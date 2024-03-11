@@ -1,6 +1,8 @@
 import * as React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../routes/mainLayout";
+
+// pages
 import TradingPage from "../routes/Trading/page";
 import MarketInfoPage from "../routes/MarketInfo/page";
 import InvestStrategyPage from "../routes/InvestStrategy/page";

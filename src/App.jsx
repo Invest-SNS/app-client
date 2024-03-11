@@ -1,13 +1,17 @@
-import './App.css'
-import { RouterProvider } from 'react-router-dom'
-import mainRouter from './router/main-router'
+import { RouterProvider } from 'react-router-dom';
+import mainRouter from './router/main-router';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './store/store';
 
 function App() {
   return (
-    <div className='min-vh-100'>
-      <RouterProvider router={mainRouter} />
-    </div>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={mainRouter} />
+      </PersistGate>
+    </Provider>
   )
 }
 
-export default App
+export default App;
