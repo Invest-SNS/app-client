@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 
 import tradingReducer from './reducers/Trading/trading';
+import chartReducer from './reducers/Chart/chart.jsx';
 
 const rootPersistConfig = {
   key: 'root',
@@ -16,6 +17,7 @@ const rootReducer = persistReducer(
   combineReducers({
     // 임시 reducer
     trading: tradingReducer,
+    chart: chartReducer,
   })
 );
 
