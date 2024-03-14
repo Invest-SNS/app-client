@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../routes/mainLayout";
 
 // pages
-import TradingPage from "../routes/Trading/page";
+import TradingPage from "../routes/Trading/TradingPage";
 import MarketInfoPage from "../routes/MarketInfo/page";
 import InvestStrategyPage from "../routes/InvestStrategy/page";
 import HotStockPage from "../routes/HotStock/page";
@@ -12,7 +12,7 @@ import MyPage from "../routes/MyPage/page";
 
 export const mainRoutes = [
   {
-    path: '/',
+    path: "/",
     element: <MainLayout />,
     children: [
       {
@@ -45,9 +45,9 @@ export const mainRoutes = [
         element: <MyPage />,
         index: true,
       },
-    ]
-  }
-]
+    ],
+  },
+];
 
 const router = createBrowserRouter(mainRoutes);
 
