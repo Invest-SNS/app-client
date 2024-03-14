@@ -5,6 +5,7 @@ import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, pers
 
 import tradingReducer from './reducers/Trading/trading';
 import chartReducer from './reducers/Chart/chart.jsx';
+import companyReducer from './reducers/Chart/clickCompany.jsx';
 
 const rootPersistConfig = {
   key: 'root',
@@ -18,6 +19,7 @@ const rootReducer = persistReducer(
     // 임시 reducer
     trading: tradingReducer,
     chart: chartReducer,
+    company: companyReducer,
   })
 );
 

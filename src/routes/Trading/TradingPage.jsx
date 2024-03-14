@@ -3,7 +3,6 @@ import MyStockList from "../../components/invest/left-bar/MyStockList";
 import styled from "styled-components";
 import Indicators from "../../components/invest/left-bar/Indicators";
 import ChartIndicators from "../../components/invest/left-bar/ChartIndicators";
-import MainChart from '../../components/invest/chart/MainChart';
 
 export default function TradingPage() {
   const [showIndicators, setShowIndicators] = useState(false);
@@ -21,8 +20,8 @@ export default function TradingPage() {
 
   return (
     <Container>
-      <MyStockList />
-      <MainChart />
+      {/* MainLayout으로 빼야할듯 */}
+      {/* <MyStockList /> */}
       {/* <ContentContainer showIndicators={showIndicators} showCharts={showCharts}>
         <Content>
           <button onClick={toggleCharts}>차트지표</button>
