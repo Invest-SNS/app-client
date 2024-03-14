@@ -31,30 +31,47 @@ import {
 import { chartInstance } from '../../../lib/apis/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { getChartDatas } from '../../../store/reducers/Chart/chart'
+import styled from "styled-components";
+import SMAChart from "./subChart/SMAChart";
 
-export default function MainChart() {
-  const dataList = useSelector((state) => state.chart.datas)
-  const dispatch = useDispatch();
+export default function MainChart({ toggleCharts, toggleIndicators }) {
+  // const dataList = useSelector((state) => state.chart.datas)
+  const company = useSelector((state) => state.company.data)
+  // const dispatch = useDispatch();
   const [datas, setDatas] = useState([]);
   async function getData() {
-    const data = await chartInstance.post('/', {
+    const data = await chartInstance.post('/stockPrice', {
       "code" : "005930",
-      "start_date" : "20220101",
-      "end_date" : "20220809",
+      "start_date" : "19990101",
+      "end_date" : "20240313",
+      // 분, 일, 월, 연봉
       "time_format" : "D"
     })
-    setDatas(data.data);
+    setDatas(data.data.reverse());
   }
 
   useEffect(() => {
     getData();
-    dispatch(getChartDatas())
-      .then((res) => {
-        console.log('data payload',res.payload)
-      })
+    // dispatch(getChartDatas())
+    //   .then((res) => {
+    //     console.log('data payload',res.payload)
+    //   })
 
-    console.log('데이터:', dataList)
+    // console.log('데이터:', dataList)
   }, [])
+
+  useEffect(() => {
+    console.log('company: ',company)
+    // accvolume: "333333"
+    // code: "005930"
+    // favorite: true
+    // id: 1
+    // index: "코스피"
+    // name: "삼성전자"
+    // prdy_vrss: "1100"
+    // price: "72800"
+    // returns: "0.55%"
+  }, [company])
 
   const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor(
     (d) => {
@@ -68,30 +85,10 @@ export default function MainChart() {
   const margin = { left: 0, right: 78, top: 0, bottom: 24 };
 
   const height = 800;
-  const width = 1200;
-  
-  // 이동평균선(EMA) 계산하는 함수
-  // const ema12 = ema()
-  //   .id(1)
-  //   .options({ windowSize: 12 })
-  //   .merge((d, c) => {
-  //     d.ema12 = c;
-  //   })
-  //   .accessor((d) => d.ema12);
+  const width = 1150;
 
-  // const ema26 = ema()
-  //   .id(2)
-  //   .options({ windowSize: 26 })
-  //   .merge((d, c) => {
-  //     d.ema26 = c;
-  //   })
-  //   .accessor((d) => d.ema26);
-
-  // const elder = elderRay();
-
-  // const calculatedData = elder(ema26(ema12(initialData)));
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(
-    datas.reverse()
+    datas
   );
 
   // 소수점 이하 둘째짜리까지만 표현
@@ -102,6 +99,7 @@ export default function MainChart() {
 
   const gridHeight = height - margin.top - margin.bottom;
 
+  const elder = elderRay();
   const elderRayHeight = 100;
   const elderRayOrigin = (_, h) => [0, h];
   const barChartHeight = gridHeight / 4;
@@ -187,65 +185,110 @@ export default function MainChart() {
   }
 
   return (
-    <ChartCanvas
-      height={height}
-      ratio={3}
-      width={width}
-      margin={margin}
-      data={data}
-      displayXAccessor={displayXAccessor}
-      seriesName="Data"
-      xScale={xScale}
-      xAccessor={xAccessor}
-      xExtents={xExtents}
-      zoomAnchor={lastVisibleItemBasedZoomAnchor}
-    >
-      <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
-        {/* 분봉 호버했을 때, 날짜/시가/종가/고가/저가 표시 */}
-        <HoverTooltip
-          // yAccessor={ema26.accessor()}
-          tooltip={{ content: tooltipContent()}}
-          fontSize={15}
-        />
-        <XAxis showGridLines showTickLabel={false} />
-        <YAxis showGridLines tickFormat={pricesDisplayFormat} />
-        <CandlestickSeries />
-
-        <MouseCoordinateX displayFormat={timeDisplayFormat} />
-        <MouseCoordinateY
-          rectWidth={margin.right}
-          displayFormat={pricesDisplayFormat}
-        />
-        <EdgeIndicator
-          itemType="last"
-          rectWidth={margin.right}
-          fill={openCloseColor}
-          lineStroke={openCloseColor}
-          displayFormat={pricesDisplayFormat}
-          yAccessor={yEdgeIndicator}
-        />
-
-        <ZoomButtons />
-        <OHLCTooltip origin={[8, 16]} />
-      </Chart>
-      {/* 거래량 차트 */}
-      <Chart
-        id={2}
-        height={barChartHeight}
-        origin={barChartOrigin}
-        yExtents={barChartExtents}
+    <Container>
+      <CompanyContainer>
+        <CompanyLogo src="https://file.alphasquare.co.kr/media/images/stock_logo/kr/005930.png" />
+        <FontContainer>
+          <MainFont>{company.name}</MainFont>
+          <SubFont>{company.code} {company.index}</SubFont>
+        </FontContainer>
+      </CompanyContainer>
+      <Content>
+        <button onClick={toggleCharts}>차트지표</button>
+        <button onClick={toggleIndicators}>보조지표</button>
+      </Content>
+      <ChartCanvas
+        height={height}
+        ratio={3}
+        width={width}
+        margin={margin}
+        data={data}
+        displayXAccessor={displayXAccessor}
+        seriesName="Data"
+        xScale={xScale}
+        xAccessor={xAccessor}
+        xExtents={xExtents}
+        zoomAnchor={lastVisibleItemBasedZoomAnchor}
       >
-        {/* <HoverTooltip
-          // yAccessor={ema26.accessor()}
-          tooltip={{ content: volumeContent()}}
-          fontSize={15}
-        /> */}
-        <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-        <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-        <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
-      </Chart>
-      
-      <CrossHairCursor />
-    </ChartCanvas>
+        {/* 거래량 차트 */}
+        <Chart
+          id={2}
+          height={barChartHeight}
+          origin={barChartOrigin}
+          yExtents={barChartExtents}
+        >
+          <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
+          <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+          <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
+        </Chart>
+        <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
+          {/* 분봉 호버했을 때, 날짜/시가/종가/고가/저가 표시 */}
+          <HoverTooltip
+            // yAccessor={ema26.accessor()}
+            tooltip={{ content: tooltipContent()}}
+            fontSize={15}
+          />
+          <XAxis showGridLines showTickLabel={false} />
+          <YAxis showGridLines tickFormat={pricesDisplayFormat} />
+          <CandlestickSeries />
+
+          <SMAChart />
+
+          <MouseCoordinateX displayFormat={timeDisplayFormat} />
+          <MouseCoordinateY
+            rectWidth={margin.right}
+            displayFormat={pricesDisplayFormat}
+          />
+          <EdgeIndicator
+            itemType="last"
+            rectWidth={margin.right}
+            fill={openCloseColor}
+            lineStroke={openCloseColor}
+            displayFormat={pricesDisplayFormat}
+            yAccessor={yEdgeIndicator}
+          />
+
+          <ZoomButtons />
+          <OHLCTooltip origin={[8, 16]} />
+        </Chart>  
+        <CrossHairCursor />
+      </ChartCanvas>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const CompanyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 5px;
+`
+
+const CompanyLogo = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  margin-right: 10px;
+`
+
+const FontContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const MainFont = styled.span`
+  font-weight: 700;
+`
+
+const SubFont = styled.span`
+  font-size: 12px;
+`
+
+const Content = styled.div`
+  display: flex;
+  align-items: center;
+`;
