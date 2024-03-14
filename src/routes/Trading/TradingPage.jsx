@@ -20,19 +20,17 @@ export default function TradingPage() {
 
   return (
     <Container>
-      {/* MainLayout으로 빼야할듯 */}
-      {/* <MyStockList /> */}
-      {/* <ContentContainer showIndicators={showIndicators} showCharts={showCharts}>
+      {/* <MyStockList />
+      <ContentContainer>
         <Content>
           <button onClick={toggleCharts}>차트지표</button>
           <button onClick={toggleIndicators}>보조지표</button>
-          TradingPage
         </Content>
-        <ChartsContainer showCharts={showCharts}>
-          <ChartIndicators onClose={toggleCharts} />
+        <ChartsContainer $showcharts={showCharts}>
+          {showCharts ? <ChartIndicators onClose={toggleCharts} /> : <></>}
         </ChartsContainer>
-        <IndicatorsContainer showIndicators={showIndicators}>
-          <Indicators onClose={toggleIndicators} />
+        <IndicatorsContainer $showindicators={showIndicators}>
+          {showIndicators ? <Indicators onClose={toggleIndicators} /> : <></>}
         </IndicatorsContainer>
       </ContentContainer> */}
     </Container>
@@ -65,7 +63,7 @@ const ChartsContainer = styled.div`
   height: 100%;
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(${(props) => (props.showCharts ? "0" : "-100%")});
+  transform: translateX(${(props) => (props.$showcharts ? "0" : "-100%")});
   transition: transform 0.3s ease;
   position: absolute;
   top: 0;
@@ -78,7 +76,7 @@ const IndicatorsContainer = styled.div`
   height: 100%;
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(${(props) => (props.showIndicators ? "0" : "-100%")});
+  transform: translateX(${(props) => (props.$showindicators ? "0" : "-100%")});
   transition: transform 0.3s ease;
   position: absolute;
   top: 0;

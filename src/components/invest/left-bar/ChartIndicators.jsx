@@ -1,28 +1,20 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import IndicatorDetail from "./IndicatorDetail";
+import chartData from "../../../../public/Json/chartData.json";
 
 const ChartIndicators = ({ onClose }) => {
-  const [showDetail, setShowDetail] = useState(false);
-  const toggleDetail = () => {
-    setShowDetail(!showDetail);
-  };
+  const [showDetail, setShowDetail] = useState(
+    Array(chartData.length).fill(false)
+  );
 
-  const chartJson = [
-    {
-      id: 0,
-      name: "SMA",
-      showName: "단순 이동평균선",
-      var: ["lineTime"],
-    },
-    { id: 1, name: "WMA", showName: "가중 이동평균선", var: ["lineTime"] },
-    {
-      id: 2,
-      name: "BBANDS",
-      showName: "볼린저밴드",
-      var: ["lineTime", "stdev"],
-    },
-  ];
+  const toggleDetail = (index) => {
+    setShowDetail((prevShowDetail) => {
+      const newShowDetail = [...prevShowDetail];
+      newShowDetail[index] = !newShowDetail[index];
+      return newShowDetail;
+    });
+  };
 
   return (
     <Container>
@@ -30,14 +22,29 @@ const ChartIndicators = ({ onClose }) => {
         <IndicatorDiv>차트지표</IndicatorDiv>
         <CloseButton onClick={onClose} src="/icon/X.svg" alt="x" />
       </IndicatorsWrapper>
-      <ItemWrapper>
-        <CheckBox type="checkbox"></CheckBox>
-        <ItemDiv>이동평균선</ItemDiv>
-        <DetailBtn onClick={toggleDetail}>설정</DetailBtn>
-      </ItemWrapper>
-      <DetailContainer showDetail={showDetail}>
-        <IndicatorDetail onClose={toggleDetail} />
-      </DetailContainer>
+      <ItemContainer>
+        {chartData.map((item, idx) => (
+          <ItemWrapper key={item.id}>
+            <CheckBox type="checkbox"></CheckBox>
+            <ItemDiv>{item.showName}</ItemDiv>
+            <DetailBtn onClick={() => toggleDetail(idx)}>설정</DetailBtn>
+            <DetailContainer $showdetail={showDetail[idx]}>
+              {showDetail[idx] ? (
+                <IndicatorDetail
+                  indiType="chart"
+                  showName={item.showName}
+                  name={item.name}
+                  vars={item.vars}
+                  onClose={() => toggleDetail(idx)}
+                  initialValues={item.vars.map((item) => item.default)}
+                />
+              ) : (
+                <></>
+              )}
+            </DetailContainer>
+          </ItemWrapper>
+        ))}
+      </ItemContainer>
     </Container>
   );
 };
@@ -73,6 +80,10 @@ const IndicatorDiv = styled.div`
   line-height: normal;
   padding-top: 10px;
   padding-bottom: 10px;
+`;
+
+const ItemContainer = styled.div`
+  width: 100%;
 `;
 
 const ItemWrapper = styled.div`
@@ -136,12 +147,13 @@ const DetailContainer = styled.div`
   height: 100%;
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(${(props) => (props.showDetail ? "0" : "-100%")});
+  transform: translateX(${(props) => (props.$showdetail ? "0" : "-100%")});
   transition: transform 0.3s ease;
   position: absolute;
   top: 0;
   left: 0;
   overflow: hidden;
+  z-index: 999;
 `;
 
 export default ChartIndicators;
