@@ -32,11 +32,18 @@ export default function MainLayout() {
               {showCharts ? <ChartIndicators onClose={toggleCharts} /> : <></>}
             </ChartsContainer>
             <IndicatorsContainer $showindicators={showIndicators}>
-              {showIndicators ? <Indicators onClose={toggleIndicators} /> : <></>}
+              {showIndicators ? (
+                <Indicators onClose={toggleIndicators} />
+              ) : (
+                <></>
+              )}
             </IndicatorsContainer>
           </ContentContainer>
         </LeftContainer>
-        <MainChart toggleCharts={toggleCharts} toggleIndicators={toggleIndicators} />
+        <MainChart
+          toggleCharts={toggleCharts}
+          toggleIndicators={toggleIndicators}
+        />
         <Outlet />
       </Container>
     </>
@@ -45,7 +52,9 @@ export default function MainLayout() {
 
 const Container = styled.div`
   display: flex;
-`
+  height: calc(100vh - 57px);
+  overflow: hidden;
+`;
 
 const LeftContainer = styled.div`
   display: flex;
