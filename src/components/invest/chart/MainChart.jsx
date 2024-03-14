@@ -32,12 +32,16 @@ import { chartInstance } from '../../../lib/apis/api';
 import { useSelector, useDispatch } from 'react-redux';
 // import { getChartDatas } from '../../../store/reducers/Chart/chart'
 import styled from "styled-components";
-// import SMAChart from "./subChart/SMAChart";
+import SMAChart from "./subChart/SMAChart";
+import { getChartDatas, setSubDatas } from "../../../store/reducers/Chart/chart";
+import { fakeData } from "./subChart/data";
+import MACDChart from "./subChart/MACDChart";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
-  // const dataList = useSelector((state) => state.chart.datas)
+  const dataList = useSelector((state) => state.chart.datas)
+  const subDataList = useSelector((state) => state.chart.subDatas)
   const company = useSelector((state) => state.company.data)
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [datas, setDatas] = useState([]);
   async function getData() {
     const data = await chartInstance.post('/stockPrice', {
@@ -50,14 +54,13 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     setDatas(data.data.reverse());
   }
 
+  const subDatas = fakeData;
   useEffect(() => {
     getData();
-    // dispatch(getChartDatas())
-    //   .then((res) => {
-    //     console.log('data payload',res.payload)
-    //   })
+    dispatch(getChartDatas())
+    dispatch(setSubDatas(subDatas));
 
-    // console.log('데이터:', dataList)
+    console.log('모든 데이터:', dataList)
   }, [])
 
   useEffect(() => {
@@ -88,7 +91,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const width = 1150;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(
-    datas
+    dataList
   );
 
   // 소수점 이하 둘째짜리까지만 표현
@@ -221,6 +224,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
           <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
         </Chart>
+        
         <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
           {/* 분봉 호버했을 때, 날짜/시가/종가/고가/저가 표시 */}
           <HoverTooltip
@@ -253,6 +257,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
         </Chart>  
         <CrossHairCursor />
       </ChartCanvas>
+      <MACDChart />
     </Container>
   );
 }

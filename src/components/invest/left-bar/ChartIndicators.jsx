@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import IndicatorDetail from "./IndicatorDetail";
-import chartData from "../../../../public/Json/chartData.json";
+// import chartData from "../../../../public/Json/chartData.json";
+import chartData from '../../../Json/chartData.json'
 
 const ChartIndicators = ({ onClose }) => {
   const [showDetail, setShowDetail] = useState(

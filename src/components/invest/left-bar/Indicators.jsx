@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import IndicatorDetail from "./IndicatorDetail";
-import indiData from "../../../../public/Json/indiData.json";
+// import indiData from "../../../../public/Json/indiData.json";
+import indiData from '../../../Json/indiData.json'
 
 const Indicators = ({ onClose }) => {
   const [showDetail, setShowDetail] = useState(
