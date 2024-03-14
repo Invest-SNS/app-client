@@ -15,6 +15,8 @@ import logger from "redux-logger";
 import tradingReducer from "./reducers/Trading/trading";
 import chartValuesReducer from "./reducers/Trading/chartValues";
 import indicatorValuesReducer from "./reducers/Trading/indicatorValues";
+import chartReducer from './reducers/Chart/chart.jsx';
+import companyReducer from './reducers/Chart/clickCompany.jsx';
 
 const rootPersistConfig = {
   key: "root",
@@ -27,6 +29,8 @@ const rootReducer = persistReducer(
   combineReducers({
     // 임시 reducer
     trading: tradingReducer,
+    chart: chartReducer,
+    company: companyReducer,
     chartValues: chartValuesReducer,
     indicatorValues: indicatorValuesReducer,
   })

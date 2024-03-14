@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import clickCompany, { setClickCompany } from "../../../store/reducers/Chart/clickCompany";
 
 const MyStockList = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -100,6 +102,8 @@ const MyStockList = () => {
     }
   };
 
+  const dispatch = useDispatch();
+
   return (
     <LeftContainer>
       <MyItemContainer>
@@ -139,7 +143,10 @@ const MyStockList = () => {
               {searchResults.length > 0 && (
                 <SearchResults>
                   {searchResults.map((result) => (
-                    <SearchResult key={result.id}>
+                    <SearchResult key={result.id} onClick={() => {
+                      console.log('')
+                      dispatch(setClickCompany(result))
+                    }}>
                       <img
                         src={`https://file.alphasquare.co.kr/media/images/stock_logo/kr/${result.code}.png`}
                         style={{
@@ -219,7 +226,7 @@ const MyStockList = () => {
 };
 
 const LeftContainer = styled.section`
-  width: 250px;
+  min-width: 250px;
   height: calc(100vh - 57px);
   border-right: 1px solid #e2e2e2;
 `;

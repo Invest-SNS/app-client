@@ -20,7 +20,7 @@ export default function TradingPage() {
 
   return (
     <Container>
-      <MyStockList />
+      {/* <MyStockList />
       <ContentContainer>
         <Content>
           <button onClick={toggleCharts}>차트지표</button>
@@ -32,7 +32,7 @@ export default function TradingPage() {
         <IndicatorsContainer $showindicators={showIndicators}>
           {showIndicators ? <Indicators onClose={toggleIndicators} /> : <></>}
         </IndicatorsContainer>
-      </ContentContainer>
+      </ContentContainer> */}
     </Container>
   );
 }
