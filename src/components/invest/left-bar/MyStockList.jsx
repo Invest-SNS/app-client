@@ -8,22 +8,8 @@ const MyStockList = () => {
   const [favoriteArr, setFavoriteArr] = useState([]);
   const searchRef = useRef(null);
 
-  //   useEffect(() => {
-  //     const handleClickOutside = (event) => {
-  //       if (searchRef.current && !searchRef.current.contains(event.target)) {
-  //         setShowSearch(false);
-  //       }
-  //     };
-
-  //     document.addEventListener("mousedown", handleClickOutside);
-  //     return () => {
-  //       document.removeEventListener("mousedown", handleClickOutside);
-  //     };
-  //   }, []);
-
-  // 검색어 입력에 따라 검색 결과 가져오기
   useEffect(() => {
-    // 예시: 서버에서 검색 결과 가져오는 함수 (fetchSearchResults)
+    // 예시
     const fetchSearchResults = async () => {
       const fakeSearchResults = [
         {
@@ -108,7 +94,7 @@ const MyStockList = () => {
       const updatedFavoriteArr = favoriteArr.filter(
         (item) => item.id !== result.id
       );
-      setFavoriteArr(updatedFavoriteArr); // 해당 아이템을 favoriteArr에서 삭제
+      setFavoriteArr(updatedFavoriteArr);
       console.log(`관심 종목에서 삭제: ${result.name}`);
       console.log(favoriteArr);
     }
@@ -135,7 +121,7 @@ const MyStockList = () => {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                 ></SearchInput>
-                {searchInput && ( // 검색 입력값이 있는 경우에만 초기화 버튼 표시
+                {searchInput && (
                   <SearchClearBtn onClick={() => setSearchInput("")}>
                     <img src="/icon/X.svg" alt="x" style={{ width: 15 }} />
                   </SearchClearBtn>
@@ -290,11 +276,9 @@ const Img = styled.img`
 `;
 
 const SearchInput = styled.input`
-  /* position: relative; */
   width: 85%;
   padding-left: 30px;
   font-size: 15px;
-  /* border: 1px solid grey; */
   border: none;
   background-color: #f3f3f3;
 `;
@@ -364,8 +348,6 @@ const StockName = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-
-  /* margin-bottom: 1px; */
 `;
 
 const RowDiv = styled.div`
