@@ -30,9 +30,9 @@ import {
 } from "react-financial-charts";
 import { chartInstance } from '../../../lib/apis/api';
 import { useSelector, useDispatch } from 'react-redux';
-import { getChartDatas } from '../../../store/reducers/Chart/chart'
+// import { getChartDatas } from '../../../store/reducers/Chart/chart'
 import styled from "styled-components";
-import SMAChart from "./subChart/SMAChart";
+// import SMAChart from "./subChart/SMAChart";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   // const dataList = useSelector((state) => state.chart.datas)
@@ -232,7 +232,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <YAxis showGridLines tickFormat={pricesDisplayFormat} />
           <CandlestickSeries />
 
-          <SMAChart />
+          {/* <SMAChart /> */}
 
           <MouseCoordinateX displayFormat={timeDisplayFormat} />
           <MouseCoordinateY
