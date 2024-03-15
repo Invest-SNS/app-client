@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Chart, ChartCanvas, CurrentCoordinate, LineSeries, ema } from 'react-financial-charts';
 import { fakeData } from './data';
-import { useDispatch, useSelector } from 'react-redux';
+import { LineSeries } from 'react-financial-charts';
 
-export default function SMAChart({datas, click}) {
+export default function BBANDSChart({ datas, click }) {
   const [smaCalculated, setSmaCalculated] = useState(false);
 
-  const calculateSMA = () => {
+  const calculateBBANDS = () => {
     const responses = [fakeData.response1, fakeData.response2, fakeData.response3, fakeData.response4, fakeData.response5];
     responses.forEach((response, index) => {
       const f_idx = response.begIndex;
@@ -22,7 +21,7 @@ export default function SMAChart({datas, click}) {
 
   useEffect(() => {
     if (click) {
-      calculateSMA()
+      calculateBBANDS()
     }
   }, [click]);
 

@@ -32,17 +32,17 @@ import { chartInstance } from '../../../lib/apis/api';
 import { useSelector, useDispatch } from 'react-redux';
 // import { getChartDatas } from '../../../store/reducers/Chart/chart'
 import styled from "styled-components";
-import SMAChart from "./subChart/SMAChart";
-import { getChartDatas, setSubDatas } from "../../../store/reducers/Chart/chart";
+import { getChartDatas } from "../../../store/reducers/Chart/chart";
 import { fakeData } from "./subChart/data";
-import MACDChart from "./subChart/MACDChart";
+import SMAChart from "./subChart/SMAChart";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas)
-  const subDataList = useSelector((state) => state.chart.subDatas)
   const company = useSelector((state) => state.company.data)
   const dispatch = useDispatch();
   const [datas, setDatas] = useState([]);
+  const [click, setClick] = useState(false);
+
   async function getData() {
     const data = await chartInstance.post('/stockPrice', {
       "code" : "005930",
@@ -51,20 +51,19 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
       // 분, 일, 월, 연봉
       "time_format" : "D"
     })
+
     setDatas(data.data.reverse());
   }
 
-  const subDatas = fakeData;
   useEffect(() => {
-    getData();
+    getData()
     dispatch(getChartDatas())
-    dispatch(setSubDatas(subDatas));
 
-    console.log('모든 데이터:', dataList)
+    console.log('모든 데이터:', datas)
   }, [])
 
   useEffect(() => {
-    console.log('company: ',company)
+    // console.log('company: ',company)
     // accvolume: "333333"
     // code: "005930"
     // favorite: true
@@ -87,11 +86,11 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   );
   const margin = { left: 0, right: 78, top: 0, bottom: 24 };
 
-  const height = 800;
+  const height = 760;
   const width = 1150;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(
-    dataList
+    datas
   );
 
   // 소수점 이하 둘째짜리까지만 표현
@@ -102,9 +101,6 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
 
   const gridHeight = height - margin.top - margin.bottom;
 
-  const elder = elderRay();
-  const elderRayHeight = 100;
-  const elderRayOrigin = (_, h) => [0, h];
   const barChartHeight = gridHeight / 4;
   const barChartOrigin = (_, h) => [0, h - barChartHeight];
   const chartHeight = gridHeight - barChartHeight;
@@ -173,26 +169,56 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     };
   }
 
-  function volumeContent() {
-    return ({ currentItem, xAccessor }) => {
-      return {
-        x: HoverDisplayFormat(xAccessor(currentItem)),
-        y: [
-          {
-            label: "거래량",
-            value: currentItem.volume && pricesDisplayFormat(currentItem.volume)
-          },
-        ]
-      };
-    };
-  }
+  // async function getSMA() {
+  //   const data = await chartInstance.post('/subChart/SMA', {
+  //     "chart" : datas,
+  //     "lineTime1" : 5,
+  //     "lineTime2" : 10,
+  //     "lineTime3" : 30,
+  //     "lineTime4" : 60,
+  //     "lineTime5" : 120
+  //   })
+
+  //   // 단순이동평균선 데이터 삽입
+  //   const responses = [data.data.response1, data.data.response2, data.data.response3, data.data.response4, data.data.response5];
+  //   responses.forEach((response, index) => {
+  //     const l_idx = response.nbElement;
+  //     const subData = response.result.outReal;
+  //     for (let i = 0; i < l_idx; i++) {
+  //       const smaKey = `sma${[5, 10, 30, 60, 100][index]}`; // 예시에서는 100이 마지막 값이지만, 실제 데이터에 따라 조정 필요
+  //       datas[i][smaKey] = subData[l_idx - 1 - i];
+  //     }
+  //   });
+
+  //   console.log(data.data)
+  // }
+
+  // 단순이동평균선 데이터 삽입
+  // useEffect(() => {
+  //   if (datas.length > 0) {
+  //     const responses = [fakeData.response1, fakeData.response2, fakeData.response3, fakeData.response4, fakeData.response5];
+  //     responses.forEach((response, index) => {
+  //       const f_idx = response.begIndex;
+  //       const l_idx = response.nbElement;
+  //       const subData = response.result.outReal;
+  //       for (let i = 0; i < l_idx; i++) {
+  //         const smaKey = `sma${[5, 10, 30, 60, 100][index]}`; // 예시에서는 100이 마지막 값이지만, 실제 데이터에 따라 조정 필요
+  //         datas[datas.length - i - 1][smaKey] = subData[i];
+  //       }
+  //     });
+  //   }
+  // }, [])
 
   return (
     <Container>
       <CompanyContainer>
         <CompanyLogo src="https://file.alphasquare.co.kr/media/images/stock_logo/kr/005930.png" />
         <FontContainer>
-          <MainFont>{company.name}</MainFont>
+          <MainFont onClick={() => {
+            // getSMA()
+            setClick(prev => !prev)
+            console.log(datas)
+          }}>{company.name}</MainFont>
           <SubFont>{company.code} {company.index}</SubFont>
         </FontContainer>
       </CompanyContainer>
@@ -236,7 +262,23 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <YAxis showGridLines tickFormat={pricesDisplayFormat} />
           <CandlestickSeries />
 
-          {/* <SMAChart /> */}
+          {click && <SMAChart datas={datas} click={click} />}
+          {/* <LineSeries
+            yAccessor={d => d.sma5} 
+            strokeStyle='#b3009e'
+          />
+          <LineSeries 
+            yAccessor={d => d.sma10} 
+            strokeStyle='#b33300'
+          />
+          <LineSeries 
+            yAccessor={d => d.sma30} 
+            strokeStyle='#edda02'
+          />
+          <LineSeries 
+            yAccessor={d => d.sma60} 
+            strokeStyle='#00b33f'
+          /> */}
 
           <MouseCoordinateX displayFormat={timeDisplayFormat} />
           <MouseCoordinateY
@@ -257,7 +299,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
         </Chart>  
         <CrossHairCursor />
       </ChartCanvas>
-      <MACDChart />
+      {/* <MACDChart /> */}
     </Container>
   );
 }

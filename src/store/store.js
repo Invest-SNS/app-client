@@ -17,6 +17,7 @@ import chartValuesReducer from "./reducers/Trading/chartValues";
 import indicatorValuesReducer from "./reducers/Trading/indicatorValues";
 import chartReducer from './reducers/Chart/chart.jsx';
 import companyReducer from './reducers/Chart/clickCompany.jsx';
+import subChartReducer from './reducers/Chart/SubChart/clickSubChart.jsx';
 
 const rootPersistConfig = {
   key: "root",
@@ -33,6 +34,7 @@ const rootReducer = persistReducer(
     company: companyReducer,
     chartValues: chartValuesReducer,
     indicatorValues: indicatorValuesReducer,
+    subChart: subChartReducer,
   })
 );
 const myMiddlewares = [logger];

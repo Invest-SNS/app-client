@@ -44,36 +44,35 @@ export default function MACDChart() {
   const x_min = xAccessor(data[Math.max(0, data.length - 100)]);
   const xExtents = [x_min, x_max + 5];
 
-  console.log('MACD', data)
-
   const MACDExtents = (data) => {
     return data.y;
   };
 
   return (
-    <ChartCanvas
-        height={200}
-        ratio={3}
-        width={width}
-        margin={margin}
-        data={data}
-        displayXAccessor={displayXAccessor}
-        seriesName="subdata"
-        xScale={xScale}
-        xAccessor={xAccessor}
-        xExtents={xExtents}
-      >
-        {/* MACD 차트 */}
-        <Chart
-          id={4}
-          height={barChartHeight}
-          origin={barChartOrigin}
-          yExtents={MACDExtents}
-        >
-          <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-          <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-          <BarSeries fillStyle="rgba(38, 166, 154, 0.3)" yAccessor={MACDData}/>
-        </Chart>
-      </ChartCanvas>
+    <></>
+    // <ChartCanvas
+    //     height={200}
+    //     ratio={3}
+    //     width={width}
+    //     margin={margin}
+    //     data={data}
+    //     displayXAccessor={displayXAccessor}
+    //     seriesName="subdata"
+    //     xScale={xScale}
+    //     xAccessor={xAccessor}
+    //     xExtents={xExtents}
+    //   >
+    //     {/* MACD 차트 */}
+    //     <Chart
+    //       id={4}
+    //       height={barChartHeight}
+    //       origin={barChartOrigin}
+    //       yExtents={MACDExtents}
+    //     >
+    //       <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
+    //       <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+    //       <BarSeries fillStyle="rgba(38, 166, 154, 0.3)" yAccessor={MACDData}/>
+    //     </Chart>
+    //   </ChartCanvas>
   )
 }

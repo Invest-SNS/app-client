@@ -3,7 +3,6 @@ import { getChartData } from '../../../lib/apis/chart'
 
 const initialState = {
   datas: [],
-  subDatas: [],
 };
 
 export const getChartDatas = createAsyncThunk(
@@ -19,18 +18,18 @@ const chartSlice = createSlice({
   name: "chart",
   initialState: initialState,
   reducers: {
-    setSubDatas(state, action) {
-      state.subDatas = action.payload;
+    setChartDatas(state, action) {
+      state.datas = action.payload;
     }
   },
   extraReducers: (builder) => {
     builder.addCase(getChartDatas.fulfilled, (state, action) => {
-      state.datas = action.payload;
+      state.datas = action.payload.reverse();
     })
   },
 });
 
-const { setSubDatas } = chartSlice.actions;
-export { setSubDatas };
+const { setChartDatas } = chartSlice.actions;
+export { setChartDatas };
 
 export default chartSlice.reducer;
