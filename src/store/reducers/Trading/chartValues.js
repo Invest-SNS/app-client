@@ -11,7 +11,7 @@ const initialState = {
 };
 
 const chartValuesSlice = createSlice({
-  name: "hartValues",
+  name: "chartValues",
   initialState: initialState,
   reducers: {
     setValues: (state, action) => {
