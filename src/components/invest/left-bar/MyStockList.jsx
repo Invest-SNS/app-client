@@ -12,6 +12,8 @@ import { setFavoriteArr } from "~/store/reducers/Trading/search";
 //TODO : 로고 사진 변경
 import default_Img from "../../../../public/icon/+.svg";
 import { getCookie } from "~/lib/apis/cookie";
+import clickCompany, { setClickCompany } from "../../../store/reducers/Chart/clickCompany";
+
 
 const MyStockList = () => {
   const isLogin = !!getCookie("token");
@@ -20,7 +22,7 @@ const MyStockList = () => {
   // const [searchResults, setSearchResults] = useState([]);
   // const [favoriteArr, setFavoriteArr] = useState([]);
   const searchRef = useRef(null);
-
+  
   const dispatch = useDispatch();
   const favoriteArr = useSelector((state) => state.search.favoriteArr);
   const searchResults = useSelector((state) => state.search.searchResults);
@@ -28,7 +30,6 @@ const MyStockList = () => {
   useEffect(() => {
     // 예시
     const fetchSearchResults = async () => {};
-
     if (searchInput) {
       fetchSearchResults();
     } else {
@@ -71,6 +72,7 @@ const MyStockList = () => {
       const updatedFavoriteArr = favoriteArr.filter(
         (item) => item !== result.code
       );
+
       dispatch(setFavoriteArr(updatedFavoriteArr)); // Dispatch the updated favoriteArr
       dispatch(postLikeStock({ likeStock: updatedFavoriteArr }));
       dispatch(postSearchUser({ searchQuery: searchInput }));
@@ -300,11 +302,9 @@ const Img = styled.img`
 `;
 
 const SearchInput = styled.input`
-  /* position: relative; */
   width: 85%;
   padding-left: 30px;
   font-size: 15px;
-  /* border: 1px solid grey; */
   border: none;
   background-color: #f3f3f3;
 `;
