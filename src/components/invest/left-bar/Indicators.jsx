@@ -3,8 +3,6 @@ import styled from "styled-components";
 import IndicatorDetail from "./IndicatorDetail";
 // import indiData from "../../../../public/Json/indiData.json";
 import indiData from '../../../Json/indiData.json'
-import { useDispatch, useSelector } from "react-redux";
-import { setClickSub } from "../../../store/reducers/Chart/SubChart/clickSubChart";
 
 const Indicators = ({ onClose }) => {
   const [showDetail, setShowDetail] = useState(

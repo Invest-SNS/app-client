@@ -59,7 +59,7 @@ const Container = styled.div`
 const LeftContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: fit-content;
   height: 100%;
   position: relative;
   overflow: hidden;
@@ -68,7 +68,7 @@ const LeftContainer = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  // flex-grow: 1;
   transition: margin-left 0.3s ease;
 `;
 

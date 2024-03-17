@@ -33,47 +33,22 @@ import { useSelector, useDispatch } from 'react-redux';
 // import { getChartDatas } from '../../../store/reducers/Chart/chart'
 import styled from "styled-components";
 import { getChartDatas } from "../../../store/reducers/Chart/chart";
-import { fakeData } from "./subChart/data";
 import SMAChart from "./subChart/SMAChart";
+import WMAChart from "./subChart/WMAChart";
+import EMAChart from "./subChart/EMAChart";
+import BBANDSChart from "./subChart/BBANDSChart";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas)
   const company = useSelector((state) => state.company.data)
   const dispatch = useDispatch();
   const [datas, setDatas] = useState([]);
-  const [click, setClick] = useState(false);
-
-  async function getData() {
-    const data = await chartInstance.post('/stockPrice', {
-      "code" : "005930",
-      "start_date" : "19990101",
-      "end_date" : "20240313",
-      // 분, 일, 월, 연봉
-      "time_format" : "D"
-    })
-
-    setDatas(data.data.reverse());
-  }
 
   useEffect(() => {
-    getData()
+    // getData()
     dispatch(getChartDatas())
 
-    console.log('모든 데이터:', datas)
   }, [])
-
-  useEffect(() => {
-    // console.log('company: ',company)
-    // accvolume: "333333"
-    // code: "005930"
-    // favorite: true
-    // id: 1
-    // index: "코스피"
-    // name: "삼성전자"
-    // prdy_vrss: "1100"
-    // price: "72800"
-    // returns: "0.55%"
-  }, [company])
 
   const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor(
     (d) => {
@@ -90,7 +65,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const width = 1150;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(
-    datas
+    dataList
   );
 
   // 소수점 이하 둘째짜리까지만 표현
@@ -169,56 +144,29 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     };
   }
 
-  // async function getSMA() {
-  //   const data = await chartInstance.post('/subChart/SMA', {
-  //     "chart" : datas,
-  //     "lineTime1" : 5,
-  //     "lineTime2" : 10,
-  //     "lineTime3" : 30,
-  //     "lineTime4" : 60,
-  //     "lineTime5" : 120
-  //   })
+  // const [click, setClick] = useState(false);
+  // const checkSub = useSelector((state) => state.subChart.subChart)
 
-  //   // 단순이동평균선 데이터 삽입
-  //   const responses = [data.data.response1, data.data.response2, data.data.response3, data.data.response4, data.data.response5];
-  //   responses.forEach((response, index) => {
-  //     const l_idx = response.nbElement;
-  //     const subData = response.result.outReal;
-  //     for (let i = 0; i < l_idx; i++) {
-  //       const smaKey = `sma${[5, 10, 30, 60, 100][index]}`; // 예시에서는 100이 마지막 값이지만, 실제 데이터에 따라 조정 필요
-  //       datas[i][smaKey] = subData[l_idx - 1 - i];
-  //     }
-  //   });
-
-  //   console.log(data.data)
-  // }
-
-  // 단순이동평균선 데이터 삽입
   // useEffect(() => {
-  //   if (datas.length > 0) {
-  //     const responses = [fakeData.response1, fakeData.response2, fakeData.response3, fakeData.response4, fakeData.response5];
-  //     responses.forEach((response, index) => {
-  //       const f_idx = response.begIndex;
-  //       const l_idx = response.nbElement;
-  //       const subData = response.result.outReal;
-  //       for (let i = 0; i < l_idx; i++) {
-  //         const smaKey = `sma${[5, 10, 30, 60, 100][index]}`; // 예시에서는 100이 마지막 값이지만, 실제 데이터에 따라 조정 필요
-  //         datas[datas.length - i - 1][smaKey] = subData[i];
-  //       }
-  //     });
+  //   if (checkSub.includes('단순 이동평균선')) {
+  //     setClick(true)
+  //   } else {
+  //     setClick(false)
   //   }
-  // }, [])
+  // }, [checkSub])
+
+  // useEffect(() => {
+  //   if (dataList.length > 0) {
+  //     setDatas(dataList);
+  //   }
+  // }, [click])
 
   return (
     <Container>
       <CompanyContainer>
         <CompanyLogo src="https://file.alphasquare.co.kr/media/images/stock_logo/kr/005930.png" />
         <FontContainer>
-          <MainFont onClick={() => {
-            // getSMA()
-            setClick(prev => !prev)
-            console.log(datas)
-          }}>{company.name}</MainFont>
+          <MainFont>{company.name}</MainFont>
           <SubFont>{company.code} {company.index}</SubFont>
         </FontContainer>
       </CompanyContainer>
@@ -262,23 +210,10 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <YAxis showGridLines tickFormat={pricesDisplayFormat} />
           <CandlestickSeries />
 
-          {click && <SMAChart datas={datas} click={click} />}
-          {/* <LineSeries
-            yAccessor={d => d.sma5} 
-            strokeStyle='#b3009e'
-          />
-          <LineSeries 
-            yAccessor={d => d.sma10} 
-            strokeStyle='#b33300'
-          />
-          <LineSeries 
-            yAccessor={d => d.sma30} 
-            strokeStyle='#edda02'
-          />
-          <LineSeries 
-            yAccessor={d => d.sma60} 
-            strokeStyle='#00b33f'
-          /> */}
+          <SMAChart datas={dataList} />
+          <WMAChart datas={dataList} />
+          <EMAChart datas={dataList} />
+          <BBANDSChart datas={dataList} />
 
           <MouseCoordinateX displayFormat={timeDisplayFormat} />
           <MouseCoordinateY
@@ -307,6 +242,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  width: calc(100vw - 720px);
 `
 
 const CompanyContainer = styled.div`

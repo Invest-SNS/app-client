@@ -1,52 +1,68 @@
 import React, { useEffect, useState } from 'react';
-import { fakeData } from './data';
-import { LineSeries } from 'react-financial-charts';
+import { Chart, ChartCanvas, CurrentCoordinate, LineSeries, ema } from 'react-financial-charts';
+import { useDispatch, useSelector } from 'react-redux';
+import { setChartDatas } from '../../../../store/reducers/Chart/chart';
+import { getBBANDSChart, getWMAChart } from '../../../../store/reducers/Chart/SubChart/subChart';
 
-export default function BBANDSChart({ datas, click }) {
-  const [smaCalculated, setSmaCalculated] = useState(false);
+export default function BBANDSChart({ datas }) {
+  const dispatch = useDispatch();
+  const isActive = useSelector((state) => state.subChart.BBANDS);
 
-  const calculateBBANDS = () => {
-    const responses = [fakeData.response1, fakeData.response2, fakeData.response3, fakeData.response4, fakeData.response5];
-    responses.forEach((response, index) => {
-      const f_idx = response.begIndex;
-      const l_idx = response.nbElement;
-      const subData = response.result.outReal;
-      for (let i = 0; i < l_idx; i++) {
-        const smaKey = `sma${[5, 10, 30, 60, 100][index]}`; // 예시에서는 100이 마지막 값이지만, 실제 데이터에 따라 조정 필요
-        datas[datas.length - i - 1][smaKey] = subData[i];
-      }
-    });
-    // setSmaCalculated(true); // SMA 계산 완료
+  const calculateBBANDS = (data) => {
+    console.log('bbands', data)
+    const newData = [...datas];
+    
+    const f_idx = data.begIndex;
+    const l_idx = data.nbElement;
+    const upData = data.result.outRealUpperBand;
+    const midData = data.result.outRealMiddleBand;
+    const lowData = data.result.outRealLowerBand;
+    for (let i = 0; i < l_idx; i++) {
+      newData[f_idx + i] = {
+        ...newData[f_idx + i], // 기존 객체를 복사
+        ["upper"]: upData[i], // 새로운 속성 추가
+        ["middle"]: midData[i], // 새로운 속성 추가
+        ["lower"]: lowData[i], // 새로운 속성 추가
+      };
+    }
+    dispatch(setChartDatas(newData));
   }
 
   useEffect(() => {
-    if (click) {
-      calculateBBANDS()
+    if (isActive) {
+      const data = {
+        "chart": datas,
+        "lineTime" : 5,
+        "stdev" : 2,
+      }
+      dispatch(getBBANDSChart(data))
+        .then((res) =>  calculateBBANDS(res.payload))
+    } else if (!isActive) {
+      const updatedDatas = datas.map(item => {
+        const newItem = { ...item };
+        delete newItem.upper;
+        delete newItem.middle;
+        delete newItem.lower;
+        return newItem;
+      });
+      dispatch(setChartDatas(updatedDatas));
     }
-  }, [click]);
+  }, [isActive]);
 
   return (
     <>
       <LineSeries
-        yAccessor={d => d.sma5} 
+        yAccessor={d => d.upper} 
         strokeStyle='#b3009e'
       />
       <LineSeries 
-        yAccessor={d => d.sma10} 
+        yAccessor={d => d.middle} 
         strokeStyle='#b33300'
       />
       <LineSeries 
-        yAccessor={d => d.sma30} 
+        yAccessor={d => d.lower} 
         strokeStyle='#edda02'
       />
-      <LineSeries 
-        yAccessor={d => d.sma60} 
-        strokeStyle='#00b33f'
-      />  
-      <LineSeries 
-        yAccessor={d => d.sma100} 
-        strokeStyle='#0277ed'
-      />  
     </>
   )
 }

@@ -2,15 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Chart, ChartCanvas, CurrentCoordinate, LineSeries, ema } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../store/reducers/Chart/chart';
-import { getSMAChart } from '../../../../store/reducers/Chart/SubChart/subChart';
+import { getEMAChart, getWMAChart } from '../../../../store/reducers/Chart/SubChart/subChart';
 
-export default function SMAChart({ datas }) {
+export default function EMAChart({ datas }) {
   const dispatch = useDispatch();
-  const isActive = useSelector((state) => state.subChart.SMA);
-  // const smaChart = useSelector((state) => state.getSubChart.SMADatas);
-  console.log(isActive)
+  const isActive = useSelector((state) => state.subChart.EMA);
 
-  const calculateSMA = (data) => {
+  const calculateEMA = (data) => {
     const responses = [data.response1, data.response2, data.response3, data.response4, data.response5];
     const newData = [...datas];
     responses.forEach((response, index) => {
@@ -18,14 +16,13 @@ export default function SMAChart({ datas }) {
       const l_idx = response.nbElement;
       const subData = response.result.outReal;
       for (let i = 0; i < l_idx; i++) {
-        const smaKey = `sma${[5, 10, 30, 60, 100][index]}`;
+        const emaKey = `ema${[5, 10, 30, 60, 100][index]}`;
         newData[f_idx + i] = {
           ...newData[f_idx + i], // 기존 객체를 복사
-          [smaKey]: subData[i] // 새로운 속성 추가
+          [emaKey]: subData[i] // 새로운 속성 추가
         };
       }
     });
-    // setSmaCalculated(true); // SMA 계산 완료
     dispatch(setChartDatas(newData));
   }
 
@@ -39,16 +36,16 @@ export default function SMAChart({ datas }) {
         "lineTime4" : 60,
         "lineTime5" : 120
       }
-      dispatch(getSMAChart(data))
-        .then((res) =>  calculateSMA(res.payload))
+      dispatch(getEMAChart(data))
+        .then((res) =>  calculateEMA(res.payload))
     } else if (!isActive) {
       const updatedDatas = datas.map(item => {
         const newItem = { ...item };
-        delete newItem.sma5;
-        delete newItem.sma10;
-        delete newItem.sma30;
-        delete newItem.sma60;
-        delete newItem.sma100;
+        delete newItem.ema5;
+        delete newItem.ema10;
+        delete newItem.ema30;
+        delete newItem.ema60;
+        delete newItem.ema100;
         return newItem;
       });
       dispatch(setChartDatas(updatedDatas));
@@ -58,23 +55,23 @@ export default function SMAChart({ datas }) {
   return (
     <>
       <LineSeries
-        yAccessor={d => d.sma5} 
+        yAccessor={d => d.ema5} 
         strokeStyle='#b3009e'
       />
       <LineSeries 
-        yAccessor={d => d.sma10} 
+        yAccessor={d => d.ema10} 
         strokeStyle='#b33300'
       />
       <LineSeries 
-        yAccessor={d => d.sma30} 
+        yAccessor={d => d.ema30} 
         strokeStyle='#edda02'
       />
       <LineSeries 
-        yAccessor={d => d.sma60} 
+        yAccessor={d => d.ema60} 
         strokeStyle='#00b33f'
       />  
       <LineSeries 
-        yAccessor={d => d.sma100} 
+        yAccessor={d => d.ema100} 
         strokeStyle='#0277ed'
       />  
     </>

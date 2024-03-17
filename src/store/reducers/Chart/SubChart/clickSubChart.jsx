@@ -1,20 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  subChart: [],
+  SMA: false,
+  WMA: false,
+  EMA: false,
+  BBANDS: false,
 };
 
 const clickSubSlice = createSlice({
   name: "subChart",
   initialState: initialState,
   reducers: {
-    setClickSub(state, action) {
-      state.data = action.payload;
-    }
+    setActiveSub(state, action) {
+      state[action.payload] = true;
+    },
+    setDisactiveSub(state, action) {
+      state[action.payload] = false;
+    },
   },
 });
 
-const { setClickSub } = clickSubSlice.actions;
-export { setClickSub };
+const { setActiveSub, setDisactiveSub } = clickSubSlice.actions;
+export { setActiveSub, setDisactiveSub };
 
 export default clickSubSlice.reducer;

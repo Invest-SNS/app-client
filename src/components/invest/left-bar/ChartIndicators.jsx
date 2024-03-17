@@ -4,7 +4,7 @@ import IndicatorDetail from "./IndicatorDetail";
 // import chartData from "../../../../public/Json/chartData.json";
 import chartData from '../../../Json/chartData.json'
 import { useDispatch, useSelector } from "react-redux";
-import { setClickSub } from "../../../store/reducers/Chart/SubChart/clickSubChart";
+import { setActiveSub, setDisactiveSub } from "../../../store/reducers/Chart/SubChart/clickSubChart";
 
 const ChartIndicators = ({ onClose }) => {
   const [showDetail, setShowDetail] = useState(
@@ -20,26 +20,19 @@ const ChartIndicators = ({ onClose }) => {
   };
 
   // 데이터를 넣을 빈배열
-  const [checkedList, setCheckedList] = useState([]);
+  const dispatch = useDispatch();
   // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
   const onCheckedElement = (checked, item) => {
     if (checked) {
-      setCheckedList([...checkedList, item]);
+      dispatch(setActiveSub(item))
     } else if (!checked) {
-      setCheckedList(checkedList.filter(el => el !== item));
+      dispatch(setDisactiveSub(item))
     }
   };
 
-  const dispatch = useDispatch();
-  const checkSub = useSelector((state) => state.subChart)
-
-  useEffect(() => {
-    dispatch(setClickSub(checkedList))
-  }, [checkedList])
-  
-  console.log('checksub', checkSub)
 
   return (
+    
     <Container>
       <IndicatorsWrapper>
         <IndicatorDiv>차트지표</IndicatorDiv>
@@ -49,12 +42,10 @@ const ChartIndicators = ({ onClose }) => {
         {chartData.map((item, idx) => (
           <ItemWrapper key={item.id}>
             <CheckBox type="checkbox"
-              value={item.showName}
+              value={item.name}
                 onChange={e => {
                   onCheckedElement(e.target.checked, e.target.value);
                 }}
-              // 3️⃣ 체크표시 & 해제를 시키는 로직. 배열에 data가 있으면 true, 없으면 false
-              checked={checkedList.includes(item.showName) ? true : false}
             ></CheckBox>
             <ItemDiv>{item.showName}</ItemDiv>
             <DetailBtn onClick={() => toggleDetail(idx)}>설정</DetailBtn>
