@@ -3,19 +3,12 @@ import ReactDOM from "react-dom";
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import {
-  elderRay,
-  ema,
   discontinuousTimeScaleProviderBuilder,
   Chart,
   ChartCanvas,
-  CurrentCoordinate,
   BarSeries,
   CandlestickSeries,
-  ElderRaySeries,
-  LineSeries,
-  MovingAverageTooltip,
   OHLCTooltip,
-  SingleValueTooltip,
   lastVisibleItemBasedZoomAnchor,
   XAxis,
   YAxis,
@@ -24,25 +17,24 @@ import {
   MouseCoordinateX,
   MouseCoordinateY,
   ZoomButtons,
-  withDeviceRatio,
-  withSize,
   HoverTooltip,
 } from "react-financial-charts";
-import { chartInstance } from '../../../lib/apis/api';
+
 import { useSelector, useDispatch } from 'react-redux';
-// import { getChartDatas } from '../../../store/reducers/Chart/chart'
 import styled from "styled-components";
 import { getChartDatas } from "../../../store/reducers/Chart/chart";
+
+// 차트지표
 import SMAChart from "./subChart/SMAChart";
 import WMAChart from "./subChart/WMAChart";
 import EMAChart from "./subChart/EMAChart";
 import BBANDSChart from "./subChart/BBANDSChart";
+import SARChart from "./subChart/SARChart";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas)
   const company = useSelector((state) => state.company.data)
   const dispatch = useDispatch();
-  const [datas, setDatas] = useState([]);
 
   useEffect(() => {
     // getData()
@@ -93,7 +85,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   };
 
   const candleChartExtents = (data) => {
-    return [data.high, data.low];
+    return [data.high + 2000, data.low - 2000];
   };
 
   const yEdgeIndicator = (data) => {
@@ -144,23 +136,6 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     };
   }
 
-  // const [click, setClick] = useState(false);
-  // const checkSub = useSelector((state) => state.subChart.subChart)
-
-  // useEffect(() => {
-  //   if (checkSub.includes('단순 이동평균선')) {
-  //     setClick(true)
-  //   } else {
-  //     setClick(false)
-  //   }
-  // }, [checkSub])
-
-  // useEffect(() => {
-  //   if (dataList.length > 0) {
-  //     setDatas(dataList);
-  //   }
-  // }, [click])
-
   return (
     <Container>
       <CompanyContainer>
@@ -210,10 +185,12 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <YAxis showGridLines tickFormat={pricesDisplayFormat} />
           <CandlestickSeries />
 
+          {/* 차트지표 */}
           <SMAChart datas={dataList} />
           <WMAChart datas={dataList} />
           <EMAChart datas={dataList} />
           <BBANDSChart datas={dataList} />
+          <SARChart datas={dataList} />
 
           <MouseCoordinateX displayFormat={timeDisplayFormat} />
           <MouseCoordinateY
@@ -243,6 +220,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: calc(100vw - 720px);
+  padding: 0 10px;
 `
 
 const CompanyContainer = styled.div`

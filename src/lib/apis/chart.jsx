@@ -3,6 +3,7 @@ import { chartInstance, subChartInstance } from './api';
 export async function getChartData() {
   const date = new Date();
   const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
+  // 임시 데이터
   return await chartInstance.post('/stockPrice', {
     "code" : "005930",
     "start_date" : "19990101",
@@ -26,4 +27,8 @@ export async function getEMA(data) {
 
 export async function getBBANDS(data) {
   return await subChartInstance.post('/BBANDS', data)
+}
+
+export async function getSAR(data) {
+  return await subChartInstance.post('/SAR', data)
 }

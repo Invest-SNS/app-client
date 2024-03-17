@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Chart, ChartCanvas, CurrentCoordinate, LineSeries, ema } from 'react-financial-charts';
+import React, { useEffect } from 'react';
+import { LineSeries } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../store/reducers/Chart/chart';
 import { getWMAChart } from '../../../../store/reducers/Chart/SubChart/subChart';

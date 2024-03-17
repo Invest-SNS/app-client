@@ -5,6 +5,7 @@ const initialState = {
   WMA: false,
   EMA: false,
   BBANDS: false,
+  SAR: false,
 };
 
 const clickSubSlice = createSlice({

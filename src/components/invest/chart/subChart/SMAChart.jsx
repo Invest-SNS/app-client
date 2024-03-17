@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Chart, ChartCanvas, CurrentCoordinate, LineSeries, ema } from 'react-financial-charts';
+import React, { useEffect } from 'react';
+import { LineSeries } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../store/reducers/Chart/chart';
 import { getSMAChart } from '../../../../store/reducers/Chart/SubChart/subChart';
@@ -7,8 +7,6 @@ import { getSMAChart } from '../../../../store/reducers/Chart/SubChart/subChart'
 export default function SMAChart({ datas }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.subChart.SMA);
-  // const smaChart = useSelector((state) => state.getSubChart.SMADatas);
-  console.log(isActive)
 
   const calculateSMA = (data) => {
     const responses = [data.response1, data.response2, data.response3, data.response4, data.response5];

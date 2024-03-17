@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getBBANDS, getEMA, getSMA, getWMA } from "../../../../lib/apis/chart";
+import { getBBANDS, getEMA, getSAR, getSMA, getWMA } from "../../../../lib/apis/chart";
 
 const initialState = {
   SMADatas: [],
@@ -37,6 +37,15 @@ export const getBBANDSChart = createAsyncThunk(
   async (data, tunkAPI) => {
     // const { code, start_date, end_date, time_format } = data;
     const response = await getBBANDS(data);
+    return response.data;
+  }
+)
+
+export const getSARChart = createAsyncThunk(
+  "chart/getSAR",
+  async (data, tunkAPI) => {
+    // const { code, start_date, end_date, time_format } = data;
+    const response = await getSAR(data);
     return response.data;
   }
 )

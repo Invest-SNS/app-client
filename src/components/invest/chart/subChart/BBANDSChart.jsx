@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Chart, ChartCanvas, CurrentCoordinate, LineSeries, ema } from 'react-financial-charts';
+import React, { useEffect } from 'react';
+import { BollingerSeries } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../store/reducers/Chart/chart';
-import { getBBANDSChart, getWMAChart } from '../../../../store/reducers/Chart/SubChart/subChart';
+import { getBBANDSChart } from '../../../../store/reducers/Chart/SubChart/subChart';
 
 export default function BBANDSChart({ datas }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.subChart.BBANDS);
 
   const calculateBBANDS = (data) => {
-    console.log('bbands', data)
     const newData = [...datas];
     
     const f_idx = data.begIndex;
@@ -51,17 +50,14 @@ export default function BBANDSChart({ datas }) {
 
   return (
     <>
-      <LineSeries
-        yAccessor={d => d.upper} 
-        strokeStyle='#b3009e'
-      />
-      <LineSeries 
-        yAccessor={d => d.middle} 
-        strokeStyle='#b33300'
-      />
-      <LineSeries 
-        yAccessor={d => d.lower} 
-        strokeStyle='#edda02'
+      <BollingerSeries
+        yAccessor={d => (
+          {
+            top: d.upper,
+            middle: d.middle,
+            bottom: d.lower
+          }
+        )}
       />
     </>
   )
