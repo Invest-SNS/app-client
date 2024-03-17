@@ -19,8 +19,6 @@ import chartReducer from "./reducers/Chart/chart.jsx";
 import searchReducer from "./reducers/Trading/search";
 import userReducer from "./reducers/User/user";
 
-import tradingReducer from './reducers/Trading/trading';
-
 const rootPersistConfig = {
   key: "root",
   storage: storage,
