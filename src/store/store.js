@@ -20,12 +20,15 @@ import companyReducer from './reducers/Chart/clickCompany.jsx';
 import clickIndicatorsReducer from './reducers/Chart/Indicators/clickIndicators.jsx';
 import getChartIndicatorReducer from './reducers/Chart/Indicators/chart.jsx';
 import getSubIndicatorReducer from './reducers/Chart/Indicators/sub.jsx';
+import searchReducer from "./reducers/Trading/search";
+import userReducer from "./reducers/User/user";
 
 const rootPersistConfig = {
   key: "root",
   storage: storage,
   // whitelist: ["chartValues", "indicatorValues"],
-  blacklist: ["getSubIndicator"]
+  blacklist: ["getSubIndicator"],
+  whitelist: ["user", "chartValues", "indicatorValues", "search"],
 };
 
 const rootReducer = persistReducer(
@@ -34,12 +37,13 @@ const rootReducer = persistReducer(
     // 임시 reducer
     trading: tradingReducer,
     chart: chartReducer,
-    company: companyReducer,
     chartValues: chartValuesReducer,
     indicatorValues: indicatorValuesReducer,
     clickIndicator: clickIndicatorsReducer,
     getChartIndicator: getChartIndicatorReducer,
     getSubIndicator: getSubIndicatorReducer,
+    search: searchReducer,
+    user: userReducer,
   })
 );
 const myMiddlewares = [logger];

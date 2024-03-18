@@ -1,108 +1,111 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import {
+  postSearch,
+  postSearchUser,
+  postLikeStock,
+} from "~/store/reducers/Trading/search";
+import { postLogin } from "~/store/reducers/User/user";
+import { setFavoriteArr } from "~/store/reducers/Trading/search";
+
+//TODO : 로고 사진 변경
+import default_Img from "../../../../public/icon/+.svg";
+import { getCookie } from "~/lib/apis/cookie";
 import clickCompany, { setClickCompany } from "../../../store/reducers/Chart/clickCompany";
 
+
 const MyStockList = () => {
+  const isLogin = !!getCookie("token");
   const [showSearch, setShowSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [favoriteArr, setFavoriteArr] = useState([]);
+  // const [searchResults, setSearchResults] = useState([]);
+  // const [favoriteArr, setFavoriteArr] = useState([]);
   const searchRef = useRef(null);
-
+  
+  const dispatch = useDispatch();
+  const favoriteArr = useSelector((state) => state.search.favoriteArr);
+  const searchResults = useSelector((state) => state.search.searchResults);
+  console.log("favoriteArr", favoriteArr);
   useEffect(() => {
     // 예시
-    const fetchSearchResults = async () => {
-      const fakeSearchResults = [
-        {
-          id: 1,
-          name: "삼성전자",
-          code: "005930",
-          index: "코스피",
-          favorite: true,
-          price: "72800",
-          returns: "0.55%",
-          accvolume: "333333",
-          prdy_vrss: "1100",
-        },
-        {
-          id: 2,
-          name: "삼성SDI",
-          code: "006400",
-          index: "코스피",
-          favorite: false,
-          price: "450000",
-          returns: "8.83%",
-          accvolume: "44444444",
-          prdy_vrss: "1100",
-        },
-        {
-          id: 3,
-          name: "삼성물산",
-          code: "028260",
-          index: "코스피",
-          favorite: false,
-          price: "162700",
-          returns: "-3.15%",
-          accvolume: "11111",
-          prdy_vrss: "-5500",
-        },
-        {
-          id: 4,
-          name: "삼성생명",
-          code: "032830",
-          index: "코스피",
-          favorite: true,
-          price: "970100",
-          returns: "-5.82%",
-          accvolume: "66753",
-          prdy_vrss: "-2100",
-        },
-      ];
-
-      const favoriteResults = fakeSearchResults.filter(
-        (result) => result.favorite
-      );
-      setFavoriteArr(favoriteResults);
-      setSearchResults(fakeSearchResults);
-    };
-
+    const fetchSearchResults = async () => {};
     if (searchInput) {
       fetchSearchResults();
     } else {
-      setSearchResults([]);
+      // setSearchResults([]);
     }
   }, [searchInput]);
 
-  const addToFavorites = (result) => {
-    if (!result.favorite) {
-      const updatedResults = [...searchResults];
-      updatedResults.forEach((item) => {
-        if (item.id === result.id) {
-          item.favorite = true;
-          setFavoriteArr((prevArr) => [...prevArr, item]);
-        }
-      });
+  const searchFunc = (prop) => {
+    const actionToDispatch = isLogin ? postSearchUser(prop) : postSearch(prop);
+    dispatch(actionToDispatch);
+  };
 
-      console.log(`관심 종목으로 추가: ${result.name}`);
-      console.log(favoriteArr);
+  useEffect(() => {
+    searchFunc({ searchQuery: "" });
+    setSearchInput("");
+    setShowSearch(false);
+  }, []);
+
+  useEffect(() => {
+    dispatch(postLogin({ email: "ddu@naver.com", password: "1234" }));
+  }, []);
+
+  const onChangeInput = async (e) => {
+    setSearchInput(e.target.value);
+    console.log("searchInput", e.target.value);
+    searchFunc({ searchQuery: e.target.value });
+  };
+
+  const addToFavorites = (result) => {
+    console.log(result);
+    console.log("favoriteArr", favoriteArr);
+    if (!result.isLike) {
+      const updatedArr = [...favoriteArr, result.code]; // Update favoriteArr directly
+      dispatch(setFavoriteArr(updatedArr)); // Dispatch the updated favoriteArr
+      dispatch(postLikeStock({ likeStock: updatedArr }));
+      dispatch(postSearchUser({ searchQuery: searchInput }));
+      console.log(`관심 종목으로 추가: ${result.name} :${result.code} `);
+      console.log("favoriteArr", updatedArr);
     } else {
-      const updatedResults = [...searchResults];
-      updatedResults.forEach((item) => {
-        if (item.id === result.id) {
-          item.favorite = false;
-        }
-      });
       const updatedFavoriteArr = favoriteArr.filter(
-        (item) => item.id !== result.id
+        (item) => item !== result.code
       );
-      setFavoriteArr(updatedFavoriteArr);
-      console.log(`관심 종목에서 삭제: ${result.name}`);
-      console.log(favoriteArr);
+
+      dispatch(setFavoriteArr(updatedFavoriteArr)); // Dispatch the updated favoriteArr
+      dispatch(postLikeStock({ likeStock: updatedFavoriteArr }));
+      dispatch(postSearchUser({ searchQuery: searchInput }));
+      console.log(`관심 종목에서 삭제: ${result.name} :${result.code}`);
+      console.log("favoriteArr", updatedFavoriteArr);
     }
   };
 
-  const dispatch = useDispatch();
+  const getLogoFileName = (name, code) => {
+    if (name.includes("스팩")) {
+      return "SPAC_230706";
+    } else if (name.includes("ETN")) {
+      return "ETN_230706";
+    } else if (
+      name.includes("KODEX") ||
+      name.includes("KOSEF") ||
+      name.includes("KoAct") ||
+      name.includes("TIGER") ||
+      name.includes("ACE") ||
+      name.includes("ARIRANG") ||
+      name.includes("합성 H") ||
+      name.includes("HANARO") ||
+      name.includes("SOL")
+    ) {
+      return "ETF_230706";
+    } else {
+      return `kr/${code}`;
+    }
+  };
+
+  const onErrorImg = (e) => {
+    e.target.src = default_Img;
+  };
 
   return (
     <LeftContainer>
@@ -115,6 +118,7 @@ const MyStockList = () => {
                 display: "flex",
                 flexDirection: "column",
                 width: "100%",
+                alignItems: "center",
               }}
             >
               <SearchWrapper ref={searchRef}>
@@ -123,10 +127,15 @@ const MyStockList = () => {
                   type="text"
                   placeholder="종목명 또는 코드"
                   value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
+                  onChange={(e) => onChangeInput(e)}
                 ></SearchInput>
                 {searchInput && (
-                  <SearchClearBtn onClick={() => setSearchInput("")}>
+                  <SearchClearBtn
+                    onClick={() => {
+                      setSearchInput("");
+                      searchFunc({ searchQuery: "" });
+                    }}
+                  >
                     <img src="/icon/X.svg" alt="x" style={{ width: 15 }} />
                   </SearchClearBtn>
                 )}
@@ -135,41 +144,49 @@ const MyStockList = () => {
                     e.stopPropagation();
                     setSearchInput("");
                     setShowSearch(false);
+                    searchFunc({ searchQuery: "" });
                   }}
                 >
-                  <img src="/icon/X.svg" alt="x" style={{ width: 30 }} />
+                  <div style={{ fontSize: "13px" }}>닫기</div>
                 </SearchOutBtn>
               </SearchWrapper>
-              {searchResults.length > 0 && (
+              {searchResults?.length > 0 && (
                 <SearchResults>
-                  {searchResults.map((result) => (
-                    <SearchResult key={result.id} onClick={() => {
-                      console.log('')
-                      dispatch(setClickCompany(result))
-                    }}>
+                  {searchResults?.map((result) => (
+                    <SearchResult
+                      key={result._id}
+                      onClick={() => {
+                        console.log("");
+                        // dispatch(setClickCompany(result));
+                      }}
+                    >
                       <img
-                        src={`https://file.alphasquare.co.kr/media/images/stock_logo/kr/${result.code}.png`}
+                        src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+                          result.name,
+                          result.code
+                        )}.png`}
                         style={{
                           width: "30px",
                           borderRadius: 100,
                           margin: "0px 10px",
                         }}
+                        onError={onErrorImg}
                       />
                       <StockDiv>
                         <StockName>{result.name}</StockName>
                         <RowDiv>
                           <StockCode>{result.code}</StockCode>
-                          <StockIndex>{result.index}</StockIndex>
+                          <StockIndex>{result.market}</StockIndex>
                         </RowDiv>
                       </StockDiv>
                       <StarImg
                         onClick={() => addToFavorites(result)}
                         src={
-                          result.favorite
+                          result.isLike
                             ? "/icon/FilledStar.svg"
                             : "/icon/BlankStar.svg"
                         }
-                        alt={result.favorite ? "filledstar" : "blankstar"}
+                        alt={result.isLike ? "filledstar" : "blankstar"}
                       />
                     </SearchResult>
                   ))}
@@ -188,37 +205,39 @@ const MyStockList = () => {
           )}
         </SearchContainer>
         <MyListContainer>
-          {favoriteArr?.map((item, idx) => (
-            <MyListDiv key={idx}>
-              <ImgDiv>
-                <ToggleImg
-                  src={`https://file.alphasquare.co.kr/media/images/stock_logo/kr/${item.code}.png`}
+          {/* {favoriteArr?.map((item, idx) => ( */}
+          <MyListDiv>
+            <ImgDiv>
+              {/* <ToggleImg
+                  src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+                    item.name,
+                    item.code
+                  )}.png`}
+                  onError={onErrorImg}
                 />
                 <ToggleImg2
                   onClick={() => addToFavorites(item)}
                   src={
-                    item.favorite
-                      ? "/icon/FilledStar.svg"
-                      : "/icon/BlankStar.svg"
+                    item.isLike ? "/icon/FilledStar.svg" : "/icon/BlankStar.svg"
                   }
-                  alt={item.favorite ? "filledstar" : "blankstar"}
-                />
-              </ImgDiv>
-              <StockDiv>
-                <StockName>{item.name}</StockName>
-                <RowDiv>
-                  <StockCode>{item.code}</StockCode>
-                  <StockIndex>{item.index}</StockIndex>
-                  <StockVolume>{item.accvolume}</StockVolume>
-                </RowDiv>
-              </StockDiv>
-              <PriceDiv returns={item.returns}>
-                <CurrentPrice>{item.price}</CurrentPrice>
-                <ChangeReturns>{item.returns}</ChangeReturns>
-                <PrevVariance>{item.prdy_vrss}</PrevVariance>
-              </PriceDiv>
-            </MyListDiv>
-          ))}
+                  alt={item.isLike ? "filledstar" : "blankstar"}
+                /> */}
+            </ImgDiv>
+            <StockDiv>
+              <StockName>ㅎㅎ</StockName>
+              <RowDiv>
+                <StockCode>12345</StockCode>
+                <StockIndex>kospi</StockIndex>
+                <StockVolume>11111</StockVolume>
+              </RowDiv>
+            </StockDiv>
+            <PriceDiv returns="1111">
+              <CurrentPrice>111</CurrentPrice>
+              <ChangeReturns>111</ChangeReturns>
+              <PrevVariance>1111</PrevVariance>
+            </PriceDiv>
+          </MyListDiv>
+          {/* ))} */}
         </MyListContainer>
       </MyItemContainer>
     </LeftContainer>
@@ -227,6 +246,7 @@ const MyStockList = () => {
 
 const LeftContainer = styled.section`
   min-width: 250px;
+  width: 250px;
   height: calc(100vh - 57px);
   border-right: 1px solid #e2e2e2;
 `;
@@ -262,7 +282,6 @@ const SearchContainer = styled.div`
   font-weight: 400;
   line-height: normal;
   width: 100%;
-  border-bottom: 1px solid #c9c9c9;
 `;
 
 const SearchWrapper = styled.label`
@@ -270,13 +289,13 @@ const SearchWrapper = styled.label`
   display: flex;
   width: 100%;
   padding: 10px;
-  height: 50px;
+  height: 44px;
   background-color: #f3f3f3;
 `;
 
 const Img = styled.img`
   position: absolute;
-  top: 18px;
+  top: 15.2px;
   left: 18px;
   color: grey;
   width: 15px;
@@ -293,7 +312,7 @@ const SearchInput = styled.input`
 const SearchClearBtn = styled.button`
   position: absolute;
   right: 50px;
-  top: 18px;
+  top: 14px;
 
   border: none;
   background: none;
@@ -304,7 +323,7 @@ const SearchClearBtn = styled.button`
 `;
 
 const SearchOutBtn = styled.button`
-  width: 10%;
+  width: 17%;
   margin-left: 5%;
   border: none;
   background: none;
@@ -318,24 +337,38 @@ const SearchDiv = styled.div`
   font-size: 18px;
   width: 100%;
   padding: 10px 30px;
+  height: 44px;
+
   &:hover {
     background-color: #f3f3f3;
   }
 `;
 
 const SearchResults = styled.ul`
-  margin-top: 5px;
+  position: relative;
+  width: 100%;
   padding-left: 0;
   list-style: none;
+  max-height: calc((100vh - 151px) / 2);
+  height: max-content;
+  overflow: auto;
+  padding-bottom: 5px;
+  box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.25);
+  background-color: white;
+  z-index: 999;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const SearchResult = styled.li`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 5px 10px;
+  padding: 10px 10px;
   text-align: left;
-  height: 60px;
+  min-height: 60px;
+
   cursor: pointer;
   &:hover {
     background-color: #e8e8e8;
@@ -350,11 +383,11 @@ const StockDiv = styled.div`
 `;
 const StockName = styled.div`
   color: #000;
-  text-align: center;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  word-break: break-all;
 `;
 
 const RowDiv = styled.div`
@@ -370,7 +403,11 @@ const RowDiv = styled.div`
 const StarImg = styled.img``;
 
 const MyListContainer = styled.div`
-  width: 100%;
+  position: absolute;
+  top: 88px;
+  left: 0;
+  min-width: 250px;
+  width: 250px;
 `;
 
 const MyListDiv = styled.div`
