@@ -31,8 +31,6 @@ const ChartIndicators = ({ onClose }) => {
   };
 
   const isActive = useSelector((state) => state.clickIndicator);
-  console.log(isActive)
-
 
   return (
     
@@ -44,7 +42,8 @@ const ChartIndicators = ({ onClose }) => {
       <ItemContainer>
         {chartData.map((item, idx) => (
           <ItemWrapper key={item.id}>
-            <CheckBox type="checkbox"
+            <CheckBox 
+              type="checkbox"
               value={item.name}
               checked={isActive[item.name]}
               onChange={e => {

@@ -3,6 +3,8 @@ import styled from "styled-components";
 import IndicatorDetail from "./IndicatorDetail";
 // import indiData from "../../../../public/Json/indiData.json";
 import indiData from '../../../Json/indiData.json'
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveSub, setDisactiveSub } from "../../../store/reducers/Chart/Indicators/clickIndicators";
 
 const Indicators = ({ onClose }) => {
   const [showDetail, setShowDetail] = useState(
@@ -17,6 +19,19 @@ const Indicators = ({ onClose }) => {
     });
   };
 
+  // 데이터를 넣을 빈배열
+  const dispatch = useDispatch();
+  // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
+  const onCheckedElement = (checked, item) => {
+    if (checked) {
+      dispatch(setActiveSub(item))
+    } else if (!checked) {
+      dispatch(setDisactiveSub(item))
+    }
+  };
+
+  const isActive = useSelector((state) => state.clickIndicator);
+
   return (
     <Container>
       <IndicatorsWrapper>
@@ -27,7 +42,12 @@ const Indicators = ({ onClose }) => {
         {indiData.map((item, idx) => (
           <ItemWrapper key={item.id}>
             <CheckBox 
-              type="checkbox" 
+              type="checkbox"
+              value={item.name}
+              checked={isActive[item.name]}
+              onChange={e => {
+                onCheckedElement(e.target.checked, e.target.value);
+              }}
             ></CheckBox>
             <ItemDiv>{item.showName}</ItemDiv>
             <DetailBtn onClick={() => toggleDetail(idx)}>설정</DetailBtn>

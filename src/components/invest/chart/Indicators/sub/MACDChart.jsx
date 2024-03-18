@@ -1,16 +1,34 @@
 import React, { useEffect } from 'react';
-import { Chart, LineSeries, XAxis, YAxis } from 'react-financial-charts';
+import { Chart, LineSeries, MACDSeries, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getMACDChart } from '../../../../../store/reducers/Chart/Indicators/sub';
 import { format } from 'd3-format';
+
+const macdAppearance = {
+	stroke: {
+		macd: "#FF0000",
+		signal: "#00F300",
+	},
+	fill: {
+		divergence: "#4682B4"
+	},
+};
 
 export default function MACDChart({ datas }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.MACD);
 
   const calculateMACD = (data) => {
-    const newData = [...datas];
+    const updatedDatas = datas.map(item => {
+      const newItem = { ...item };
+      delete newItem.macd;
+      delete newItem.macdSignal;
+      delete newItem.macdHist;
+      return newItem;
+    });
+
+    const newData = [...updatedDatas];
     
     const f_idx = data.begIndex;
     const l_idx = data.nbElement;
@@ -51,7 +69,7 @@ export default function MACDChart({ datas }) {
   }, [isActive]);
 
   const barChartHeight = 250;
-  // const barChartOrigin = (w, h) => [0, h - barChartHeight];
+  const barChartOrigin = (_, h) => [0, h - barChartHeight];
   const pricesDisplayFormat = format(".2f");
   const MACDChartExtents = (data) => {
     return data.macd;
@@ -59,24 +77,12 @@ export default function MACDChart({ datas }) {
 
   return (
     <>
-      <Chart
-        id={4}
-        height={barChartHeight}
-        // origin={barChartOrigin}
-        yExtents={MACDChartExtents}
-        >
-        <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-        <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-        <LineSeries
-          yAccessor={d => d.macd} 
-          strokeStyle='#b3009e'
-        />
-        <LineSeries 
-          yAccessor={d => d.macdSignal} 
-          strokeStyle='#b33300'
-        />
-        {/* <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} /> */}
-      </Chart>
+      
+          <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
+          <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+					<MACDSeries yAccessor={d => d.macd} strokeStyle={'#b3009e'}
+					/>
+
     </>
   )
 }

@@ -18,11 +18,12 @@ import {
   MouseCoordinateY,
   ZoomButtons,
   HoverTooltip,
+  MACDSeries,
 } from "react-financial-charts";
 
 import { useSelector, useDispatch } from 'react-redux';
 import styled from "styled-components";
-import { getChartDatas } from "../../../store/reducers/Chart/chart";
+import { getChartDatas, setChartDatas } from "../../../store/reducers/Chart/chart";
 
 // 차트지표
 import SMAChart from "./Indicators/chart/SMAChart";
@@ -31,6 +32,7 @@ import EMAChart from "./Indicators/chart/EMAChart";
 import BBANDSChart from "./Indicators/chart/BBANDSChart";
 import SARChart from "./Indicators/chart/SARChart";
 import MACDChart from "./Indicators/sub/MACDChart";
+import { getMACDChart } from "../../../store/reducers/Chart/Indicators/sub";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas)
@@ -168,8 +170,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
         zoomAnchor={lastVisibleItemBasedZoomAnchor}
       >
         {/* 거래량 차트 */}
-        <Chart
-          id={2}
+        {/* <Chart
+          id={1}
           height={barChartHeight}
           origin={barChartOrigin}
           yExtents={barChartExtents}
@@ -177,9 +179,18 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
           <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
           <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
+        </Chart> */}
+
+        <Chart id={1} height={barChartHeight}
+					yExtents={d => d.macd}
+					origin={barChartOrigin}
+				>
+          <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
+          <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+          <MACDSeries yAccessor={d => d.macd} />
         </Chart>
         
-        <Chart id={4} height={chartHeight} yExtents={candleChartExtents}>
+        <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
           {/* 분봉 호버했을 때, 날짜/시가/종가/고가/저가 표시 */}
           <HoverTooltip
             // yAccessor={ema26.accessor()}
