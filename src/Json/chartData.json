@@ -16,8 +16,8 @@
       {
         "id": 1,
         "key": "lineTime2",
-        "name": "20일 선",
-        "default": 20,
+        "name": "10일 선",
+        "default": 10,
         "val": 1,
         "max": 480,
         "min": 2
@@ -25,8 +25,8 @@
       {
         "id": 2,
         "key": "lineTime3",
-        "name": "60일 선",
-        "default": 60,
+        "name": "20일 선",
+        "default": 20,
         "val": 1,
         "max": 480,
         "min": 2
@@ -34,8 +34,8 @@
       {
         "id": 3,
         "key": "lineTime4",
-        "name": "120일 선",
-        "default": 120,
+        "name": "60일 선",
+        "default": 60,
         "val": 1,
         "max": 480,
         "min": 2
@@ -43,8 +43,8 @@
       {
         "id": 4,
         "key": "lineTime5",
-        "name": "240일 선",
-        "default": 240,
+        "name": "120일 선",
+        "default": 120,
         "val": 1,
         "max": 480,
         "min": 2
@@ -68,8 +68,8 @@
       {
         "id": 1,
         "key": "lineTime2",
-        "name": "20일 선",
-        "default": 20,
+        "name": "10일 선",
+        "default": 10,
         "val": 1,
         "max": 480,
         "min": 2
@@ -77,8 +77,8 @@
       {
         "id": 2,
         "key": "lineTime3",
-        "name": "60일 선",
-        "default": 60,
+        "name": "20일 선",
+        "default": 20,
         "val": 1,
         "max": 480,
         "min": 2
@@ -86,8 +86,8 @@
       {
         "id": 3,
         "key": "lineTime4",
-        "name": "120일 선",
-        "default": 120,
+        "name": "60일 선",
+        "default": 60,
         "val": 1,
         "max": 480,
         "min": 2
@@ -95,8 +95,8 @@
       {
         "id": 4,
         "key": "lineTime5",
-        "name": "240일 선",
-        "default": 240,
+        "name": "120일 선",
+        "default": 120,
         "val": 1,
         "max": 480,
         "min": 2
@@ -120,8 +120,8 @@
       {
         "id": 1,
         "key": "lineTime2",
-        "name": "20일 선",
-        "default": 20,
+        "name": "10일 선",
+        "default": 10,
         "val": 1,
         "max": 480,
         "min": 2
@@ -129,8 +129,8 @@
       {
         "id": 2,
         "key": "lineTime3",
-        "name": "60일 선",
-        "default": 60,
+        "name": "20일 선",
+        "default": 20,
         "val": 1,
         "max": 480,
         "min": 2
@@ -138,8 +138,8 @@
       {
         "id": 3,
         "key": "lineTime4",
-        "name": "120일 선",
-        "default": 120,
+        "name": "60일 선",
+        "default": 60,
         "val": 1,
         "max": 480,
         "min": 2
@@ -147,8 +147,8 @@
       {
         "id": 4,
         "key": "lineTime5",
-        "name": "240일 선",
-        "default": 240,
+        "name": "120일 선",
+        "default": 120,
         "val": 1,
         "max": 480,
         "min": 2
@@ -164,7 +164,7 @@
         "id": 0,
         "key": "lineTime",
         "name": "기간",
-        "default": 20,
+        "default": 5,
         "val": 1,
         "max": 480,
         "min": 2

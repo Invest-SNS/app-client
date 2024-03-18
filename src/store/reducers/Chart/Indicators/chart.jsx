@@ -50,13 +50,16 @@ export const getSARChart = createAsyncThunk(
   }
 )
 
-const subChartSlice = createSlice({
-  name: "subChart",
+const chartIndicatorSlice = createSlice({
+  name: "chartIndicator",
   initialState: initialState,
   reducers: {
   },
   extraReducers: (builder) => {
+    builder.addCase(getSMAChart.fulfilled, (state, action) => {
+      state.SMADatas = action.payload;
+    })
   },
 });
 
-export default subChartSlice.reducer;
+export default chartIndicatorSlice.reducer;

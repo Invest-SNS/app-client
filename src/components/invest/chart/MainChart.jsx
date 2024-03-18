@@ -25,20 +25,25 @@ import styled from "styled-components";
 import { getChartDatas } from "../../../store/reducers/Chart/chart";
 
 // 차트지표
-import SMAChart from "./subChart/SMAChart";
-import WMAChart from "./subChart/WMAChart";
-import EMAChart from "./subChart/EMAChart";
-import BBANDSChart from "./subChart/BBANDSChart";
-import SARChart from "./subChart/SARChart";
+import SMAChart from "./Indicators/chart/SMAChart";
+import WMAChart from "./Indicators/chart/WMAChart";
+import EMAChart from "./Indicators/chart/EMAChart";
+import BBANDSChart from "./Indicators/chart/BBANDSChart";
+import SARChart from "./Indicators/chart/SARChart";
+import MACDChart from "./Indicators/sub/MACDChart";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas)
+  console.log(dataList)
   const company = useSelector((state) => state.company.data)
   const dispatch = useDispatch();
+
+  const [isShow, setIsShow] = useState(false);
 
   useEffect(() => {
     // getData()
     dispatch(getChartDatas())
+      .then(() => setIsShow(true))
 
   }, [])
 
@@ -174,7 +179,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
         </Chart>
         
-        <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
+        <Chart id={4} height={chartHeight} yExtents={candleChartExtents}>
           {/* 분봉 호버했을 때, 날짜/시가/종가/고가/저가 표시 */}
           <HoverTooltip
             // yAccessor={ema26.accessor()}
@@ -186,11 +191,11 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <CandlestickSeries />
 
           {/* 차트지표 */}
-          <SMAChart datas={dataList} />
-          <WMAChart datas={dataList} />
-          <EMAChart datas={dataList} />
-          <BBANDSChart datas={dataList} />
-          <SARChart datas={dataList} />
+          <SMAChart datas={dataList} isShow={isShow} />
+          <WMAChart datas={dataList} isShow={isShow} />
+          <EMAChart datas={dataList} isShow={isShow} />
+          <BBANDSChart datas={dataList} isShow={isShow} />
+          <SARChart datas={dataList} isShow={isShow} />
 
           <MouseCoordinateX displayFormat={timeDisplayFormat} />
           <MouseCoordinateY
@@ -211,7 +216,6 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
         </Chart>  
         <CrossHairCursor />
       </ChartCanvas>
-      {/* <MACDChart /> */}
     </Container>
   );
 }

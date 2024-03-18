@@ -17,14 +17,15 @@ import chartValuesReducer from "./reducers/Trading/chartValues";
 import indicatorValuesReducer from "./reducers/Trading/indicatorValues";
 import chartReducer from './reducers/Chart/chart.jsx';
 import companyReducer from './reducers/Chart/clickCompany.jsx';
-import subChartReducer from './reducers/Chart/SubChart/clickSubChart.jsx';
-import getSubChartReducer from './reducers/Chart/SubChart/subChart.jsx';
+import clickIndicatorsReducer from './reducers/Chart/Indicators/clickIndicators.jsx';
+import getChartIndicatorReducer from './reducers/Chart/Indicators/chart.jsx';
+import getSubIndicatorReducer from './reducers/Chart/Indicators/sub.jsx';
 
 const rootPersistConfig = {
   key: "root",
   storage: storage,
   // whitelist: ["chartValues", "indicatorValues"],
-  blacklist: ["subChart", "getSubChart"]
+  blacklist: ["getSubIndicator"]
 };
 
 const rootReducer = persistReducer(
@@ -36,8 +37,9 @@ const rootReducer = persistReducer(
     company: companyReducer,
     chartValues: chartValuesReducer,
     indicatorValues: indicatorValuesReducer,
-    subChart: subChartReducer,
-    getSubChart: getSubChartReducer,
+    clickIndicator: clickIndicatorsReducer,
+    getChartIndicator: getChartIndicatorReducer,
+    getSubIndicator: getSubIndicatorReducer,
   })
 );
 const myMiddlewares = [logger];

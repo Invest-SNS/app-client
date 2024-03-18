@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import * as chartValuesModule from "../../../store/reducers/Trading/chartValues";
 import * as indicatorValuesModule from "../../../store/reducers/Trading/indicatorValues";
+import { setChartDatas } from "../../../store/reducers/Chart/chart";
 
 const IndicatorDetail = ({
   indiType,

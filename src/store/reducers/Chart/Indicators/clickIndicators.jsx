@@ -6,6 +6,7 @@ const initialState = {
   EMA: false,
   BBANDS: false,
   SAR: false,
+  MACD: false,
 };
 
 const clickSubSlice = createSlice({

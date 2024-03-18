@@ -4,7 +4,7 @@ import IndicatorDetail from "./IndicatorDetail";
 // import chartData from "../../../../public/Json/chartData.json";
 import chartData from '../../../Json/chartData.json'
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveSub, setDisactiveSub } from "../../../store/reducers/Chart/SubChart/clickSubChart";
+import { setActiveSub, setDisactiveSub } from "../../../store/reducers/Chart/Indicators/clickIndicators";
 
 const ChartIndicators = ({ onClose }) => {
   const [showDetail, setShowDetail] = useState(
@@ -30,6 +30,9 @@ const ChartIndicators = ({ onClose }) => {
     }
   };
 
+  const isActive = useSelector((state) => state.clickIndicator);
+  console.log(isActive)
+
 
   return (
     
@@ -43,9 +46,10 @@ const ChartIndicators = ({ onClose }) => {
           <ItemWrapper key={item.id}>
             <CheckBox type="checkbox"
               value={item.name}
-                onChange={e => {
-                  onCheckedElement(e.target.checked, e.target.value);
-                }}
+              checked={isActive[item.name]}
+              onChange={e => {
+                onCheckedElement(e.target.checked, e.target.value);
+              }}
             ></CheckBox>
             <ItemDiv>{item.showName}</ItemDiv>
             <DetailBtn onClick={() => toggleDetail(idx)}>설정</DetailBtn>

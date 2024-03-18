@@ -1,15 +1,24 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChartDatas } from '../../../../store/reducers/Chart/chart';
-import { getSARChart } from '../../../../store/reducers/Chart/SubChart/subChart';
+import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
+import { getSARChart } from '../../../../../store/reducers/Chart/Indicators/chart';
 import { SARSeries } from 'react-financial-charts';
 
-export default function SARChart({ datas }) {
+export default function SARChart({ datas, isShow }) {
   const dispatch = useDispatch();
-  const isActive = useSelector((state) => state.subChart.SAR);
+  const isActive = useSelector((state) => state.clickIndicator.SAR);
+  const SARValue = useSelector((state) => state.chartValues.values.SAR);
 
   const calculateSAR = (data) => {
-    const newData = [...datas];
+    const updatedDatas = datas.map(item => {
+      const newItem = { ...item };
+      delete newItem.sar;
+      return newItem;
+    });
+
+    console.log('sar', datas)
+
+    const newData = [...updatedDatas];
     
     const f_idx = data.begIndex;
     const l_idx = data.nbElement;
@@ -24,11 +33,12 @@ export default function SARChart({ datas }) {
   }
 
   useEffect(() => {
+    console.log('SAR 들어옴')
     if (isActive) {
       const data = {
         "chart": datas,
-        "acc" : 0.02,
-        "accMax" : 0.2,
+        "acc" : SARValue[0],
+        "accMax" : SARValue[1],
       }
       dispatch(getSARChart(data))
         .then((res) =>  calculateSAR(res.payload))
@@ -40,7 +50,7 @@ export default function SARChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, SARValue, isShow]);
 
   return (
     <>

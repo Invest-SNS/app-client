@@ -32,3 +32,7 @@ export async function getBBANDS(data) {
 export async function getSAR(data) {
   return await subChartInstance.post('/SAR', data)
 }
+
+export async function getMACD(data) {
+  return await subChartInstance.post('/MACD', data)
+}
