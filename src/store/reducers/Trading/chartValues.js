@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   values: {
-    SMA: [5, 20, 60, 120, 240],
-    WMA: [5, 20, 60, 120, 240],
-    EMA: [5, 20, 60, 120, 240],
-    BBANDS: [20, 2],
+    SMA: [5, 10, 20, 60, 120],
+    WMA: [5, 10, 20, 60, 120],
+    EMA: [5, 10, 20, 60, 120],
+    BBANDS: [5, 2],
     SAR: [0.02, 0.2],
   },
 };

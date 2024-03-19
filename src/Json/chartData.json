@@ -1,0 +1,208 @@
+[
+  {
+    "id": 0,
+    "name": "SMA",
+    "showName": "단순 이동평균선",
+    "vars": [
+      {
+        "id": 0,
+        "key": "lineTime1",
+        "name": "5일 선",
+        "default": 5,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 1,
+        "key": "lineTime2",
+        "name": "10일 선",
+        "default": 10,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 2,
+        "key": "lineTime3",
+        "name": "20일 선",
+        "default": 20,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 3,
+        "key": "lineTime4",
+        "name": "60일 선",
+        "default": 60,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 4,
+        "key": "lineTime5",
+        "name": "120일 선",
+        "default": 120,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "name": "WMA",
+    "showName": "가중 이동평균선",
+    "vars": [
+      {
+        "id": 0,
+        "key": "lineTime1",
+        "name": "5일 선",
+        "default": 5,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 1,
+        "key": "lineTime2",
+        "name": "10일 선",
+        "default": 10,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 2,
+        "key": "lineTime3",
+        "name": "20일 선",
+        "default": 20,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 3,
+        "key": "lineTime4",
+        "name": "60일 선",
+        "default": 60,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 4,
+        "key": "lineTime5",
+        "name": "120일 선",
+        "default": 120,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "EMA",
+    "showName": "지수 이동평균선",
+    "vars": [
+      {
+        "id": 0,
+        "key": "lineTime1",
+        "name": "5일 선",
+        "default": 5,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 1,
+        "key": "lineTime2",
+        "name": "10일 선",
+        "default": 10,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 2,
+        "key": "lineTime3",
+        "name": "20일 선",
+        "default": 20,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 3,
+        "key": "lineTime4",
+        "name": "60일 선",
+        "default": 60,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 4,
+        "key": "lineTime5",
+        "name": "120일 선",
+        "default": 120,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "BBANDS",
+    "showName": "볼린저밴드",
+    "vars": [
+      {
+        "id": 0,
+        "key": "lineTime",
+        "name": "기간",
+        "default": 5,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 1,
+        "key": "stdev",
+        "name": "승수",
+        "default": 2,
+        "val": 0.01,
+        "max": 3,
+        "min": 1
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "SAR",
+    "showName": "Parabolic SAR",
+    "vars": [
+      {
+        "id": 0,
+        "key": "acc",
+        "name": "가속증가량",
+        "default": 0.02,
+        "val": 0.01,
+        "max": 100,
+        "min": 0.01
+      },
+      {
+        "id": 1,
+        "key": "accMax",
+        "name": "최대가속요소",
+        "default": 0.2,
+        "val": 0.01,
+        "max": 100,
+        "min": 0.01
+      }
+    ]
+  }
+]

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import IndicatorDetail from "./IndicatorDetail";
-import indiData from "../../../../public/Json/indiData.json";
+// import indiData from "../../../../public/Json/indiData.json";
+import indiData from '../../../Json/indiData.json'
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveSub, setDisactiveSub, setSubIndi } from "../../../store/reducers/Chart/Indicators/clickIndicators";
 
 const Indicators = ({ onClose }) => {
   const [showDetail, setShowDetail] = useState(
@@ -16,6 +19,20 @@ const Indicators = ({ onClose }) => {
     });
   };
 
+  const dispatch = useDispatch();
+  const isActive = useSelector((state) => state.clickIndicator);
+  const subIndi = useSelector((state) => state.clickIndicator.subIndi);
+  // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
+  const onCheckedElement = (checked, item) => {
+    if (checked) {
+      dispatch(setActiveSub(item))
+      dispatch(setSubIndi([...subIndi, item]))
+    } else if (!checked) {
+      dispatch(setDisactiveSub(item))
+      dispatch(setSubIndi(subIndi.filter(el => el !== item)))
+    }
+  };
+
   return (
     <Container>
       <IndicatorsWrapper>
@@ -25,7 +42,14 @@ const Indicators = ({ onClose }) => {
       <ItemContainer>
         {indiData.map((item, idx) => (
           <ItemWrapper key={item.id}>
-            <CheckBox type="checkbox"></CheckBox>
+            <CheckBox 
+              type="checkbox"
+              value={item.name}
+              checked={isActive[item.name]}
+              onChange={e => {
+                onCheckedElement(e.target.checked, e.target.value);
+              }}
+            ></CheckBox>
             <ItemDiv>{item.showName}</ItemDiv>
             <DetailBtn onClick={() => toggleDetail(idx)}>설정</DetailBtn>
             <DetailContainer $showdetail={showDetail[idx]}>
