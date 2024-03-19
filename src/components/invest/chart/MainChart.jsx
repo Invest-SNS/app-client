@@ -307,14 +307,14 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             rectWidth={margin.right}
             displayFormat={pricesDisplayFormat}
           />
-          <EdgeIndicator
-            itemType="last"
-            rectWidth={margin.right}
-            fill={openCloseColor}
-            lineStroke={openCloseColor}
-            displayFormat={pricesDisplayFormat}
-            yAccessor={yEdgeIndicator}
-          />
+            <EdgeIndicator
+              itemType="last"
+              rectWidth={margin.right}
+              fill={openCloseColor}
+              lineStroke={openCloseColor}
+              displayFormat={pricesDisplayFormat}
+              yAccessor={yEdgeIndicator}
+            />
 
           <ZoomButtons />
           <OHLCTooltip origin={[8, 16]} />
