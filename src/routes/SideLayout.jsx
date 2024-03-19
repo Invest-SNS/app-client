@@ -14,9 +14,8 @@ const SideLayout = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 480px;
+  width: 400px;
   position: relative;
-  overflow: hidden;
   z-index: 999;
   background-color: white;
   border-left: 1px solid #e2e2e2;

@@ -12,8 +12,7 @@ import { setFavoriteArr } from "~/store/reducers/Trading/search";
 //TODO : 로고 사진 변경
 import default_Img from "../../../../public/icon/+.svg";
 import { getCookie } from "~/lib/apis/cookie";
-import clickCompany, { setClickCompany } from "../../../store/reducers/Chart/clickCompany";
-
+// import clickCompany, { setClickCompany } from "../../../store/reducers/Chart/clickCompany";
 
 const MyStockList = () => {
   const isLogin = !!getCookie("token");
@@ -22,7 +21,7 @@ const MyStockList = () => {
   // const [searchResults, setSearchResults] = useState([]);
   // const [favoriteArr, setFavoriteArr] = useState([]);
   const searchRef = useRef(null);
-  
+
   const dispatch = useDispatch();
   const favoriteArr = useSelector((state) => state.search.favoriteArr);
   const searchResults = useSelector((state) => state.search.searchResults);
