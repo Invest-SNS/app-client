@@ -38,7 +38,6 @@ export default function EMAChart({ datas, isShow }) {
   }
 
   useEffect(() => {
-    console.log('EMA 들어옴')
     if (isActive) {
       const data = {
         "chart": datas,
