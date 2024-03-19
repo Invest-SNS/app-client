@@ -49,7 +49,7 @@ export default function TRIXChart({ datas, isShow }) {
     }
   }, [isActive, TRIXValue, isShow]);
 
-  const pricesDisplayFormat = format(".2f");
+  const pricesDisplayFormat = format(",");
 
   return (
     <>

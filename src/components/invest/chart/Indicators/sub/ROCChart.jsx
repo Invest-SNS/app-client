@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
+import { LineSeries, SingleValueTooltip, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getROCChart } from '../../../../../store/reducers/Chart/Indicators/sub';
@@ -49,13 +49,19 @@ export default function ROCChart({ datas, isShow }) {
     }
   }, [isActive, ROCValue, isShow]);
 
-  const pricesDisplayFormat = format(".2f");
+  const pricesDisplayFormat = format(",");
 
   return (
     <>
       <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
       <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
       <LineSeries yAccessor={d => d.roc} strokeStyle='#680A08' />
+      <SingleValueTooltip
+        origin={[12, 30]}
+        yAccessor={d => d.roc}
+        yLabel="ROC"
+        yDisplayFormat={format(",")}
+      />
     </>
   )
 }

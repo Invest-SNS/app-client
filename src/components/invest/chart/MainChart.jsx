@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { format } from "d3-format";
+import { format, formatLocale } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import {
   discontinuousTimeScaleProviderBuilder,
@@ -19,13 +19,15 @@ import {
   ZoomButtons,
   HoverTooltip,
   MACDSeries,
+  MovingAverageTooltip,
+  SingleValueTooltip,
 } from "react-financial-charts";
 
 import default_Img from "../../../../public/icon/+.svg";
 
 import { useSelector, useDispatch } from 'react-redux';
 import styled from "styled-components";
-import { getChartDatas, setChartDatas } from "../../../store/reducers/Chart/chart";
+import { getChartDatas, getMinuteDatas, setChartDatas } from "../../../store/reducers/Chart/chart";
 
 // 차트지표
 import SMAChart from "./Indicators/chart/SMAChart";
@@ -76,6 +78,24 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     dispatch(getChartDatas(data))
   }
 
+  // function getMinuteData(code) {
+  //   const data = {
+  //     "code" : code,
+  //   }
+
+  //   dispatch(getMinuteDatas(data))
+  //     .then(() => setIsShow(prev => !prev))
+
+  //   // 1분마다 요청 보내기
+  //   const intervalId = setInterval(() => {
+  //     dispatch(getMinuteDatas(data))
+  //       .then(() => setIsShow(prev => !prev))
+  //   }, 60000); // 1분 = 60,000 밀리초
+
+  //   // 컴포넌트가 언마운트될 때 타이머 정리
+  //   return () => clearInterval(intervalId);
+  // }
+
   useEffect(() => {
     // 초기 데이터 '일'
     const date = new Date();
@@ -88,16 +108,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     }
     
     dispatch(getChartDatas(data))
-        .then(() => setIsShow(prev => !prev))
-
-    // // 1분마다 요청 보내기
-    // const intervalId = setInterval(() => {
-    //   dispatch(getChartDatas(data))
-    //     .then(() => setIsShow(prev => !prev))
-    // }, 60000); // 1분 = 60,000 밀리초
-
-    // // 컴포넌트가 언마운트될 때 타이머 정리
-    // return () => clearInterval(intervalId);
+      .then(() => setIsShow(prev => !prev))
 
   }, [company])
 
@@ -113,14 +124,15 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const margin = { left: 0, right: 78, top: 0, bottom: 24 };
 
   const height = 760;
-  const width = 1150;
+  const width = 1190;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(
     dataList
   );
 
   // 소수점 이하 둘째짜리까지만 표현
-  const pricesDisplayFormat = format(".2f");
+  const pricesDisplayFormat = format(',');
+
   const x_max = xAccessor(data[data.length - 1]);
   const x_min = xAccessor(data[Math.max(0, data.length - 100)]);
   const xExtents = [x_min, x_max + 2];
@@ -251,6 +263,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <button onClick={toggleIndicators}>보조지표</button>
         </Content>
         <Content>
+          <button>분</button>
           <button onClick={() => getData("D")}>일</button>
           <button onClick={() => getData("W")}>주</button>
           <button onClick={() => getData("M")}>월</button>
@@ -316,11 +329,17 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           yExtents={barChartExtents}
         >
           <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-          <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+          <YAxis ticks={4} />
           <BarSeries 
             fillStyle={volumeColor} 
             yAccessor={volumeSeries}
-            baseAt={(xScale, yScale, d) => yScale(0)} 
+          />
+
+          <SingleValueTooltip
+            origin={[12, 24]}
+            yAccessor={d => d.volume}
+            yLabel="거래량"
+						yDisplayFormat={format(",")}
           />
         </Chart>
 
@@ -335,7 +354,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
         {/* STOCHF 차트 */}
         {subIndi.includes('STOCHF') && (
           <Chart id={3 + subIndi.indexOf('STOCHF')} height={barChartHeight}
-            yExtents={data => [data.outFastK - 50, data.outFastD + 50]}
+            yExtents={data => [data.outFastK - 50, data.outFastK + 50]}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('STOCHF')) * barChartHeight]}
           >
             <STOCHFChart datas={dataList} isShow={isShow} />
@@ -345,7 +364,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
         {/* STOCHF 차트 */}
         {subIndi.includes('STOCH') && (
           <Chart id={3 + subIndi.indexOf('STOCH')} height={barChartHeight}
-            yExtents={data => [data.outSlowK - 50, data.outSlowD + 50]}
+            yExtents={data => [data.outSlowK - 50, data.outSlowK + 50]}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('STOCH')) * barChartHeight]}
           >
             <STOCHChart datas={dataList} isShow={isShow} />

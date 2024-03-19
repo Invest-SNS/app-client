@@ -49,7 +49,7 @@ export default function WILLRChart({ datas, isShow }) {
     }
   }, [isActive, WILLRValue, isShow]);
 
-  const pricesDisplayFormat = format(".2f");
+  const pricesDisplayFormat = format(",");
 
   return (
     <>

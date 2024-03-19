@@ -4,6 +4,10 @@ export async function getChartData(data) {
   return await chartInstance.post('/stockPrice', data)
 }
 
+export async function getMinuteData(data) {
+  return await chartInstance.post('/stockPrice/minute', data)
+}
+
 export async function getSMA(data) {
   return await subChartInstance.post('/SMA', data)
 }

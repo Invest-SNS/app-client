@@ -51,7 +51,7 @@ export default function ULTOSCChart({ datas, isShow }) {
     }
   }, [isActive, ULTOSCValue, isShow]);
 
-  const pricesDisplayFormat = format(".2f");
+  const pricesDisplayFormat = format(",");
 
   return (
     <>

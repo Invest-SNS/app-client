@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BarSeries, XAxis, YAxis } from 'react-financial-charts';
+import { BarSeries, SingleValueTooltip, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getAROONOSCChart } from '../../../../../store/reducers/Chart/Indicators/sub';
@@ -49,7 +49,7 @@ export default function AROONOSCChart({ datas, isShow }) {
     }
   }, [isActive, AROONOSCValue, isShow]);
 
-  const pricesDisplayFormat = format(".2f");
+  const pricesDisplayFormat = format(",");
   const volumeColor = (data) => {
     return data.aroonosc > 0
       ? "#EDD02B"
@@ -64,6 +64,12 @@ export default function AROONOSCChart({ datas, isShow }) {
         fillStyle={volumeColor} 
         yAccessor={d => d.aroonosc}
         baseAt={(xScale, yScale, d) => yScale(0)}
+      />
+      <SingleValueTooltip
+        origin={[12, 30]}
+        yAccessor={d => d.aroonosc}
+        yLabel="Aroon Oscillator"
+        yDisplayFormat={format(",")}
       />
     </>
   )

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
+import { LineSeries, SingleValueTooltip, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getSTOCHFChart } from '../../../../../store/reducers/Chart/Indicators/sub';
@@ -54,7 +54,7 @@ export default function STOCHFChart({ datas, isShow }) {
     }
   }, [isActive, STOCHFValue, isShow]);
 
-  const pricesDisplayFormat = format(".2f");
+  const pricesDisplayFormat = format(",");
 
   return (
     <>
@@ -62,6 +62,12 @@ export default function STOCHFChart({ datas, isShow }) {
       <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
       <LineSeries yAccessor={d => d.outFastK} strokeStyle='#680A08' />
       <LineSeries yAccessor={d => d.outFastD} strokeStyle='#A8693D' />
+      <SingleValueTooltip
+        origin={[12, 30]}
+        yAccessor={d => d.outFastK}
+        yLabel="Stochastic Fast"
+        yDisplayFormat={format(",")}
+      />
     </>
   )
 }

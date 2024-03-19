@@ -1,17 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  data: {
-    accvolume: "333333",
-    code: "005930",
-    favorite: true,
-    id: 1,
-    index: "코스피",
-    name: "삼성전자",
-    prdy_vrss: "1100",
-    price: "72800",
-    returns: "0.55%",
-  }
+  data: {}
 };
 
 const companySlice = createSlice({

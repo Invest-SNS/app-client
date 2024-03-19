@@ -3,6 +3,10 @@ import { getBBANDS, getEMA, getSAR, getSMA, getWMA } from "../../../../lib/apis/
 
 const initialState = {
   SMADatas: [],
+  WMADatas: [],
+  EMADatas: [],
+  BBANDSDatas: [],
+  SARDatas: [],
 };
 
 export const getSMAChart = createAsyncThunk(
@@ -54,12 +58,27 @@ const chartIndicatorSlice = createSlice({
   name: "chartIndicator",
   initialState: initialState,
   reducers: {
+    setSMADatas(state, action) {
+      state.SMADatas = action.payload;
+    },
+    setWMADatas(state, action) {
+      state.WMADatas = action.payload;
+    },
+    setEMADatas(state, action) {
+      state.EMADatas = action.payload;
+    },
+    setBBANDSDatas(state, action) {
+      state.BBANDSDatas = action.payload;
+    },
+    setSARDatas(state, action) {
+      state.SARDatas = action.payload;
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(getSMAChart.fulfilled, (state, action) => {
-      state.SMADatas = action.payload;
-    })
   },
 });
+
+const { setSMADatas, setWMADatas, setEMADatas, setBBANDSDatas, setSARDatas } = chartIndicatorSlice.actions;
+export { setSMADatas, setWMADatas, setEMADatas, setBBANDSDatas, setSARDatas };
 
 export default chartIndicatorSlice.reducer;
