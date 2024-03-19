@@ -124,7 +124,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const margin = { left: 0, right: 78, top: 0, bottom: 24 };
 
   const height = 760;
-  const width = 1190;
+  const width = 1250;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(
     dataList
@@ -570,7 +570,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: calc(100vw - 720px);
+  width: calc(100vw - 650px);
   padding: 0 10px;
 `
 

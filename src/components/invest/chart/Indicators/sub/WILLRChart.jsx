@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
+import { LineSeries, SingleValueTooltip, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getWILLRChart } from '../../../../../store/reducers/Chart/Indicators/sub';
@@ -56,6 +56,12 @@ export default function WILLRChart({ datas, isShow }) {
       <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
       <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
       <LineSeries yAccessor={d => d.willr} strokeStyle='#680A08' />
+      <SingleValueTooltip
+        origin={[12, 30]}
+        yAccessor={d => d.willr}
+        yLabel="Williams %R"
+        yDisplayFormat={format(",")}
+      />
     </>
   )
 }
