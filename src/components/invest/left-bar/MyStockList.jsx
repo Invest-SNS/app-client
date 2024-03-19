@@ -12,7 +12,7 @@ import { setFavoriteArr } from "~/store/reducers/Trading/search";
 //TODO : 로고 사진 변경
 import default_Img from "/icon/+.svg";
 import { getCookie } from "~/lib/apis/cookie";
-// import clickCompany, { setClickCompany } from "../../../store/reducers/Chart/clickCompany";
+import clickCompany, { setClickCompany } from "../../../store/reducers/Chart/clickCompany";
 
 const MyStockList = () => {
   const isLogin = !!getCookie("token");
