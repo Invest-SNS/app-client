@@ -16,8 +16,6 @@ export default function SARChart({ datas, isShow }) {
       return newItem;
     });
 
-    console.log('sar', datas)
-
     const newData = [...updatedDatas];
     
     const f_idx = data.begIndex;
@@ -33,7 +31,6 @@ export default function SARChart({ datas, isShow }) {
   }
 
   useEffect(() => {
-    console.log('SAR 들어옴')
     if (isActive) {
       const data = {
         "chart": datas,
