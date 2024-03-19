@@ -10,7 +10,7 @@ import { postLogin } from "~/store/reducers/User/user";
 import { setFavoriteArr } from "~/store/reducers/Trading/search";
 
 //TODO : 로고 사진 변경
-import default_Img from "../../../../public/icon/+.svg";
+import default_Img from "/icon/+.svg";
 import { getCookie } from "~/lib/apis/cookie";
 // import clickCompany, { setClickCompany } from "../../../store/reducers/Chart/clickCompany";
 
@@ -230,7 +230,7 @@ const MyStockList = () => {
                 <StockVolume>11111</StockVolume>
               </RowDiv>
             </StockDiv>
-            <PriceDiv returns="1111">
+            <PriceDiv $returns="1111">
               <CurrentPrice>111</CurrentPrice>
               <ChangeReturns>111</ChangeReturns>
               <PrevVariance>1111</PrevVariance>
@@ -471,7 +471,8 @@ const ImgDiv = styled.div`
 `;
 
 const PriceDiv = styled.div`
-  color: ${(props) => (parseFloat(props.returns) >= 0 ? "#ee2f2a" : "#2679ed")};
+  color: ${(props) =>
+    parseFloat(props.$returns) >= 0 ? "#ee2f2a" : "#2679ed"};
   text-align: right;
   display: flex;
   flex-direction: column;
