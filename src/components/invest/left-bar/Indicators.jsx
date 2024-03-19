@@ -4,7 +4,7 @@ import IndicatorDetail from "./IndicatorDetail";
 // import indiData from "../../../../public/Json/indiData.json";
 import indiData from '../../../Json/indiData.json'
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveSub, setDisactiveSub } from "../../../store/reducers/Chart/Indicators/clickIndicators";
+import { setActiveSub, setDisactiveSub, setSubIndi } from "../../../store/reducers/Chart/Indicators/clickIndicators";
 
 const Indicators = ({ onClose }) => {
   const [showDetail, setShowDetail] = useState(
@@ -19,18 +19,19 @@ const Indicators = ({ onClose }) => {
     });
   };
 
-  // 데이터를 넣을 빈배열
   const dispatch = useDispatch();
+  const isActive = useSelector((state) => state.clickIndicator);
+  const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
   const onCheckedElement = (checked, item) => {
     if (checked) {
       dispatch(setActiveSub(item))
+      dispatch(setSubIndi([...subIndi, item]))
     } else if (!checked) {
       dispatch(setDisactiveSub(item))
+      dispatch(setSubIndi(subIndi.filter(el => el !== item)))
     }
   };
-
-  const isActive = useSelector((state) => state.clickIndicator);
 
   return (
     <Container>

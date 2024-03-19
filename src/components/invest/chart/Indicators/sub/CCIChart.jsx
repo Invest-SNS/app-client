@@ -5,7 +5,7 @@ import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getCCIChart } from '../../../../../store/reducers/Chart/Indicators/sub';
 import { format } from 'd3-format';
 
-export default function CCIChart({ datas }) {
+export default function CCIChart({ datas, isShow }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.CCI);
   const CCIValue = useSelector((state) => state.indicatorValues.values.CCI);
@@ -47,7 +47,7 @@ export default function CCIChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, CCIValue, isShow]);
 
   const pricesDisplayFormat = format(".2f");
 

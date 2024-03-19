@@ -28,6 +28,7 @@ const initialState = {
   STOCHRSI: false,
   ULTOSC: false,
   PPO: false,
+  subIndi: [],
 };
 
 const clickSubSlice = createSlice({
@@ -40,10 +41,13 @@ const clickSubSlice = createSlice({
     setDisactiveSub(state, action) {
       state[action.payload] = false;
     },
+    setSubIndi(state, action) {
+      state.subIndi = action.payload;
+    }
   },
 });
 
-const { setActiveSub, setDisactiveSub } = clickSubSlice.actions;
-export { setActiveSub, setDisactiveSub };
+const { setActiveSub, setDisactiveSub, setSubIndi } = clickSubSlice.actions;
+export { setActiveSub, setDisactiveSub, setSubIndi };
 
 export default clickSubSlice.reducer;

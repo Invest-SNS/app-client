@@ -27,8 +27,17 @@ const rootPersistConfig = {
   key: "root",
   storage: storage,
   // whitelist: ["chartValues", "indicatorValues"],
-  blacklist: ["getSubIndicator"],
-  whitelist: ["user", "chartValues", "indicatorValues", "search"],
+  whitelist: [
+    "user", 
+    "chartValues", 
+    "indicatorValues", 
+    "search", 
+    "chart",
+    "clickIndicator",
+    "getChartIndicator", 
+    "getSubIndicator",
+    "company"
+  ],
 };
 
 const rootReducer = persistReducer(

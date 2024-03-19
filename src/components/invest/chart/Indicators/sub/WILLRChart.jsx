@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
-import { getADChart, getATRChart, getCCIChart, getTRIXChart, getWILLRChart } from '../../../../../store/reducers/Chart/Indicators/sub';
+import { getWILLRChart } from '../../../../../store/reducers/Chart/Indicators/sub';
 import { format } from 'd3-format';
 
-export default function WILLRChart({ datas }) {
+export default function WILLRChart({ datas, isShow }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.WILLR);
   const WILLRValue = useSelector((state) => state.indicatorValues.values.WILLR);
@@ -47,7 +47,7 @@ export default function WILLRChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, WILLRValue, isShow]);
 
   const pricesDisplayFormat = format(".2f");
 

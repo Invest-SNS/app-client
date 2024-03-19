@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
-import { getADChart, getATRChart, getCCIChart, getTRIXChart } from '../../../../../store/reducers/Chart/Indicators/sub';
+import { getTRIXChart } from '../../../../../store/reducers/Chart/Indicators/sub';
 import { format } from 'd3-format';
 
-export default function TRIXChart({ datas }) {
+export default function TRIXChart({ datas, isShow }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.TRIX);
   const TRIXValue = useSelector((state) => state.indicatorValues.values.TRIX);
@@ -47,7 +47,7 @@ export default function TRIXChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, TRIXValue, isShow]);
 
   const pricesDisplayFormat = format(".2f");
 

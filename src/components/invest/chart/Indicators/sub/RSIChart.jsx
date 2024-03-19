@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { BarSeries, Chart, LineSeries, MACDSeries, XAxis, YAxis } from 'react-financial-charts';
+import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
-import { getMACDChart, getRSIChart, getSTOCHChart, getSTOCHFChart } from '../../../../../store/reducers/Chart/Indicators/sub';
+import { getRSIChart } from '../../../../../store/reducers/Chart/Indicators/sub';
 import { format } from 'd3-format';
 
-export default function RSIChart({ datas }) {
+export default function RSIChart({ datas, isShow }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.RSI);
   const RSIValue = useSelector((state) => state.indicatorValues.values.RSI);
@@ -47,7 +47,7 @@ export default function RSIChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, RSIValue, isShow]);
 
   const pricesDisplayFormat = format(".2f");
 

@@ -21,6 +21,8 @@ import {
   MACDSeries,
 } from "react-financial-charts";
 
+import default_Img from "../../../../public/icon/+.svg";
+
 import { useSelector, useDispatch } from 'react-redux';
 import styled from "styled-components";
 import { getChartDatas, setChartDatas } from "../../../store/reducers/Chart/chart";
@@ -32,8 +34,6 @@ import EMAChart from "./Indicators/chart/EMAChart";
 import BBANDSChart from "./Indicators/chart/BBANDSChart";
 import SARChart from "./Indicators/chart/SARChart";
 import MACDChart from "./Indicators/sub/MACDChart";
-import { getMACDChart } from "../../../store/reducers/Chart/Indicators/sub";
-import STOCHFastChart from "./Indicators/sub/STOCHFast";
 import STOCHFChart from "./Indicators/sub/STOCHFast";
 import STOCHChart from "./Indicators/sub/STOCH";
 import RSIChart from "./Indicators/sub/RSIChart";
@@ -51,21 +51,55 @@ import DMIChart from "./Indicators/sub/DMIChart";
 import ADXChart from "./Indicators/sub/ADXChart";
 import ADXRChart from "./Indicators/sub/ADXRChart";
 import AROONChart from "./Indicators/sub/AROONChart";
+import AROONOSCChart from "./Indicators/sub/AROONOSCChart";
+import STOCHRSIChart from "./Indicators/sub/STOCHRSIChart";
+import ULTOSCChart from "./Indicators/sub/ULTOSCChart";
+import PPOChart from "./Indicators/sub/PPOChart";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas)
-  console.log(dataList)
   const company = useSelector((state) => state.company.data)
   const dispatch = useDispatch();
 
   const [isShow, setIsShow] = useState(false);
+  
+  function getData(format) {
+    const date = new Date();
+    const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
+    const data = {
+      "code" : company.code,
+      "start_date" : "19990101",
+      "end_date" : formattedDate,
+      "time_format" : format
+    }
+
+    dispatch(getChartDatas(data))
+  }
 
   useEffect(() => {
-    // getData()
-    dispatch(getChartDatas())
-      .then(() => setIsShow(true))
+    // 초기 데이터 '일'
+    const date = new Date();
+    const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
+    const data = {
+      "code" : company.code,
+      "start_date" : "19990101",
+      "end_date" : formattedDate,
+      "time_format" : "D"
+    }
+    
+    dispatch(getChartDatas(data))
+        .then(() => setIsShow(prev => !prev))
 
-  }, [])
+    // // 1분마다 요청 보내기
+    // const intervalId = setInterval(() => {
+    //   dispatch(getChartDatas(data))
+    //     .then(() => setIsShow(prev => !prev))
+    // }, 60000); // 1분 = 60,000 밀리초
+
+    // // 컴포넌트가 언마운트될 때 타이머 정리
+    // return () => clearInterval(intervalId);
+
+  }, [company])
 
   const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor(
     (d) => {
@@ -89,18 +123,21 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const pricesDisplayFormat = format(".2f");
   const x_max = xAccessor(data[data.length - 1]);
   const x_min = xAccessor(data[Math.max(0, data.length - 100)]);
-  const xExtents = [x_min, x_max + 5];
+  const xExtents = [x_min, x_max + 2];
 
   const gridHeight = height - margin.top - margin.bottom;
+  
+  // 클릭한 보조지표
+  const subIndi = useSelector((state) => state.clickIndicator.subIndi);
 
-  const barChartHeight = gridHeight / 4;
+  // default : 4
+  const barChartHeight = subIndi.length < 3 ? gridHeight / 4 : gridHeight / 6;
 
   // 차트 추가될 때마다 origin 변경해주어야 함
-  const barChartOrigin = (_, h) => [0, gridHeight - 2 * barChartHeight];
-  const MACDChartOrigin = (_, h) => [0 , gridHeight - barChartHeight];
+  const barChartOrigin = (_, h) => [0, gridHeight - (subIndi.length + 1) * barChartHeight];
   
   // * (차트 개수)
-  const chartHeight = gridHeight - barChartHeight * 2;
+  const chartHeight = gridHeight - barChartHeight * (subIndi.length + 1);
 
   const yExtents = (data) => {
     return [data.high, data.low];
@@ -112,11 +149,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const HoverDisplayFormat = timeFormat(hoverTimeFormat);
 
   const barChartExtents = (data) => {
-    return [data.volume - 10000000, data.volume + 10000000];
-  };
-
-  const STOCHFChartExtents = (data) => {
-    return [data.outFastK - 50, data.outFastD + 50];
+    return [data.volume, data.volume];
   };
 
   const candleChartExtents = (data) => {
@@ -171,33 +204,59 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     };
   }
 
-  function BarChartContent() {
-    return ({ currentItem, xAccessor }) => {
-      return {
-        x: HoverDisplayFormat(xAccessor(currentItem)),
-        y: [
-          {
-            label: "거래량",
-            value: currentItem.volume && pricesDisplayFormat(currentItem.volume)
-          },
-        ]
-      };
-    };
-  }
+  const getLogoFileName = (name, code) => {
+    if (name.includes("스팩")) {
+      return "SPAC_230706";
+    } else if (name.includes("ETN")) {
+      return "ETN_230706";
+    } else if (
+      name.includes("KODEX") ||
+      name.includes("KOSEF") ||
+      name.includes("KoAct") ||
+      name.includes("TIGER") ||
+      name.includes("ACE") ||
+      name.includes("ARIRANG") ||
+      name.includes("합성 H") ||
+      name.includes("HANARO") ||
+      name.includes("SOL")
+    ) {
+      return "ETF_230706";
+    } else {
+      return `kr/${code}`;
+    }
+  };
+
+  const onErrorImg = (e) => {
+    e.target.src = default_Img;
+  };
 
   return (
     <Container>
       <CompanyContainer>
-        <CompanyLogo src="https://file.alphasquare.co.kr/media/images/stock_logo/kr/005930.png" />
+        <CompanyLogo 
+          src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+            company.name,
+            company.code
+          )}.png`}
+          onError={onErrorImg} 
+        />
         <FontContainer>
           <MainFont>{company.name}</MainFont>
           <SubFont>{company.code} {company.index}</SubFont>
         </FontContainer>
       </CompanyContainer>
-      <Content>
-        <button onClick={toggleCharts}>차트지표</button>
-        <button onClick={toggleIndicators}>보조지표</button>
-      </Content>
+      <BtnContainer>
+        <Content>
+          <button onClick={toggleCharts}>차트지표</button>
+          <button onClick={toggleIndicators}>보조지표</button>
+        </Content>
+        <Content>
+          <button onClick={() => getData("D")}>일</button>
+          <button onClick={() => getData("W")}>주</button>
+          <button onClick={() => getData("M")}>월</button>
+          <button onClick={() => getData("Y")}>년</button>
+        </Content>
+      </BtnContainer>
       <ChartCanvas
         height={height}
         ratio={3}
@@ -258,7 +317,11 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
         >
           <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
           <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-          <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
+          <BarSeries 
+            fillStyle={volumeColor} 
+            yAccessor={volumeSeries}
+            baseAt={(xScale, yScale, d) => yScale(0)} 
+          />
         </Chart>
 
         {/* MACD 차트 */}
@@ -270,141 +333,216 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
         </Chart> */}
 
         {/* STOCHF 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.outFastK - 50, data.outFastD + 50]}
-					origin={MACDChartOrigin}
-				>
-          <STOCHFChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('STOCHF') && (
+          <Chart id={3 + subIndi.indexOf('STOCHF')} height={barChartHeight}
+            yExtents={data => [data.outFastK - 50, data.outFastD + 50]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('STOCHF')) * barChartHeight]}
+          >
+            <STOCHFChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* STOCHF 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.outSlowK - 50, data.outSlowD + 50]}
-					origin={MACDChartOrigin}
-				>
-          <STOCHChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('STOCH') && (
+          <Chart id={3 + subIndi.indexOf('STOCH')} height={barChartHeight}
+            yExtents={data => [data.outSlowK - 50, data.outSlowD + 50]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('STOCH')) * barChartHeight]}
+          >
+            <STOCHChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* RSI 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.rsi - 20, data.rsi + 20]}
-					origin={MACDChartOrigin}
-				>
-          <RSIChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('RSI') && (
+          <Chart id={3 + subIndi.indexOf('RSI')} height={barChartHeight}
+            yExtents={data => [data.rsi - 20, data.rsi + 20]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('RSI')) * barChartHeight]}
+          >
+            <RSIChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* CCI 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.cci - 100, data.cci + 100]}
-					origin={MACDChartOrigin}
-				>
-          <CCIChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('CCI') && (
+          <Chart id={3 + subIndi.indexOf('CCI')} height={barChartHeight}
+            yExtents={data => [data.cci - 100, data.cci + 100]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('CCI')) * barChartHeight]}
+          >
+            <CCIChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* MOM 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.mom - 1000, data.mom + 1000]}
-					origin={MACDChartOrigin}
-				>
-          <MOMChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('MOM') && (
+          <Chart id={3 + subIndi.indexOf('MOM')} height={barChartHeight}
+            yExtents={data => [data.mom - 1000, data.mom + 1000]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('MOM')) * barChartHeight]}
+          >
+            <MOMChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* ROC 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.roc - 5, data.roc + 5]}
-					origin={MACDChartOrigin}
-				>
-          <ROCChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('ROC') && (
+          <Chart id={3 + subIndi.indexOf('ROC')} height={barChartHeight}
+            yExtents={data => [data.roc - 5, data.roc + 5]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ROC')) * barChartHeight]}
+          >
+            <ROCChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* AD 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.ad - 5000000, data.ad + 5000000]}
-					origin={MACDChartOrigin}
-				>
-          <ADChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('AD') && (
+          <Chart id={3 + subIndi.indexOf('AD')} height={barChartHeight}
+            yExtents={data => [data.ad - 5000000, data.ad + 5000000]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('AD')) * barChartHeight]}
+          >
+            <ADChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* ATR 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.atr - 100, data.atr + 100]}
-					origin={MACDChartOrigin}
-				>
-          <ATRChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('ATR') && (
+          <Chart id={3 + subIndi.indexOf('ATR')} height={barChartHeight}
+            yExtents={data => [data.atr - 100, data.atr + 100]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ATR')) * barChartHeight]}
+          >
+            <ATRChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* MFI 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.mfi - 10, data.mfi + 10]}
-					origin={MACDChartOrigin}
-				>
-          <MFIChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('MFI') && (
+          <Chart id={3 + subIndi.indexOf('MFI')} height={barChartHeight}
+            yExtents={data => [data.mfi - 10, data.mfi + 10]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('MFI')) * barChartHeight]}
+          >
+            <MFIChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* OBV 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.obv - 50000000, data.obv + 50000000]}
-					origin={MACDChartOrigin}
-				>
-          <OBVChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('OBV') && (
+          <Chart id={3 + subIndi.indexOf('OBV')} height={barChartHeight}
+            yExtents={data => [data.obv - 50000000, data.obv + 50000000]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('OBV')) * barChartHeight]}
+          >
+            <OBVChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* ADOSC 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.adosc - 10000000, data.adosc + 10000000]}
-					origin={MACDChartOrigin}
-				>
-          <ADOSCChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('ADOSC') && (
+          <Chart id={3 + subIndi.indexOf('ADOSC')} height={barChartHeight}
+            yExtents={data => [data.adosc - 10000000, data.adosc + 10000000]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ADOSC')) * barChartHeight]}
+          >
+            <ADOSCChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* TRIX 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.trix - 0.1, data.trix + 0.1]}
-					origin={MACDChartOrigin}
-				>
-          <TRIXChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('TRIX') && (
+          <Chart id={3 + subIndi.indexOf('TRIX')} height={barChartHeight}
+            yExtents={data => [data.trix - 0.1, data.trix + 0.1]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('TRIX')) * barChartHeight]}
+          >
+            <TRIXChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* WILLR 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.willr - 30, data.willr + 30]}
-					origin={MACDChartOrigin}
-				>
-          <WILLRChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('WILLR') && (
+          <Chart id={3 + subIndi.indexOf('WILLR')} height={barChartHeight}
+            yExtents={data => [data.willr - 30, data.willr + 30]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('WILLR')) * barChartHeight]}
+          >
+            <WILLRChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* DMI (DX) 차트 */}
         {/* 값 제대로 받아오는지 확인 필요 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.dx - 10, data.dx + 10]}
-					origin={MACDChartOrigin}
-				>
-          <DMIChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('DX') && (
+          <Chart id={3 + subIndi.indexOf('DX')} height={barChartHeight}
+            yExtents={data => [data.dx - 10, data.dx + 10]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('DX')) * barChartHeight]}
+          >
+            <DMIChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* ADX 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.adx - 5, data.adx + 5]}
-					origin={MACDChartOrigin}
-				>
-          <ADXChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('ADX') && (
+          <Chart id={3 + subIndi.indexOf('ADX')} height={barChartHeight}
+            yExtents={data => [data.adx - 5, data.adx + 5]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ADX')) * barChartHeight]}
+          >
+            <ADXChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
         {/* ADXR 차트 */}
-        {/* <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.adxr - 10, data.adxr + 10]}
-					origin={MACDChartOrigin}
-				>
-          <ADXRChart datas={dataList} />
-        </Chart> */}
+        {subIndi.includes('ADXR') && (
+          <Chart id={3 + subIndi.indexOf('ADXR')} height={barChartHeight}
+            yExtents={data => [data.adxr - 10, data.adxr + 10]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ADXR')) * barChartHeight]}
+          >
+            <ADXRChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
 
-        {/* ADXR 차트 */}
-        <Chart id={3} height={barChartHeight}
-					yExtents={data => [data.aroon - 10, data.aroon + 10]}
-					origin={MACDChartOrigin}
-				>
-          <AROONChart datas={dataList} />
-        </Chart>
+        {/* AROON 차트 */}
+        {subIndi.includes('AROON') && (
+          <Chart id={3 + subIndi.indexOf('AROON')} height={barChartHeight}
+            yExtents={data => [data.aroon - 10, data.aroon + 10]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('AROON')) * barChartHeight]}
+          >
+            <AROONChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
+
+        {/* AROONOSC 차트 */}
+        {subIndi.includes('AROONOSC') && (
+          <Chart id={3 + subIndi.indexOf('AROONOSC')} height={barChartHeight}
+            yExtents={data => [data.aroonosc - 10, data.aroonosc + 10]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('AROONOSC')) * barChartHeight]}
+          >
+            <AROONOSCChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
+
+        {/* STOCHRSI 차트 */}
+        {subIndi.includes('STOCHRSI') && (
+          <Chart id={3 + subIndi.indexOf('STOCHRSI')} height={barChartHeight}
+            yExtents={data => [data.stochRsiK - 10, data.stochRsiD + 10]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('STOCHRSI')) * barChartHeight]}
+          >
+            <STOCHRSIChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
+
+        {/* ULTOSC 차트 */}
+        {subIndi.includes('ULTOSC') && (
+          <Chart id={3 + subIndi.indexOf('ULTOSC')} height={barChartHeight}
+            yExtents={data => [data.ultosc - 10, data.ultosc + 10]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ULTOSC')) * barChartHeight]}
+          >
+            <ULTOSCChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
+
+        {/* PPO 차트 */}
+        {/* PPO Signal 데이터인듯 */}
+        {subIndi.includes('PPO') && (
+          <Chart id={3 + subIndi.indexOf('PPO')} height={barChartHeight}
+            yExtents={data => [data.ppo - 1, data.ppo + 1]}
+            origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('PPO')) * barChartHeight]}
+          >
+            <PPOChart datas={dataList} isShow={isShow} />
+          </Chart>
+        )}
       </ChartCanvas>
     </Container>
   );
@@ -447,3 +585,7 @@ const Content = styled.div`
   display: flex;
   align-items: center;
 `;
+
+const BtnContainer = styled.div`
+  display: flex;
+`

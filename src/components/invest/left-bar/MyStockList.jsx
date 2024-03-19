@@ -157,7 +157,7 @@ const MyStockList = () => {
                       key={result._id}
                       onClick={() => {
                         console.log("");
-                        // dispatch(setClickCompany(result));
+                        dispatch(setClickCompany(result));
                       }}
                     >
                       <img

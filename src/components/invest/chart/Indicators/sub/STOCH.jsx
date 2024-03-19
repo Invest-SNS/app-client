@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { BarSeries, Chart, LineSeries, MACDSeries, XAxis, YAxis } from 'react-financial-charts';
+import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
-import { getMACDChart, getSTOCHChart, getSTOCHFChart } from '../../../../../store/reducers/Chart/Indicators/sub';
+import { getSTOCHChart } from '../../../../../store/reducers/Chart/Indicators/sub';
 import { format } from 'd3-format';
 
-export default function STOCHChart({ datas }) {
+export default function STOCHChart({ datas, isShow }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.STOCH);
   const STOCHValue = useSelector((state) => state.indicatorValues.values.STOCH);
@@ -53,7 +53,7 @@ export default function STOCHChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, STOCHValue, isShow]);
 
   const pricesDisplayFormat = format(".2f");
 

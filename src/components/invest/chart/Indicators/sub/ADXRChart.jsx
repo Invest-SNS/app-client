@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
-import { getADChart, getADXChart, getADXRChart, getATRChart, getCCIChart } from '../../../../../store/reducers/Chart/Indicators/sub';
+import { getADXRChart } from '../../../../../store/reducers/Chart/Indicators/sub';
 import { format } from 'd3-format';
 
-export default function ADXRChart({ datas }) {
+export default function ADXRChart({ datas, isShow }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.ADXR);
   const ADXRValue = useSelector((state) => state.indicatorValues.values.ADXR);
@@ -47,7 +47,7 @@ export default function ADXRChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, ADXRValue, isShow]);
 
   const pricesDisplayFormat = format(".2f");
 

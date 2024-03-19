@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Chart, LineSeries, MACDSeries, XAxis, YAxis } from 'react-financial-charts';
+import { BarSeries, Chart, LineSeries, MACDSeries, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getMACDChart } from '../../../../../store/reducers/Chart/Indicators/sub';
@@ -15,7 +15,7 @@ const macdAppearance = {
 	},
 };
 
-export default function MACDChart({ datas }) {
+export default function MACDChart({ datas, isShow }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.MACD);
 
@@ -66,7 +66,7 @@ export default function MACDChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, isShow]);
 
   const barChartHeight = 250;
   const barChartOrigin = (_, h) => [0, h - barChartHeight];
@@ -77,12 +77,11 @@ export default function MACDChart({ datas }) {
 
   return (
     <>
-      
-          <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-          <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-					<MACDSeries yAccessor={d => d.macd} strokeStyle={'#b3009e'}
-					/>
-
+      <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
+      <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+      <LineSeries yAccessor={d => d.macd} strokeStyle='#680A08' />
+      <LineSeries yAccessor={d => d.macdSignal} strokeStyle='#A8693D' />
+      <BarSeries fillStyle='#000' yAccessor={d => d.macdHist} />
     </>
   )
 }

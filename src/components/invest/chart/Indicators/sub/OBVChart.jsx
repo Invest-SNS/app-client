@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
-import { getADChart, getATRChart, getCCIChart, getMFIChart, getOBVChart } from '../../../../../store/reducers/Chart/Indicators/sub';
+import { getOBVChart } from '../../../../../store/reducers/Chart/Indicators/sub';
 import { format } from 'd3-format';
 
-export default function OBVChart({ datas }) {
+export default function OBVChart({ datas, isShow }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.OBV);
 
@@ -45,7 +45,7 @@ export default function OBVChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, isShow]);
 
   const pricesDisplayFormat = format(".2f");
 

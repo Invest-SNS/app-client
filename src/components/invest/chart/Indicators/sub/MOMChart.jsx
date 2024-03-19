@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { LineSeries, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
-import { getCCIChart, getMOMChart } from '../../../../../store/reducers/Chart/Indicators/sub';
+import { getMOMChart } from '../../../../../store/reducers/Chart/Indicators/sub';
 import { format } from 'd3-format';
 
-export default function MOMChart({ datas }) {
+export default function MOMChart({ datas, isShow }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.MOM);
   const MOMValue = useSelector((state) => state.indicatorValues.values.MOM);
@@ -47,7 +47,7 @@ export default function MOMChart({ datas }) {
       });
       dispatch(setChartDatas(updatedDatas));
     }
-  }, [isActive]);
+  }, [isActive, MOMValue, isShow]);
 
   const pricesDisplayFormat = format(".2f");
 

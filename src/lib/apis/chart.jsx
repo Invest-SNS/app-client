@@ -1,16 +1,7 @@
 import { chartInstance, subChartInstance } from './api';
 
-export async function getChartData() {
-  const date = new Date();
-  const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
-  // 임시 데이터
-  return await chartInstance.post('/stockPrice', {
-    "code" : "005930",
-    "start_date" : "19990101",
-    "end_date" : formattedDate,
-    // 분, 일, 월, 연봉
-    "time_format" : "D"
-  })
+export async function getChartData(data) {
+  return await chartInstance.post('/stockPrice', data)
 }
 
 export async function getSMA(data) {
