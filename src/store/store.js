@@ -37,6 +37,7 @@ const rootReducer = persistReducer(
     // 임시 reducer
     trading: tradingReducer,
     chart: chartReducer,
+    company: companyReducer,
     chartValues: chartValuesReducer,
     indicatorValues: indicatorValuesReducer,
     clickIndicator: clickIndicatorsReducer,

@@ -33,6 +33,24 @@ import BBANDSChart from "./Indicators/chart/BBANDSChart";
 import SARChart from "./Indicators/chart/SARChart";
 import MACDChart from "./Indicators/sub/MACDChart";
 import { getMACDChart } from "../../../store/reducers/Chart/Indicators/sub";
+import STOCHFastChart from "./Indicators/sub/STOCHFast";
+import STOCHFChart from "./Indicators/sub/STOCHFast";
+import STOCHChart from "./Indicators/sub/STOCH";
+import RSIChart from "./Indicators/sub/RSIChart";
+import CCIChart from "./Indicators/sub/CCIChart";
+import MOMChart from "./Indicators/sub/MOMChart";
+import ROCChart from "./Indicators/sub/ROCChart";
+import ADChart from "./Indicators/sub/ADChart";
+import ATRChart from "./Indicators/sub/ATRChart";
+import MFIChart from "./Indicators/sub/MFIChart";
+import OBVChart from "./Indicators/sub/OBVChart";
+import ADOSCChart from "./Indicators/sub/ADOSCChart";
+import TRIXChart from "./Indicators/sub/TRIXChart";
+import WILLRChart from "./Indicators/sub/WILLRChart";
+import DMIChart from "./Indicators/sub/DMIChart";
+import ADXChart from "./Indicators/sub/ADXChart";
+import ADXRChart from "./Indicators/sub/ADXRChart";
+import AROONChart from "./Indicators/sub/AROONChart";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas)
@@ -76,8 +94,14 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const gridHeight = height - margin.top - margin.bottom;
 
   const barChartHeight = gridHeight / 4;
-  const barChartOrigin = (_, h) => [0, h - barChartHeight];
-  const chartHeight = gridHeight - barChartHeight;
+
+  // 차트 추가될 때마다 origin 변경해주어야 함
+  const barChartOrigin = (_, h) => [0, gridHeight - 2 * barChartHeight];
+  const MACDChartOrigin = (_, h) => [0 , gridHeight - barChartHeight];
+  
+  // * (차트 개수)
+  const chartHeight = gridHeight - barChartHeight * 2;
+
   const yExtents = (data) => {
     return [data.high, data.low];
   };
@@ -88,7 +112,11 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const HoverDisplayFormat = timeFormat(hoverTimeFormat);
 
   const barChartExtents = (data) => {
-    return data.volume;
+    return [data.volume - 10000000, data.volume + 10000000];
+  };
+
+  const STOCHFChartExtents = (data) => {
+    return [data.outFastK - 50, data.outFastD + 50];
   };
 
   const candleChartExtents = (data) => {
@@ -143,6 +171,20 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     };
   }
 
+  function BarChartContent() {
+    return ({ currentItem, xAccessor }) => {
+      return {
+        x: HoverDisplayFormat(xAccessor(currentItem)),
+        y: [
+          {
+            label: "거래량",
+            value: currentItem.volume && pricesDisplayFormat(currentItem.volume)
+          },
+        ]
+      };
+    };
+  }
+
   return (
     <Container>
       <CompanyContainer>
@@ -169,28 +211,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
         xExtents={xExtents}
         zoomAnchor={lastVisibleItemBasedZoomAnchor}
       >
-        {/* 거래량 차트 */}
-        {/* <Chart
-          id={1}
-          height={barChartHeight}
-          origin={barChartOrigin}
-          yExtents={barChartExtents}
-        >
-          <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-          <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-          <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
-        </Chart> */}
-
-        <Chart id={1} height={barChartHeight}
-					yExtents={d => d.macd}
-					origin={barChartOrigin}
-				>
-          <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
-          <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-          <MACDSeries yAccessor={d => d.macd} />
-        </Chart>
-        
-        <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
+        {/* 일반 차트 */}
+        <Chart id={1} height={chartHeight} yExtents={candleChartExtents}>
           {/* 분봉 호버했을 때, 날짜/시가/종가/고가/저가 표시 */}
           <HoverTooltip
             // yAccessor={ema26.accessor()}
@@ -226,6 +248,163 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           <OHLCTooltip origin={[8, 16]} />
         </Chart>  
         <CrossHairCursor />
+
+        {/* 거래량 차트 */}
+        <Chart
+          id={2}
+          height={barChartHeight}
+          origin={barChartOrigin}
+          yExtents={barChartExtents}
+        >
+          <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
+          <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+          <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
+        </Chart>
+
+        {/* MACD 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={d => d.macd}
+					origin={MACDChartOrigin}
+				>
+          <MACDChart datas={dataList} />
+        </Chart> */}
+
+        {/* STOCHF 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.outFastK - 50, data.outFastD + 50]}
+					origin={MACDChartOrigin}
+				>
+          <STOCHFChart datas={dataList} />
+        </Chart> */}
+
+        {/* STOCHF 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.outSlowK - 50, data.outSlowD + 50]}
+					origin={MACDChartOrigin}
+				>
+          <STOCHChart datas={dataList} />
+        </Chart> */}
+
+        {/* RSI 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.rsi - 20, data.rsi + 20]}
+					origin={MACDChartOrigin}
+				>
+          <RSIChart datas={dataList} />
+        </Chart> */}
+
+        {/* CCI 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.cci - 100, data.cci + 100]}
+					origin={MACDChartOrigin}
+				>
+          <CCIChart datas={dataList} />
+        </Chart> */}
+
+        {/* MOM 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.mom - 1000, data.mom + 1000]}
+					origin={MACDChartOrigin}
+				>
+          <MOMChart datas={dataList} />
+        </Chart> */}
+
+        {/* ROC 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.roc - 5, data.roc + 5]}
+					origin={MACDChartOrigin}
+				>
+          <ROCChart datas={dataList} />
+        </Chart> */}
+
+        {/* AD 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.ad - 5000000, data.ad + 5000000]}
+					origin={MACDChartOrigin}
+				>
+          <ADChart datas={dataList} />
+        </Chart> */}
+
+        {/* ATR 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.atr - 100, data.atr + 100]}
+					origin={MACDChartOrigin}
+				>
+          <ATRChart datas={dataList} />
+        </Chart> */}
+
+        {/* MFI 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.mfi - 10, data.mfi + 10]}
+					origin={MACDChartOrigin}
+				>
+          <MFIChart datas={dataList} />
+        </Chart> */}
+
+        {/* OBV 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.obv - 50000000, data.obv + 50000000]}
+					origin={MACDChartOrigin}
+				>
+          <OBVChart datas={dataList} />
+        </Chart> */}
+
+        {/* ADOSC 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.adosc - 10000000, data.adosc + 10000000]}
+					origin={MACDChartOrigin}
+				>
+          <ADOSCChart datas={dataList} />
+        </Chart> */}
+
+        {/* TRIX 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.trix - 0.1, data.trix + 0.1]}
+					origin={MACDChartOrigin}
+				>
+          <TRIXChart datas={dataList} />
+        </Chart> */}
+
+        {/* WILLR 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.willr - 30, data.willr + 30]}
+					origin={MACDChartOrigin}
+				>
+          <WILLRChart datas={dataList} />
+        </Chart> */}
+
+        {/* DMI (DX) 차트 */}
+        {/* 값 제대로 받아오는지 확인 필요 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.dx - 10, data.dx + 10]}
+					origin={MACDChartOrigin}
+				>
+          <DMIChart datas={dataList} />
+        </Chart> */}
+
+        {/* ADX 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.adx - 5, data.adx + 5]}
+					origin={MACDChartOrigin}
+				>
+          <ADXChart datas={dataList} />
+        </Chart> */}
+
+        {/* ADXR 차트 */}
+        {/* <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.adxr - 10, data.adxr + 10]}
+					origin={MACDChartOrigin}
+				>
+          <ADXRChart datas={dataList} />
+        </Chart> */}
+
+        {/* ADXR 차트 */}
+        <Chart id={3} height={barChartHeight}
+					yExtents={data => [data.aroon - 10, data.aroon + 10]}
+					origin={MACDChartOrigin}
+				>
+          <AROONChart datas={dataList} />
+        </Chart>
       </ChartCanvas>
     </Container>
   );
