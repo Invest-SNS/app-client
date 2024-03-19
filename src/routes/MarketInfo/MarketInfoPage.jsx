@@ -8,7 +8,7 @@ export default function MarketInfoPage() {
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 400px;
   height: 100%;
   position: relative;
   overflow: hidden;
