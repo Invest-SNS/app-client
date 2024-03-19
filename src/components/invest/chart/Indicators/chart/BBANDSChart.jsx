@@ -18,8 +18,6 @@ export default function BBANDSChart({ datas, isShow }) {
       return newItem;
     });
 
-    console.log('bbands', updatedDatas)
-
     const newData = [...updatedDatas];
     
     const f_idx = data.begIndex;
@@ -39,7 +37,6 @@ export default function BBANDSChart({ datas, isShow }) {
   }
 
   useEffect(() => {
-    console.log('볼린저 들어옴')
     if (isActive) {
       const data = {
         "chart": datas,
