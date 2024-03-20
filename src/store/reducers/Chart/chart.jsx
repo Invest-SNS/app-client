@@ -3,6 +3,7 @@ import { getChartData, getMinuteData } from '../../../lib/apis/chart'
 
 const initialState = {
   datas: [],
+  date: "D",
 };
 
 export const getChartDatas = createAsyncThunk(
@@ -27,6 +28,9 @@ const chartSlice = createSlice({
   reducers: {
     setChartDatas(state, action) {
       state.datas = action.payload;
+    },
+    setClickDate(state, action) {
+      state.date = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -39,7 +43,7 @@ const chartSlice = createSlice({
   },
 });
 
-const { setChartDatas } = chartSlice.actions;
-export { setChartDatas };
+const { setChartDatas, setClickDate } = chartSlice.actions;
+export { setChartDatas, setClickDate };
 
 export default chartSlice.reducer;

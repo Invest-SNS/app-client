@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LineSeries, SingleValueTooltip, XAxis, YAxis } from 'react-financial-charts';
+import { LineSeries, SingleValueTooltip, StraightLine, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getSTOCHFChart } from '../../../../../store/reducers/Chart/Indicators/sub';
@@ -60,13 +60,22 @@ export default function STOCHFChart({ datas, isShow }) {
     <>
       <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
       <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-      <LineSeries yAccessor={d => d.outFastK} strokeStyle='#680A08' />
-      <LineSeries yAccessor={d => d.outFastD} strokeStyle='#A8693D' />
+      <StraightLine yValue={0} lineDash={"ShortDash2"} strokeStyle='#aeafb0' />
+      <LineSeries yAccessor={d => d.outFastK} strokeStyle='#680A08' strokeWidth={1.3} />
+      <LineSeries yAccessor={d => d.outFastD} strokeStyle='#B87A80' strokeWidth={1.3} />
       <SingleValueTooltip
         origin={[12, 30]}
         yAccessor={d => d.outFastK}
-        yLabel="Stochastic Fast"
+        yLabel="Fast STO %K"
         yDisplayFormat={format(",")}
+        labelFill='#680A08'
+      />
+      <SingleValueTooltip
+        origin={[12, 45]}
+        yAccessor={d => d.outFastD}
+        yLabel="Fast STO %D"
+        yDisplayFormat={format(",")}
+        labelFill='#B87A80'
       />
     </>
   )

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BollingerSeries } from 'react-financial-charts';
+import { BollingerBandTooltip, BollingerSeries } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getBBANDSChart } from '../../../../../store/reducers/Chart/Indicators/chart';
@@ -59,6 +59,16 @@ export default function BBANDSChart({ datas, isShow }) {
 
   return (
     <>
+      {/* <BollingerBandTooltip
+        origin={[12, 40]}
+        yAccessor={d => (
+          {
+            top: d.upper,
+            middle: d.middle,
+            bottom: d.lower
+          }
+        )}
+      /> */}
       <BollingerSeries
         yAccessor={d => (
           {

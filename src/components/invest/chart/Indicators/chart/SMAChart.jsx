@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { LineSeries } from 'react-financial-charts';
+import { Label, LineSeries, MovingAverageTooltip, SingleTooltip, SingleValueTooltip, ToolTipTSpanLabel, ToolTipText } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getSMAChart } from '../../../../../store/reducers/Chart/Indicators/chart';
+import styled from 'styled-components';
 
-export default function SMAChart({ datas, isShow }) {
+export default function SMAChart({ datas, isShow, chartIndi }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.SMA);
   const SMAValue = useSelector((state) => state.chartValues.values.SMA);
@@ -64,6 +65,10 @@ export default function SMAChart({ datas, isShow }) {
 
   return (
     <>
+      <SingleTooltip
+        origin={[12, 40 + (chartIndi.indexOf('SMA') * 15)]}
+        yLabel="단순 이동평균"
+      />
       {SMAValue.map((value, index) => (
         <LineSeries
           key={`sma${value}`}

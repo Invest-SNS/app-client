@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BarSeries, SingleValueTooltip, XAxis, YAxis } from 'react-financial-charts';
+import { BarSeries, SingleValueTooltip, StraightLine, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getAROONOSCChart } from '../../../../../store/reducers/Chart/Indicators/sub';
@@ -60,6 +60,7 @@ export default function AROONOSCChart({ datas, isShow }) {
     <>
       <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
       <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+      <StraightLine yValue={0} lineDash={"ShortDash2"} strokeStyle='#aeafb0' />
       <BarSeries 
         fillStyle={volumeColor} 
         yAccessor={d => d.aroonosc}

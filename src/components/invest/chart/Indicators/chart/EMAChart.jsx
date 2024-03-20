@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { LineSeries } from 'react-financial-charts';
+import { LineSeries, SingleTooltip } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getEMAChart } from '../../../../../store/reducers/Chart/Indicators/chart';
 
-export default function EMAChart({ datas, isShow }) {
+export default function EMAChart({ datas, isShow, chartIndi }) {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator.EMA);
   const EMAValue = useSelector((state) => state.chartValues.values.EMA);
@@ -63,6 +63,11 @@ export default function EMAChart({ datas, isShow }) {
 
   return (
     <>
+      <SingleTooltip
+        origin={[12, 40 + (chartIndi.indexOf('EMA') * 15)]}
+        yLabel="지수 이동평균선"
+        yValue={`${EMAValue[0]} ${EMAValue[1]} ${EMAValue[2]} ${EMAValue[3]} ${EMAValue[4]}`}
+      />
       {EMAValue.map((value, index) => (
         <LineSeries
           key={`ema${value}`}
