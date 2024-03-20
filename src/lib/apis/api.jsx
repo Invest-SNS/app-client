@@ -22,3 +22,10 @@ export const baseUserInstance = axios.create({
   },
 });
 
+export const formdataInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "multipart/form-data",
+    Authorization: `Bearer ${getCookie("token")}`,
+  },
+});
