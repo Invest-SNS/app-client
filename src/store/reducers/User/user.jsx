@@ -2,13 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { postLogin as reqPostLogin } from "~/lib/apis/user";
 
 const initialState = {
+  user: null,
   loading: "idle",
 };
 
 const postLogin = createAsyncThunk(
   "user/login",
   async ({ email, password }, thunkAPI) => {
-    await reqPostLogin(email, password);
+    const response = await reqPostLogin(email, password);
+    return response;
   }
 );
 
@@ -18,7 +20,8 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(postLogin.fulfilled, (state) => {
+      .addCase(postLogin.fulfilled, (state, action) => {
+        state.user = action.payload;
         state.loading = "fulfilled";
       })
       .addCase(postLogin.pending, (state) => {
