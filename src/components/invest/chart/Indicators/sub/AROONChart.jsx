@@ -11,24 +11,11 @@ export default function AROONChart({ datas, isShow }) {
   const AROONValue = useSelector((state) => state.indicatorValues.values.AROON);
 
   const calculateAROON = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      delete newItem.aroon;
-      return newItem;
-    });
-
-    const newData = [...updatedDatas];
-    
-    const f_idx = data.begIndex;
-    const l_idx = data.nbElement;
-    const aroon = data.result.outAroonDown;
-    for (let i = 0; i < l_idx; i++) {
-      newData[f_idx + i] = {
-        ...newData[f_idx + i], // 기존 객체를 복사
-        ["aroon"]: aroon[i], // 새로운 속성 추가
-      };
-    }
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'AROON'
+    }));
   }
 
   useEffect(() => {
@@ -42,7 +29,8 @@ export default function AROONChart({ datas, isShow }) {
     } else if (!isActive) {
       const updatedDatas = datas.map(item => {
         const newItem = { ...item };
-        delete newItem.aroon;
+        delete newItem.aroonDown;
+        delete newItem.aroonUp;
         return newItem;
       });
       dispatch(setChartDatas(updatedDatas));
@@ -56,11 +44,19 @@ export default function AROONChart({ datas, isShow }) {
       <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
       <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
       <StraightLine yValue={0} lineDash={"ShortDash2"} strokeStyle='#aeafb0' />
-      <LineSeries yAccessor={d => d.aroon} strokeStyle='#680A08' strokeWidth={1.3} />
+      <LineSeries yAccessor={d => d.aroonUp} strokeStyle='#EDD02B' strokeWidth={1.3} />
+      <LineSeries yAccessor={d => d.aroonDown} strokeStyle='#680A08' strokeWidth={1.3} />
       <SingleValueTooltip
         origin={[12, 30]}
-        yAccessor={d => d.aroon}
-        yLabel="Aroon"
+        yAccessor={d => d.aroonUp}
+        yLabel="Aroon Up"
+        yDisplayFormat={format(",")}
+        labelFill='#EDD02B'
+      />
+      <SingleValueTooltip
+        origin={[12, 45]}
+        yAccessor={d => d.aroonDown}
+        yLabel="Aroon Down"
         yDisplayFormat={format(",")}
         labelFill='#680A08'
       />

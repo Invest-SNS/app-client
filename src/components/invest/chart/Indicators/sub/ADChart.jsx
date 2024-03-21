@@ -10,24 +10,11 @@ export default function ADChart({ datas, isShow }) {
   const isActive = useSelector((state) => state.clickIndicator.AD);
 
   const calculateAD = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      delete newItem.ad;
-      return newItem;
-    });
-
-    const newData = [...updatedDatas];
-    
-    const f_idx = data.begIndex;
-    const l_idx = data.nbElement;
-    const ad = data.result.outReal;
-    for (let i = 0; i < l_idx; i++) {
-      newData[f_idx + i] = {
-        ...newData[f_idx + i], // 기존 객체를 복사
-        ["ad"]: ad[i], // 새로운 속성 추가
-      };
-    }
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'AD'
+    }));
   }
 
   useEffect(() => {

@@ -59,21 +59,24 @@ import ULTOSCChart from "./Indicators/sub/ULTOSCChart";
 import PPOChart from "./Indicators/sub/PPOChart";
 import { setCompanyCode } from "../../../store/reducers/Chart/clickCompany";
 import { setChartIndi, setDisactiveSub, setSubIndi } from "../../../store/reducers/Chart/Indicators/clickIndicators";
+import { getBBANDSChart, getSARChart } from "../../../store/reducers/Chart/Indicators/chart";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas);
   const clickDate = useSelector((state) => state.chart.date);
   const company = useSelector((state) => state.company.data);
   const companyCode = useSelector((state) => state.company.companyCode);
+  const dispatch = useDispatch();
+  const [isShow, setIsShow] = useState(false);
 
   // 클릭한 보조지표
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
 
-  const dispatch = useDispatch();
+  console.log('보조지표', subIndi);
+  console.log('차트지표', chartIndi);
   
   function getData(format) {
-    console.log('버튼 클릭 시 데이터 새로 받아옴')
     const date = new Date();
     const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
     const data = {
@@ -84,8 +87,20 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     }
 
     dispatch(getChartDatas(data))
+      .then(() => setIsShow(prev => !prev))
+  }
 
-    // TODO : 일, 주, 월, 년 선택시 지표 초기화되는거 고민해보기
+  function getNewData(format) {
+    const date = new Date();
+    const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
+    const data = {
+      "code" : company.code,
+      "start_date" : "19990101",
+      "end_date" : formattedDate,
+      "time_format" : format
+    }
+
+    dispatch(getChartDatas(data))
     // 실시간 데이터 받아올 때 수정해야할 수도 있는 부분
     // 차트지표, 보조지표 초기화
     // 새로운 기업의 데이터를 불러올 때는 초기화를 시켜줘야함
@@ -102,10 +117,11 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   }
 
   useEffect(() => {
+    // getData('D')
     // 실시간 데이터 받아올 때 수정해야할 수도 있는 부분
     // 새로운 기업을 클릭했을 때만 데이터 갱신
     if (companyCode !== company.code) {
-      getData(company.code)
+      getNewData(company.code)
       dispatch(setCompanyCode(company.code))
     }
 
@@ -328,19 +344,19 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
 
           {/* 차트지표 */}
           {chartIndi.includes('SMA') && (
-            <SMAChart datas={dataList} chartIndi={chartIndi} />
+            <SMAChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
           )}
           {chartIndi.includes('WMA') && (
-            <WMAChart datas={dataList} chartIndi={chartIndi} />
+            <WMAChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
           )}
           {chartIndi.includes('EMA') && (
-            <EMAChart datas={dataList} chartIndi={chartIndi} />
+            <EMAChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
           )}
           {chartIndi.includes('BBANDS') && (
-            <BBANDSChart datas={dataList} chartIndi={chartIndi} />
+            <BBANDSChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
           )}
           {chartIndi.includes('SAR') && (
-            <SARChart datas={dataList} chartIndi={chartIndi} />
+            <SARChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
           )}
 
           <MouseCoordinateX displayFormat={timeDisplayFormat} />
@@ -395,7 +411,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('MACD')) * barChartHeight]}
           >
-            <MACDChart datas={dataList} />
+            <MACDChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -406,7 +422,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('STOCHF')) * barChartHeight]}
           >
-            <STOCHFChart datas={dataList} />
+            <STOCHFChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -417,7 +433,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('STOCH')) * barChartHeight]}
           >
-            <STOCHChart datas={dataList} />
+            <STOCHChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -428,7 +444,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('RSI')) * barChartHeight]}
           >
-            <RSIChart datas={dataList} />
+            <RSIChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -439,7 +455,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('CCI')) * barChartHeight]}
           >
-            <CCIChart datas={dataList} />
+            <CCIChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -450,7 +466,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('MOM')) * barChartHeight]}
           >
-            <MOMChart datas={dataList} />
+            <MOMChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -461,7 +477,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ROC')) * barChartHeight]}
           >
-            <ROCChart datas={dataList} />
+            <ROCChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -472,7 +488,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('AD')) * barChartHeight]}
           >
-            <ADChart datas={dataList} />
+            <ADChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -483,7 +499,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ATR')) * barChartHeight]}
           >
-            <ATRChart datas={dataList} />
+            <ATRChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -494,7 +510,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('MFI')) * barChartHeight]}
           >
-            <MFIChart datas={dataList} />
+            <MFIChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -505,7 +521,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('OBV')) * barChartHeight]}
           >
-            <OBVChart datas={dataList} />
+            <OBVChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -516,7 +532,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ADOSC')) * barChartHeight]}
           >
-            <ADOSCChart datas={dataList} />
+            <ADOSCChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -527,7 +543,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('TRIX')) * barChartHeight]}
           >
-            <TRIXChart datas={dataList} />
+            <TRIXChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -538,7 +554,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('WILLR')) * barChartHeight]}
           >
-            <WILLRChart datas={dataList} />
+            <WILLRChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -550,7 +566,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('DX')) * barChartHeight]}
           >
-            <DMIChart datas={dataList} />
+            <DMIChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -561,7 +577,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ADX')) * barChartHeight]}
           >
-            <ADXChart datas={dataList} />
+            <ADXChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -572,18 +588,18 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ADXR')) * barChartHeight]}
           >
-            <ADXRChart datas={dataList} />
+            <ADXRChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
         {/* AROON 차트 */}
         {subIndi.includes('AROON') && (
           <Chart id={3 + subIndi.indexOf('AROON')} height={barChartHeight}
-            yExtents={data => data.aroon}
+            yExtents={data => data.aroonDown}
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('AROON')) * barChartHeight]}
           >
-            <AROONChart datas={dataList} />
+            <AROONChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -594,7 +610,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('AROONOSC')) * barChartHeight]}
           >
-            <AROONOSCChart datas={dataList} />
+            <AROONOSCChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -605,7 +621,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('STOCHRSI')) * barChartHeight]}
           >
-            <STOCHRSIChart datas={dataList} />
+            <STOCHRSIChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -616,7 +632,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('ULTOSC')) * barChartHeight]}
           >
-            <ULTOSCChart datas={dataList} />
+            <ULTOSCChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
 
@@ -628,7 +644,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             padding={20}
             origin={(_, h) => [0 , gridHeight - (subIndi.length - subIndi.indexOf('PPO')) * barChartHeight]}
           >
-            <PPOChart datas={dataList} />
+            <PPOChart datas={dataList} isShow={isShow} />
           </Chart>
         )}
       </ChartCanvas>

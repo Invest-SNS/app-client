@@ -11,24 +11,11 @@ export default function PPOChart({ datas, isShow }) {
   const PPOValue = useSelector((state) => state.indicatorValues.values.PPO);
 
   const calculatePPO = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      delete newItem.ppo;
-      return newItem;
-    });
-
-    const newData = [...updatedDatas];
-    
-    const f_idx = data.begIndex;
-    const l_idx = data.nbElement;
-    const ppo = data.result.outReal;
-    for (let i = 0; i < l_idx; i++) {
-      newData[f_idx + i] = {
-        ...newData[f_idx + i], // 기존 객체를 복사
-        ["ppo"]: ppo[i], // 새로운 속성 추가
-      };
-    }
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'PPO'
+    }));
   }
 
   useEffect(() => {

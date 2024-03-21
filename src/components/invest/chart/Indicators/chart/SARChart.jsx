@@ -10,24 +10,11 @@ export default function SARChart({ datas, isShow, chartIndi }) {
   const SARValue = useSelector((state) => state.chartValues.values.SAR);
 
   const calculateSAR = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      delete newItem.sar;
-      return newItem;
-    });
-
-    const newData = [...updatedDatas];
-    
-    const f_idx = data.begIndex;
-    const l_idx = data.nbElement;
-    const sarData = data.result.outReal;
-    for (let i = 0; i < l_idx; i++) {
-      newData[f_idx + i] = {
-        ...newData[f_idx + i], // 기존 객체를 복사
-        ["sar"]: sarData[i], // 새로운 속성 추가
-      };
-    }
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'SAR'
+    }));
   }
 
   useEffect(() => {
@@ -38,7 +25,7 @@ export default function SARChart({ datas, isShow, chartIndi }) {
         "accMax" : SARValue[1],
       }
       dispatch(getSARChart(data))
-        .then((res) =>  calculateSAR(res.payload))
+      .then((res) => calculateSAR(res.payload))
     } else if (!isActive) {
       const updatedDatas = datas.map(item => {
         const newItem = { ...item };

@@ -11,27 +11,11 @@ export default function STOCHRSIChart({ datas, isShow }) {
   const STOCHRSIValue = useSelector((state) => state.indicatorValues.values.STOCHRSI);
 
   const calculateSTOCHRSI = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      delete newItem.stochRsiK;
-      delete newItem.stochRsiD;
-      return newItem;
-    });
-
-    const newData = [...updatedDatas];
-    
-    const f_idx = data.begIndex;
-    const l_idx = data.nbElement;
-    const outFastK = data.result.outFastK;
-    const outFastD = data.result.outFastD;
-    for (let i = 0; i < l_idx; i++) {
-      newData[f_idx + i] = {
-        ...newData[f_idx + i], // 기존 객체를 복사
-        ["stochRsiK"]: outFastK[i], // 새로운 속성 추가
-        ["stochRsiD"]: outFastD[i], // 새로운 속성 추가
-      };
-    }
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'STOCHRSI'
+    }));
   }
 
   useEffect(() => {

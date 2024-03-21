@@ -10,31 +10,12 @@ export default function WMAChart({ datas, isShow, chartIndi }) {
   const WMAValue = useSelector((state) => state.chartValues.values.WMA);
 
   const calculateWMA = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      Object.keys(item).forEach(key => {
-        if (key.includes('wma')) {
-          delete newItem[key];
-        }
-      });
-      return newItem;
-    });
-
-    const responses = [data.response1, data.response2, data.response3, data.response4, data.response5];
-    const newData = [...updatedDatas];
-    responses.forEach((response, index) => {
-      const f_idx = response.begIndex;
-      const l_idx = response.nbElement;
-      const subData = response.result.outReal;
-      for (let i = 0; i < l_idx; i++) {
-        const wmaKey = `wma${[WMAValue[0], WMAValue[1], WMAValue[2], WMAValue[3], WMAValue[4]][index]}`;
-        newData[f_idx + i] = {
-          ...newData[f_idx + i], // 기존 객체를 복사
-          [wmaKey]: subData[i] // 새로운 속성 추가
-        };
-      }
-    });
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'WMA',
+      value: WMAValue,
+    }));
   }
 
   useEffect(() => {

@@ -11,27 +11,11 @@ export default function STOCHFChart({ datas, isShow }) {
   const STOCHFValue = useSelector((state) => state.indicatorValues.values.STOCHF);
 
   const calculateSTOCHF = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      delete newItem.outFastK;
-      delete newItem.outFastD;
-      return newItem;
-    });
-
-    const newData = [...updatedDatas];
-    
-    const f_idx = data.begIndex;
-    const l_idx = data.nbElement;
-    const outFastK = data.result.outFastK;
-    const outFastD = data.result.outFastD;
-    for (let i = 0; i < l_idx; i++) {
-      newData[f_idx + i] = {
-        ...newData[f_idx + i], // 기존 객체를 복사
-        ["outFastK"]: outFastK[i], // 새로운 속성 추가
-        ["outFastD"]: outFastD[i], // 새로운 속성 추가
-      };
-    }
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'STOCHF'
+    }));
   }
 
   useEffect(() => {

@@ -11,24 +11,11 @@ export default function AROONOSCChart({ datas, isShow }) {
   const AROONOSCValue = useSelector((state) => state.indicatorValues.values.AROONOSC);
 
   const calculateAROONOSC = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      delete newItem.aroonosc;
-      return newItem;
-    });
-
-    const newData = [...updatedDatas];
-    
-    const f_idx = data.begIndex;
-    const l_idx = data.nbElement;
-    const aroonosc = data.result.outReal;
-    for (let i = 0; i < l_idx; i++) {
-      newData[f_idx + i] = {
-        ...newData[f_idx + i], // 기존 객체를 복사
-        ["aroonosc"]: aroonosc[i], // 새로운 속성 추가
-      };
-    }
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'AROONOSC'
+    }));
   }
 
   useEffect(() => {

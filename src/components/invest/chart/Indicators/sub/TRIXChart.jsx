@@ -11,24 +11,11 @@ export default function TRIXChart({ datas, isShow }) {
   const TRIXValue = useSelector((state) => state.indicatorValues.values.TRIX);
 
   const calculateTRIX = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      delete newItem.trix;
-      return newItem;
-    });
-
-    const newData = [...updatedDatas];
-    
-    const f_idx = data.begIndex;
-    const l_idx = data.nbElement;
-    const trix = data.result.outReal;
-    for (let i = 0; i < l_idx; i++) {
-      newData[f_idx + i] = {
-        ...newData[f_idx + i], // 기존 객체를 복사
-        ["trix"]: trix[i], // 새로운 속성 추가
-      };
-    }
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'TRIX'
+    }));
   }
 
   useEffect(() => {
