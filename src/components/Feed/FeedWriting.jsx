@@ -1,12 +1,18 @@
 import React, { useState, useRef, useCallback } from "react";
 import styled from "styled-components";
+import { postBoardFeed, postVoteFeed } from "../../store/reducers/Feed/feed";
+import { useDispatch, useSelector } from "react-redux";
 
 const FeedWriting = ({ setIsWrite }) => {
   const inputRef = useRef();
   const [previewImage, setPreviewImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [body, setBody] = useState("");
 
   const [isVote, setIsVote] = useState(false);
+
+  const dispatch = useDispatch();
+  const userNickname = useSelector((state) => state.user.user.nickname);
 
   const onUploadImage = useCallback((e) => {
     const file = e.target.files[0];
@@ -17,10 +23,8 @@ const FeedWriting = ({ setIsWrite }) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewImage(reader.result);
-      console.log("reader.result", reader.result);
     };
     reader.readAsDataURL(file);
-    console.log("reader", reader);
   }, []);
 
   const onUploadImageButtonClick = useCallback(() => {
@@ -35,11 +39,39 @@ const FeedWriting = ({ setIsWrite }) => {
     setSelectedImage(null);
     setPreviewImage(null);
   };
+
+  const onSubmit = () => {
+    try {
+      const formData = new FormData();
+      if (isVote) {
+        dispatch(postVoteFeed(body));
+        window.location.reload();
+      } else {
+        formData.append("body", body);
+
+        if (selectedImage) {
+          formData.append("file", selectedImage);
+        }
+        dispatch(postBoardFeed(formData));
+        window.location.reload();
+      }
+      for (let key of formData.keys()) {
+        console.log(key);
+      }
+
+      for (let value of formData.values()) {
+        console.log(value);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Container>
       <UserContainer>
         <img src="/icon/user.svg" alt="프로필" style={{ width: "45px" }} />
-        <UserNickname>양똥개</UserNickname>
+        <UserNickname>{userNickname}</UserNickname>
         <img
           src="/icon/X.svg"
           alt="x"
@@ -51,11 +83,21 @@ const FeedWriting = ({ setIsWrite }) => {
         <>
           <VoteWrapper>
             <VoteDiv>O / X 투표</VoteDiv>
-            <VoteTextarea placeholder="투표 제목" />
+            <VoteTextarea
+              placeholder="투표 제목"
+              onChange={(e) => {
+                setBody(e.target.value);
+                console.log("body", body);
+              }}
+            />
           </VoteWrapper>
         </>
       ) : (
-        <StyledTextarea placeholder="글을 작성해보세요." />
+        <StyledTextarea
+          placeholder="글을 작성해보세요."
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+        />
       )}
 
       {previewImage && (
@@ -91,7 +133,7 @@ const FeedWriting = ({ setIsWrite }) => {
           <img src="/icon/vote.svg" alt="투표" style={{ width: "27px" }} />
           <div>투표</div>
         </ButtonDiv>
-        <UploadBtn>게시</UploadBtn>
+        <UploadBtn onClick={onSubmit}>게시</UploadBtn>
       </UploadContainer>
     </Container>
   );
