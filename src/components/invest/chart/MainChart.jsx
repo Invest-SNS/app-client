@@ -90,38 +90,12 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
       .then(() => setIsShow(prev => !prev))
   }
 
-  function getNewData(format) {
-    const date = new Date();
-    const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
-    const data = {
-      "code" : company.code,
-      "start_date" : "19990101",
-      "end_date" : formattedDate,
-      "time_format" : format
-    }
-
-    dispatch(getChartDatas(data))
-    // 실시간 데이터 받아올 때 수정해야할 수도 있는 부분
-    // 차트지표, 보조지표 초기화
-    // 새로운 기업의 데이터를 불러올 때는 초기화를 시켜줘야함
-    subIndi.map((item, idx) => 
-      dispatch(setDisactiveSub(item))
-    )
-
-    chartIndi.map((item, idx) => 
-      dispatch(setDisactiveSub(item))
-    )
-    
-    dispatch(setSubIndi([]))
-    dispatch(setChartIndi([]))
-  }
-
   useEffect(() => {
-    // getData('D')
     // 실시간 데이터 받아올 때 수정해야할 수도 있는 부분
     // 새로운 기업을 클릭했을 때만 데이터 갱신
     if (companyCode !== company.code) {
-      getNewData(company.code)
+      getData('D')
+      dispatch(setClickDate('D'))
       dispatch(setCompanyCode(company.code))
     }
 
