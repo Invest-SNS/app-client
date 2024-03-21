@@ -37,6 +37,7 @@ const FeedPage = () => {
   const onErrorImg = (e) => {
     e.target.src = default_Img;
   };
+
   return (
     <Container>
       {isWrite ? (
