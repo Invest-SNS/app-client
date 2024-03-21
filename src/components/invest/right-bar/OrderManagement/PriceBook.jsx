@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const PriceBook = () => {
+const PriceBook = ({
+  onPriceUpdate,
+  onPriceGapUpdate,
+  onSelectedPriceUpdate,
+}) => {
   // 매도
   const sellPriceData = [
     72200,
@@ -65,6 +69,11 @@ const PriceBook = () => {
   const [currentPrice, setCurrentPrice] = useState(72200);
   const containerRef = useRef(null);
 
+  useEffect(() => {
+    onPriceUpdate(currentPrice);
+    onPriceGapUpdate(sellPrice[1] - sellPrice[0]);
+  }, []);
+
   const adjustScroll = () => {
     const container = containerRef.current;
     if (container) {
@@ -89,8 +98,8 @@ const PriceBook = () => {
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
-        {Array.from({ length: 10 })
-          .map((_, index) => (
+        {sellPrice
+          .map((price, index) => (
             <div
               key={uuidv4()}
               style={{
@@ -102,16 +111,18 @@ const PriceBook = () => {
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "0 1rem",
-                border:
-                  sellPrice[index] === currentPrice
-                    ? "1px solid black"
-                    : "none",
+                border: price === currentPrice ? "1px solid black" : "none",
+              }}
+              onClick={() => {
+                if (price !== "") {
+                  onSelectedPriceUpdate(price);
+                }
               }}
             >
-              {sellPrice[index] !== "" && (
+              {price !== "" && (
                 <>
                   <span style={{ fontSize: "0.9rem" }}>
-                    {sellPrice[index].toLocaleString()}
+                    {price.toLocaleString()}
                   </span>
                   <span style={{ fontSize: "0.7rem", color: "#015FFF" }}>
                     {sellQuantity[index].toLocaleString()}
@@ -124,7 +135,7 @@ const PriceBook = () => {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column" }}>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {buyPrice.map((price, index) => (
           <div
             key={uuidv4()}
             style={{
@@ -136,14 +147,18 @@ const PriceBook = () => {
               alignItems: "center",
               justifyContent: "space-between",
               padding: "0 1rem",
-              border:
-                buyPrice[index] === currentPrice ? "1px solid black" : "none",
+              border: price === currentPrice ? "1px solid black" : "none",
+            }}
+            onClick={() => {
+              if (price !== "") {
+                onSelectedPriceUpdate(price);
+              }
             }}
           >
-            {buyPrice[index] !== "" && (
+            {price !== "" && (
               <>
                 <span style={{ fontSize: "0.9rem" }}>
-                  {buyPrice[index].toLocaleString()}
+                  {price.toLocaleString()}
                 </span>
                 <span style={{ fontSize: "0.7rem", color: "red" }}>
                   {buyQuantity[index].toLocaleString()}

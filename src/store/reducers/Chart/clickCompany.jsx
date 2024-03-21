@@ -8,7 +8,7 @@ const initialState = {
     name: "삼성전자",
     __v: 0,
     _id: "65f24176b5fd9b9fdc483b63",
-  }
+  },
 };
 
 const companySlice = createSlice({
@@ -17,7 +17,7 @@ const companySlice = createSlice({
   reducers: {
     setClickCompany(state, action) {
       state.data = action.payload;
-    }
+    },
   },
 });
 
