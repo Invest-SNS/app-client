@@ -53,7 +53,7 @@ export default function HotStockPage() {
     <S.Container>
       <Container>
         {/* 인기 주식 */}
-        <div style={{ paddingTop: '20px' }}>
+        <div>
           <TitleDiv>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/sparkles_2728.png" />
             <MainFont>인기 주식</MainFont>
@@ -77,7 +77,7 @@ export default function HotStockPage() {
         </div>
       
         {/* 핫이슈 종목 */}
-        <div style={{ paddingTop: '20px' }}>
+        <div style={{ paddingTop: '35px' }}>
           <TitleDiv>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/fire_1f525.png" />
             <MainFont>핫이슈 종목</MainFont>
@@ -118,8 +118,8 @@ const Container = styled.div`
 const TitleDiv = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 15px 0;
+  // justify-content: center;
+  padding: 15px 0 15px 20px;
   gap: 8px;
 `
 
@@ -136,8 +136,8 @@ const IconImg = styled.img`
 const RankDiv = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 15px 0;
+  // justify-content: center;
+  padding: 15px 0 15px 20px;
   gap: 10px;
 `
 
