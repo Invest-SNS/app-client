@@ -24,10 +24,20 @@ const Indicators = ({ onClose }) => {
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
   const onCheckedElement = (checked, item) => {
-    if (checked) {
-      dispatch(setActiveSub(item))
-      dispatch(setSubIndi([...subIndi, item]))
-    } else if (!checked) {
+    if (subIndi.length < 4) {
+      if (checked) {
+        dispatch(setActiveSub(item))
+        dispatch(setSubIndi([...subIndi, item]))
+      }
+    } else {
+      if (checked) {
+        dispatch(setActiveSub(item))
+        dispatch(setSubIndi([...subIndi.filter((el, idx) => idx !== 0), item]))
+        dispatch(setDisactiveSub(subIndi[0]))
+      }
+    }
+
+    if (!checked) {
       dispatch(setDisactiveSub(item))
       dispatch(setSubIndi(subIndi.filter(el => el !== item)))
     }

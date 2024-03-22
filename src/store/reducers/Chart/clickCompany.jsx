@@ -9,6 +9,7 @@ const initialState = {
     __v: 0,
     _id: "65f24176b5fd9b9fdc483b63",
   },
+  companyCode: "005930",
 };
 
 const companySlice = createSlice({
@@ -18,10 +19,13 @@ const companySlice = createSlice({
     setClickCompany(state, action) {
       state.data = action.payload;
     },
+    setCompanyCode(state, action) {
+      state.companyCode = action.payload;
+    },
   },
 });
 
-const { setClickCompany } = companySlice.actions;
-export { setClickCompany };
+const { setClickCompany, setCompanyCode } = companySlice.actions;
+export { setClickCompany, setCompanyCode };
 
 export default companySlice.reducer;
