@@ -4,19 +4,14 @@ import * as S from "../../style/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { getHotDatas, getPopularDatas } from "../../store/reducers/Hot/getStockInfo";
 import default_Img from "../../../public/icon/+.svg";
+import restart_Img from '../../../public/icon/restart.svg';
 
 export default function HotStockPage() {
   const dispatch = useDispatch();
-  const [selectedTab, setSelectedTab] = useState("인기 주식");
-  const handleTabClick = (tab) => {
-    setSelectedTab(tab);
-  };
 
   const popularData = useSelector((state) => state.hot.popularData);
   const hotData = useSelector((state) => state.hot.hotData);
   const [selectNum, setSelectNum] = useState(1);
-
-  console.log('hotData', hotData)
 
   useEffect(() => {
     dispatch(getPopularDatas());
@@ -59,20 +54,26 @@ export default function HotStockPage() {
             <MainFont>인기 주식</MainFont>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/sparkles_2728.png" />
           </TitleDiv>
-          {popularData.map((item, idx) =>
-            <RankDiv key={idx} num={idx}>
-              <RankFont>{item.now_rank}.</RankFont>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <CompanyLogo
-                  src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                    item.stbd_nm,
-                    item.stock_code
-                  )}.png`}
-                  onError={onErrorImg}
-                />
-                <RankFont>{item.stbd_nm}</RankFont>
-              </div>
-            </RankDiv>
+          {popularData.length > 0 ? (
+            popularData.map((item, idx) =>
+              <RankDiv key={idx} num={idx}>
+                <RankFont>{item.now_rank}.</RankFont>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <CompanyLogo
+                    src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+                      item.stbd_nm,
+                      item.stock_code
+                    )}.png`}
+                    onError={onErrorImg}
+                  />
+                  <RankFont>{item.stbd_nm}</RankFont>
+                </div>
+              </RankDiv>
+            )
+          ) : (
+            <ErrorDiv1>
+              <ReIcon src={restart_Img} onClick={() => dispatch(getPopularDatas())} />
+            </ErrorDiv1>
           )}
         </div>
       
@@ -106,9 +107,9 @@ export default function HotStockPage() {
               </RankDiv>
             )
           ) : (
-            <ErrorDiv>
+            <ErrorDiv2>
               <RankFont>조건에 맞는 데이터가 없습니다.</RankFont>
-            </ErrorDiv>
+            </ErrorDiv2>
           )}
         </div>
       </Container>
@@ -183,9 +184,20 @@ const CompanyLogo = styled.img`
   margin-right: 10px;
 `;
 
-const ErrorDiv = styled.div`
+const ErrorDiv1 = styled.div`
+  display: flex;
+  padding: 90px 0;
+  justify-content: center;
+  align-items: center;
+`
+
+const ErrorDiv2 = styled.div`
   display: flex;
   padding: 150px 0;
   justify-content: center;
   align-items: center;
+`
+
+const ReIcon = styled.img`
+  width: 20px;
 `
