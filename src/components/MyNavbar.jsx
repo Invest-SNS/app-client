@@ -119,25 +119,25 @@ const MyNavbar = ({ offCanvasTitle }) => {
                   </Nav.Link>
                 </>
               )} */}
+              {/* ChatBot 모달 */}
+              <Modal show={showChatBot} onHide={toggleChatBot} size="lg" centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>ChatBot</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <ChatBot />
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={toggleChatBot}>
+                    닫기
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>
     </Navbar>
-    {/* ChatBot 모달 */}
-      <Modal show={showChatBot} onHide={toggleChatBot} size="lg" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>ChatBot</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <ChatBot />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={toggleChatBot}>
-            닫기
-          </Button>
-        </Modal.Footer>
-      </Modal>
   );
 };
 
