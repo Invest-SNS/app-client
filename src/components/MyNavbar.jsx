@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 // import { IsLoginContext, useIsLoginState } from "~/lib/hooks/isLoginContext";
 // import useAuth from "~/lib/hooks/useAuth";
 import { useSelector } from "react-redux";
+import LogoIcon from '../../public/icon/logo.svg'
 
 const EXPAND_BREAKPOINT = "md";
 
@@ -55,7 +56,10 @@ const MyNavbar = ({ offCanvasTitle }) => {
       style={{ borderBottom: "1px solid black" }}
     >
       <Container fluid>
-        <Navbar.Brand href="#">invest-SNS</Navbar.Brand>
+        <Navbar.Brand href="#" style={{ display: 'flex', gap: '10px', alignItems: 'center', fontWeight: '100' }}>
+          <img src={LogoIcon} width={37} />
+          StockMate
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls={`Navbar-expand-${EXPAND_BREAKPOINT}`} />
         <Navbar.Offcanvas
           id={`Navbar-expand-${EXPAND_BREAKPOINT}`}
