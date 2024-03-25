@@ -1,16 +1,21 @@
 import React, { useContext, useEffect, useState, useMemo } from "react";
-import { Container, Navbar, Nav, Offcanvas } from "react-bootstrap";
+import { Container, Navbar, Nav, Offcanvas, Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 // import { fetchAboutUser, logout } from "~/lib/apis/user";
 // import { getCookie, removeCookie } from "~/lib/apis/cookie";
 // import { IsLoginContext, useIsLoginState } from "~/lib/hooks/isLoginContext";
 // import useAuth from "~/lib/hooks/useAuth";
 import { useSelector } from "react-redux";
+import ChatBot from "../routes/chatBot/chatBot";
 import LogoIcon from '../../public/icon/logo.svg'
+
 
 const EXPAND_BREAKPOINT = "md";
 
 const MyNavbar = ({ offCanvasTitle }) => {
+  const [showChatBot, setShowChatBot] = useState(false); // ChatBot 표시 상태
+  const toggleChatBot = () => setShowChatBot(prev => !prev);
+
   // const [user, setUser] = useState("");
   //   const [userId, setUserId] = useState("");
   // const [isLogin, setIsLogin] = useState(false);
@@ -77,6 +82,11 @@ const MyNavbar = ({ offCanvasTitle }) => {
             >
               {/* {!user ? ( */}
               <div style={{ display: "flex", gap: "15px" }}>
+              
+              {/* 챗봇 토글 버튼 */}
+                <Button variant="outline-primary" onClick={toggleChatBot} >
+                  ChatBot
+                </Button>
                 <Nav.Link
                   as={Link}
                   className="flex-grow-1 text-center"
@@ -109,6 +119,20 @@ const MyNavbar = ({ offCanvasTitle }) => {
                   </Nav.Link>
                 </>
               )} */}
+              {/* ChatBot 모달 */}
+              <Modal show={showChatBot} onHide={toggleChatBot} size="lg" centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>ChatBot</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <ChatBot />
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={toggleChatBot}>
+                    닫기
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
