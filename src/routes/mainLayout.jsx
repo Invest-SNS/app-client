@@ -52,7 +52,7 @@ export default function MainLayout() {
 
 const Container = styled.div`
   display: flex;
-  height: calc(100vh - 57px);
+  height: calc(100vh - 65px);
   overflow: hidden;
 `;
 
