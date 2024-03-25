@@ -26,11 +26,6 @@ export const mainRoutes = [
             index: true,
           },
           {
-            path: "/market",
-            element: <MarketInfoPage />,
-            index: true,
-          },
-          {
             path: "/strategy",
             element: <InvestStrategyPage />,
             index: true,

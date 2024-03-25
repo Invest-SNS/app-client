@@ -60,6 +60,7 @@ import PPOChart from "./Indicators/sub/PPOChart";
 import { setCompanyCode } from "../../../store/reducers/Chart/clickCompany";
 import { setChartIndi, setDisactiveSub, setSubIndi } from "../../../store/reducers/Chart/Indicators/clickIndicators";
 import { getBBANDSChart, getSARChart } from "../../../store/reducers/Chart/Indicators/chart";
+import { useWebSocket } from "../../../lib/hooks/useWebSocket";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas);
@@ -75,6 +76,11 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
 
   console.log('보조지표', subIndi);
   console.log('차트지표', chartIndi);
+
+  // const { askPrice, nowPrice } = useWebSocket();
+  // useEffect(() => {
+  //   console.log('nowPrice',nowPrice)
+  // }, [nowPrice])
   
   function getData(format) {
     const date = new Date();
