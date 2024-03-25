@@ -2,25 +2,23 @@ import React, { useState, useEffect } from "react";
 import TradingInputButton from "./Button/TradingInputButton";
 import OrderModal from "./Modal/OrderModal";
 import ErrorOrderModal from "./Modal/ErrorOrderModal";
+import { useDispatch, useSelector } from "react-redux";
 
-const OrderBook = ({
-  currentPrice,
-  newPriceGap,
-  maxQuatity,
-  balance,
-  orderType,
-  selectedPrice,
-}) => {
-  const [selectedType, setSelectedType] = useState("지정가");
-  const [price, setPrice] = useState(selectedPrice);
-  const [quantity, setQuantity] = useState(0);
-  const [priceGap, setPriceGap] = useState(newPriceGap);
-  const [disablePriceInput, setDisablePriceInput] = useState(false);
-  const [userMaxQuantity, setUserQuantity] = useState(maxQuatity);
-  const [userBalance, setUserBalance] = useState(balance);
-  const [userOrderType, setUserOrderType] = useState(orderType);
+const OrderBook = () => {
+  // const [priceGap, setPriceGap] = useState(newPriceGap);
+  // const [userMaxQuantity, setUserQuantity] = useState(maxQuatity);
+  // const [userBalance, setUserBalance] = useState(balance);
+  // const [userOrderType, setUserOrderType] = useState(orderType);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [balance, setBalance] = useState(2000000);
+  const [selectedType, setSelectedType] = useState("지정가"); // 지정가, 시장가
+  const [disablePriceInput, setDisablePriceInput] = useState(false);
+  // const [price, setPrice] = useState(selectedPrice);
+  const [quantity, setQuantity] = useState(0);
+
+  const dispatch = useDispatch();
+  const { selectedPrice } = useSelector((state) => state.trading);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -43,21 +41,20 @@ const OrderBook = ({
     if (type === "시장가") {
       setDisablePriceInput(true);
       setQuantity(0);
-      setPrice(0);
+      // setPrice(0);
     } else {
       setDisablePriceInput(false);
-      setPrice(currentPrice);
       setQuantity(0);
     }
   };
 
   const increasePrice = () => {
-    setPrice(price + priceGap);
+    // setPrice(price + priceGap);
   };
 
   const decreasePrice = () => {
-    const newPrice = price - priceGap;
-    setPrice(newPrice < 0 ? 0 : newPrice);
+    // const newPrice = price - priceGap;
+    // setPrice(newPrice < 0 ? 0 : newPrice);
   };
 
   const increaseQuantity = () => {
@@ -72,7 +69,7 @@ const OrderBook = ({
 
   return (
     <>
-      <ErrorOrderModal
+      {/* <ErrorOrderModal
         isOpen={isErrorModalOpen}
         onClose={closeErrorModal}
         content={"주문 수량이 없습니다."}
@@ -367,7 +364,7 @@ const OrderBook = ({
             {userOrderType === "매수" ? `매수` : `매도`}
           </button>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

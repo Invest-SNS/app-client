@@ -26,7 +26,7 @@ const Feed = () => {
   console.log("allFeedData", allFeedData);
   return (
     <>
-      {allFeedData.map((item, idx) => {
+      {allFeedData?.map((item, idx) => {
         console.log("item", item);
         return (
           <div key={idx}>
