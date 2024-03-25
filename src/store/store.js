@@ -12,7 +12,6 @@ import {
   persistStore,
 } from "redux-persist";
 import logger from "redux-logger";
-import tradingReducer from "./reducers/Trading/trading";
 import chartValuesReducer from "./reducers/Trading/chartValues";
 import indicatorValuesReducer from "./reducers/Trading/indicatorValues";
 import chartReducer from "./reducers/Chart/chart.jsx";
@@ -23,13 +22,13 @@ import getSubIndicatorReducer from "./reducers/Chart/Indicators/sub.jsx";
 import searchReducer from "./reducers/Trading/search";
 import userReducer from "./reducers/User/user";
 import feedReducer from "./reducers/Feed/feed";
-import hotStockReducer from './reducers/Hot/getStockInfo.jsx';
-import strategyReducer from './reducers/Strategy/getStrategy.jsx';
+import commentReducer from "./reducers/Feed/comment";
+import hotStockReducer from "./reducers/Hot/getStockInfo.jsx";
+import strategyReducer from "./reducers/Strategy/getStrategy.jsx";
 
 const rootPersistConfig = {
   key: "root",
   storage: storage,
-  // whitelist: ["chartValues", "indicatorValues"],
   whitelist: [
     "user",
     "chartValues",
@@ -57,6 +56,7 @@ const rootReducer = persistReducer(
     search: searchReducer,
     user: userReducer,
     feed: feedReducer,
+    comment: commentReducer,
     hot: hotStockReducer,
     strategy: strategyReducer,
   })

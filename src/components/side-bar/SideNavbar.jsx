@@ -1,9 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const SideNavbar = () => {
   const location = useLocation();
+  console.log(location.pathname);
+
   return (
     <Nav>
       <ul>
@@ -53,8 +56,8 @@ const SideNavbar = () => {
           </Link>
         </li>
         <li>
-          <Link
-            to="/feed"
+          <a
+            href="/feed"
             className={location.pathname === "/feed" ? "active" : ""}
           >
             <img
@@ -66,11 +69,11 @@ const SideNavbar = () => {
               alt="피드"
             />
             <div>피드</div>
-          </Link>
+          </a>
         </li>
         <li>
-          <Link
-            to="/mypage"
+          <a
+            href="/mypage"
             className={location.pathname === "/mypage" ? "active" : ""}
           >
             <img
@@ -82,7 +85,7 @@ const SideNavbar = () => {
               alt="마이페이지"
             />
             <div>마이페이지</div>
-          </Link>
+          </a>
         </li>
       </ul>
     </Nav>

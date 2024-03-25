@@ -1,32 +1,92 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FeedBoard from "./FeedBoard";
 import FeedOrder from "./FeedOrder";
 import FeedReturns from "./FeedReturns";
-import FeedVoteNot from "./FeedVoteNot";
-import FeedVoteYes from "./FeedVoteYes";
-import FeedDetail from "../FeedDetail";
+
 import styled from "styled-components";
-import { fetchAllFeed } from "../../../store/reducers/Feed/feed";
+import { fetchAllFeed, fetchMyFeed } from "../../../store/reducers/Feed/feed";
 import { useDispatch, useSelector } from "react-redux";
 
-const Feed = () => {
-  const [showDetail, setShowDetail] = useState(false);
-  const toggleDetail = () => {
-    setShowDetail(true);
+import FeedVote from "./FeedVote";
+
+const Feed = ({ path }) => {
+  const dispatch = useDispatch();
+  const [isBottom, setIsBottom] = useState(false);
+  const [page, setPage] = useState(1);
+  const [fetching, setFetching] = useState(false);
+
+  const scrollRef = useRef();
+
+  const userId = useSelector((state) => state.user.user.id);
+
+  console.log("page", page);
+
+  useEffect(() => {
+    if (path === "/feed") {
+      console.log("isBottom", isBottom);
+      if (isBottom) {
+        setFetching(true);
+        dispatch(fetchAllFeed(page))
+          .then(() => setFetching(false))
+          .catch(() => setFetching(false));
+      } else {
+        dispatch(fetchAllFeed(1));
+      }
+    } else if (path === "/mypage" && userId) {
+      if (isBottom) {
+        setFetching(true);
+        dispatch(fetchMyFeed({ userId: userId, page: page }))
+          .then(() => setFetching(false))
+          .catch(() => setFetching(false));
+      } else {
+        dispatch(fetchMyFeed({ userId: userId, page: 1 }));
+      }
+    }
+  }, [dispatch, path, userId, isBottom, page]);
+
+  const feedData = useSelector((state) => {
+    if (path === "/feed") return state.feed.allFeed;
+    else if (path === "/mypage") return state.feed.myFeed;
+    return [];
+  });
+
+  const handleScroll = () => {
+    const scrollHeight = scrollRef.current.scrollHeight;
+    const scrollTop = scrollRef.current.scrollTop;
+    const clientHeight = scrollRef.current.clientHeight;
+
+    let cal;
+    if (path === "/feed") {
+      cal = scrollTop + clientHeight + 0.5;
+    } else {
+      cal = scrollTop + clientHeight + 1;
+    }
+    if (cal >= scrollHeight && !fetching) {
+      console.log("hello");
+      setIsBottom(true);
+      setPage((prevPage) => prevPage + 1);
+    }
   };
 
   useEffect(() => {
-    setShowDetail(false);
-    dispatch(fetchAllFeed());
-  }, []);
-  console.log(showDetail);
+    const scrollElement = scrollRef.current;
+    if (scrollElement) {
+      scrollElement.addEventListener("scroll", handleScroll);
+      console.log("dddd");
+      return () => {
+        scrollElement.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, [handleScroll]);
 
-  const dispatch = useDispatch();
-  const allFeedData = useSelector((state) => state.feed.allFeed);
-  console.log("allFeedData", allFeedData);
+  console.log("feedData", feedData.length);
+  if (feedData.length == 0) {
+    return <Container> 아직 작성된 글이 없습니다.</Container>;
+  }
+
   return (
-    <>
-      {allFeedData?.map((item, idx) => {
+    <FeedScrollDiv ref={scrollRef}>
+      {feedData?.map((item, idx) => {
         console.log("item", item);
         return (
           <div key={idx}>
@@ -34,41 +94,49 @@ const Feed = () => {
               <FeedOrder item={item} />
             ) : item.isProfit ? (
               <FeedReturns item={item} />
-            ) : item.isVote && item.myVote ? (
-              <FeedVoteYes item={item} />
             ) : item.isVote ? (
-              <FeedVoteNot item={item} />
+              <FeedVote page={page} path={path} item={item} />
             ) : (
-              <FeedBoard item={item} toggleDetail={toggleDetail} />
+              <FeedBoard item={item} />
             )}
           </div>
         );
       })}
-
-      <DetailContainer $showdetail={showDetail}>
-        {showDetail ? (
-          <>
-            <FeedDetail setShowDetail={setShowDetail} />
-          </>
-        ) : (
-          <></>
-        )}
-      </DetailContainer>
-    </>
+    </FeedScrollDiv>
   );
 };
 
-const DetailContainer = styled.div`
-  width: 400px;
-  height: 100%;
-  background-color: #fff;
-  transform: translateX(${(props) => (props.$showdetail ? "0" : "100%")});
-  transition: transform 0.3s ease;
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  z-index: 999;
+const Container = styled.div`
+  background-color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+`;
+
+const FeedScrollDiv = styled.div`
+  overflow-y: auto;
+  /* max-height: 100%; */
+  /* background-color: #fff; */
+  /* padding-left: 8px; */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #b8b8b8;
+    border-radius: 10px;
+    border: transparent;
+  }
+
+  &:hover {
+    /* 마우스가 올라갔을 때 스크롤바를 보이게 함 */
+    scrollbar-color: #b8b8b8 transparent;
+  }
 `;
 
 export default Feed;

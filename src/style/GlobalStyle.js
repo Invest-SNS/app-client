@@ -21,6 +21,7 @@ export const FeedWrapper = styled.div`
 
 export const UserDiv = styled.div`
   margin: 20px 25px 0px 25px;
+  width: 80%;
 `;
 
 export const UserNickname = styled.div`
@@ -60,12 +61,14 @@ export const BottomWrapper = styled.div`
   margin: 20px 25px 0px 25px;
   padding: 15px 0px;
   border-top: 1px solid #dadada;
+  border-bottom: 1px solid #dadada;
   gap: 20px;
 `;
 
 export const IconDiv = styled.div`
   display: flex;
   align-items: center;
+  width: 50px;
 `;
 
 export const StockWrapper = styled.div`
@@ -89,4 +92,8 @@ export const StockDiv = styled.div`
   font-size: 17px;
   font-style: normal;
   font-weight: 550;
+`;
+
+export const CommentDiv = styled.div`
+  display: ${(props) => (props.$check == true ? "none" : "flex")};
 `;

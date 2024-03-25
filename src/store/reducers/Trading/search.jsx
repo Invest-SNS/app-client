@@ -3,11 +3,13 @@ import {
   postSearch as reqPostSearch,
   postSearchUser as reqPostSearchUser,
   postLikeStock as reqPostLikeStock,
+  fetchLikeStock as reqFetchLikeStock,
 } from "~/lib/apis/search";
 
 const initialState = {
   searchResults: [],
   favoriteArr: [],
+  myFavoriteArr: [],
   loading: "idle",
 };
 
@@ -31,6 +33,14 @@ const postLikeStock = createAsyncThunk(
   "search/postLikeStock",
   async ({ likeStock }, thunkAPI) => {
     const response = await reqPostLikeStock(likeStock);
+    return response;
+  }
+);
+
+const fetchLikeStock = createAsyncThunk(
+  "search/fetchLikeStock",
+  async (data, thunkAPI) => {
+    const response = await reqFetchLikeStock();
     return response;
   }
 );
@@ -75,10 +85,20 @@ const searchSlice = createSlice({
       })
       .addCase(postLikeStock.rejected, (state) => {
         state.loading = "rejected";
+      })
+      .addCase(fetchLikeStock.fulfilled, (state, action) => {
+        state.myFavoriteArr = action.payload;
+        state.loading = "idle";
+      })
+      .addCase(fetchLikeStock.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(fetchLikeStock.rejected, (state) => {
+        state.loading = "rejected";
       });
   },
 });
 
 export const { setFavoriteArr } = searchSlice.actions;
-export { postSearch, postSearchUser, postLikeStock };
+export { postSearch, postSearchUser, postLikeStock, fetchLikeStock };
 export default searchSlice.reducer;
