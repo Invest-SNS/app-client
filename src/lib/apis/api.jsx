@@ -11,6 +11,10 @@ export const subChartInstance = axios.create({
   baseURL: BASE_URL + "/subChart",
 });
 
+export const shinhanInstance = axios.create({
+  baseURL: BASE_URL + "/shinhanInfo",
+});
+
 export const baseInstance = axios.create({
   baseURL: BASE_URL,
 });
