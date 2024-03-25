@@ -131,7 +131,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const margin = { left: 0, right: 78, top: 0, bottom: 24 };
 
   // window 사이즈에 맞춘 넓이/높이
-  const height = window.innerHeight - 160;
+  const height = window.innerHeight - 170;
   const width = window.innerWidth - 660;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(

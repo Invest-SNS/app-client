@@ -70,6 +70,7 @@ const ContentContainer = styled.div`
   flex-direction: column;
   // flex-grow: 1;
   transition: margin-left 0.3s ease;
+  z-index: 99;
 `;
 
 const Content = styled.div`
