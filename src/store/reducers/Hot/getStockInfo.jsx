@@ -32,6 +32,9 @@ const hotStockSlice = createSlice({
     }),
     builder.addCase(getHotDatas.fulfilled, (state, action) => {
       state.hotData = action.payload;
+    }),
+    builder.addCase(getHotDatas.rejected, (state, action) => {
+      state.hotData = [];
     })
   },
 });

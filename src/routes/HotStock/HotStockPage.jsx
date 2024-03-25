@@ -53,14 +53,14 @@ export default function HotStockPage() {
     <S.Container>
       <Container>
         {/* 인기 주식 */}
-        <div>
+        <div style={{ padding: '5px 10px 0 10px' }}>
           <TitleDiv>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/sparkles_2728.png" />
             <MainFont>인기 주식</MainFont>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/sparkles_2728.png" />
           </TitleDiv>
           {popularData.map((item, idx) =>
-            <RankDiv key={idx}>
+            <RankDiv key={idx} num={idx}>
               <RankFont>{item.now_rank}.</RankFont>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <CompanyLogo
@@ -77,7 +77,7 @@ export default function HotStockPage() {
         </div>
       
         {/* 핫이슈 종목 */}
-        <div style={{ paddingTop: '35px' }}>
+        <div style={{ padding: '20px 10px 0 10px' }}>
           <TitleDiv>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/fire_1f525.png" />
             <MainFont>핫이슈 종목</MainFont>
@@ -89,20 +89,26 @@ export default function HotStockPage() {
             <SelectBtn num={selectNum} onClick={() => setSelectNum(3)}>외국인순매수</SelectBtn>
             <SelectBtn num={selectNum} onClick={() => setSelectNum(4)}>기관순매수</SelectBtn>
           </BtnDiv>
-          {hotData.map((item, idx) =>
-            <RankDiv key={idx}>
-              <RankFont>{item.rank}.</RankFont>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <CompanyLogo
-                  src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                    item.stbd_nm,
-                    item.stock_code
-                  )}.png`}
-                  onError={onErrorImg}
-                />
-                <RankFont>{item.stbd_nm}</RankFont>
-              </div>
-            </RankDiv>
+          {hotData.length > 0 ? (
+            hotData.map((item, idx) =>
+              <RankDiv key={idx} num={idx}>
+                <RankFont>{item.rank}.</RankFont>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <CompanyLogo
+                    src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+                      item.stbd_nm,
+                      item.stock_code
+                    )}.png`}
+                    onError={onErrorImg}
+                  />
+                  <RankFont>{item.stbd_nm}</RankFont>
+                </div>
+              </RankDiv>
+            )
+          ) : (
+            <ErrorDiv>
+              <RankFont>조건에 맞는 데이터가 없습니다.</RankFont>
+            </ErrorDiv>
           )}
         </div>
       </Container>
@@ -118,8 +124,7 @@ const Container = styled.div`
 const TitleDiv = styled.div`
   display: flex;
   align-items: center;
-  // justify-content: center;
-  padding: 15px 0 15px 20px;
+  padding: 20px 5px;
   gap: 8px;
 `
 
@@ -129,16 +134,19 @@ const MainFont = styled.span`
 `
 
 const IconImg = styled.img`
-  width: 45px;
-  height: 45px;
+  width: 35px;
+  height: 35px;
 `
 
 const RankDiv = styled.div`
+  // background-color: ${(props) => props.num % 2 ? "rgba(255, 227, 215, 0.4)" : "rgba(0, 0, 0, 0.03)"};
   display: flex;
   align-items: center;
-  // justify-content: center;
-  padding: 15px 0 15px 20px;
+  padding: 13px 0 13px 20px;
   gap: 10px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  margin-bottom: 8px;
 `
 
 const RankFont = styled.span`
@@ -164,12 +172,20 @@ const SelectBtn = styled.div`
   }
 
   &:nth-child(${(props) => props.num}) {
-    background-color: #FFE3D7;
+    background-color: #ffd4c2;
   }
 `
+
 const CompanyLogo = styled.img`
   width: 35px;
   height: 35px;
   border-radius: 999px;
   margin-right: 10px;
 `;
+
+const ErrorDiv = styled.div`
+  display: flex;
+  padding: 150px 0;
+  justify-content: center;
+  align-items: center;
+`
