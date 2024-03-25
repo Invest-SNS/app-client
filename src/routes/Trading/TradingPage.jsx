@@ -5,134 +5,15 @@ import PriceBook from "../../components/invest/right-bar/OrderManagement/PriceBo
 import OrderBook from "../../components/invest/right-bar/OrderManagement/OrderBook";
 import OrderList from "../../components/invest/right-bar/OrderHistory/OrderHistoryList";
 import NewIcon from "../../components/invest/right-bar/OrderHistory/NewIcon";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedTab } from "../../store/reducers/Trading/trading";
 
 export default function TradingPage() {
-  const pendingOrders = [
-    {
-      code: "005930",
-      name: "삼성전자",
-      orderType: "매수",
-      price: 78400,
-      quantity: 5,
-      remaining: 3,
-    },
-    {
-      code: "005930",
-      name: "삼성전자",
-      orderType: "매수",
-      price: 78400,
-      quantity: 5,
-      remaining: 5,
-    },
-    {
-      code: "003720",
-      name: "삼영",
-      orderType: "매도",
-      price: 3915,
-      quantity: 20,
-      remaining: 13,
-    },
-    {
-      code: "003720",
-      name: "삼영",
-      orderType: "매도",
-      price: 3915,
-      quantity: 20,
-      remaining: 13,
-    },
-    {
-      code: "003720",
-      name: "삼영",
-      orderType: "매도",
-      price: 3915,
-      quantity: 20,
-      remaining: 13,
-    },
-  ];
-
-  const filledOrders = [
-    {
-      code: "005930",
-      name: "삼성전자",
-      orderType: "매수",
-      price: 78400,
-      quantity: 2,
-      createdAt: "09: 28",
-    },
-    {
-      code: "005930",
-      name: "삼영",
-      orderType: "매도",
-      price: 3915,
-      quantity: 10,
-      createdAt: "09: 28",
-    },
-    {
-      code: "003720",
-      name: "삼영",
-      orderType: "매도",
-      price: 3915,
-      quantity: 7,
-      createdAt: "09: 28",
-    },
-    {
-      code: "003720",
-      name: "삼영",
-      orderType: "매도",
-      price: 3915,
-      quantity: 7,
-      createdAt: "09: 28",
-    },
-    {
-      code: "003720",
-      name: "삼영",
-      orderType: "매도",
-      price: 3915,
-      quantity: 7,
-      createdAt: "09: 28",
-    },
-    {
-      code: "003720",
-      name: "삼영",
-      orderType: "매도",
-      price: 3915,
-      quantity: 7,
-      createdAt: "09: 28",
-    },
-  ];
-
-  const [selectedTab, setSelectedTab] = useState("매수");
-  const [currentPrice, setCurrentPrice] = useState(0);
-  const [priceGap, setPriceGap] = useState(0);
-  const [maxQuantity, setMaxQuantity] = useState(0);
-  const [balance, setBalace] = useState(2000000);
-  const [selectedPrice, setSelectedPrice] = useState(0);
-
-  useEffect(() => {
-    setSelectedPrice(currentPrice);
-  }, [currentPrice]);
-
-  const handleSelectPriceUpdate = (price) => {
-    setSelectedPrice(price);
-  };
-
-  const handlePriceUpdate = (newPrice) => {
-    setCurrentPrice(newPrice);
-  };
+  const dispatch = useDispatch();
+  const { selectedTab } = useSelector((state) => state.trading);
 
   const handleTabClick = (tab) => {
-    setSelectedTab(tab);
-    if (tab === "매수") {
-      setMaxQuantity(balance);
-      handleSelectPriceUpdate(currentPrice);
-    } else if (tab === "매도") {
-      setMaxQuantity(30);
-      handleSelectPriceUpdate(currentPrice);
-    }
-  };
-
-  const handlePriceGap = (newPriceGap) => {
-    setPriceGap(newPriceGap);
+    dispatch(setSelectedTab(tab));
   };
 
   const getLogoFileName = (name, code) => {
@@ -221,6 +102,7 @@ export default function TradingPage() {
                 ? "1.5px solid red"
                 : "1.5px solid #D9D9D9",
             fontSize: "0.85rem",
+            cursor: "pointer",
           }}
           onClick={() => handleTabClick("매수")}
         >
@@ -238,6 +120,7 @@ export default function TradingPage() {
                 ? "1.5px solid red"
                 : "1.5px solid #D9D9D9",
             fontSize: "0.85rem",
+            cursor: "pointer",
           }}
           onClick={() => handleTabClick("매도")}
         >
@@ -255,6 +138,7 @@ export default function TradingPage() {
                 ? "1.5px solid red"
                 : "1.5px solid #D9D9D9",
             fontSize: "0.85rem",
+            cursor: "pointer",
           }}
           onClick={() => handleTabClick("주문내역")}
         >
@@ -269,32 +153,19 @@ export default function TradingPage() {
             flexDirection: "row",
             height: "100%",
             width: "100%",
-            overflow: "auto",
           }}
         >
-          <PriceBook
-            onPriceUpdate={handlePriceUpdate}
-            onPriceGapUpdate={handlePriceGap}
-            onSelectedPriceUpdate={handleSelectPriceUpdate}
-          />
-          <div>
-            <OrderBook
-              currentPrice={currentPrice}
-              newPriceGap={priceGap}
-              maxQuatity={maxQuantity}
-              balance={balance}
-              orderType={selectedTab}
-              selectedPrice={selectedPrice}
-            />
-          </div>
+          <PriceBook />
+          {/* <OrderBook /> */}
         </div>
       ) : (
-        <div style={{ height: "80%" }}>
-          <OrderList
-            pedingOrderList={pendingOrders}
-            filledOrderList={filledOrders}
-          />
-        </div>
+        <></>
+        // <div style={{ height: "80%" }}>
+        //   <OrderList
+        //     pedingOrderList={pendingOrders}
+        //     filledOrderList={filledOrders}
+        //   />
+        // </div>
       )}
     </Container>
   );
