@@ -51,13 +51,13 @@ export default function HotStockPage() {
         <div style={{ padding: '5px 10px 0 10px' }}>
           <TitleDiv>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/sparkles_2728.png" />
-            <MainFont>인기 주식</MainFont>
+            <MainFont>실시간 인기 주식</MainFont>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/sparkles_2728.png" />
           </TitleDiv>
           {popularData.length > 0 ? (
             popularData.map((item, idx) =>
               <RankDiv key={idx} num={idx}>
-                <RankFont>{item.now_rank}.</RankFont>
+                <RankFont>{item.now_rank}위</RankFont>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <CompanyLogo
                     src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
