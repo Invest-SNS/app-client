@@ -3,7 +3,7 @@ import styled from "styled-components";
 import * as S from "../../style/GlobalStyle";
 
 import Feed from "../../components/Feed/FeedShow/Feed";
-import Account from "../../components/Feed/Account";
+//import Account from "../../components/Feed/Account";
 
 export default function MyPage() {
   const [selectedTab, setSelectedTab] = useState("내 피드");
@@ -72,7 +72,7 @@ export default function MyPage() {
       </UserContainer>
       <ContentContainer>
         {selectedTab === "내 피드" ? <Feed /> : <></>}
-        {selectedTab === "내 종목" ? <Account /> : <></>}
+        {/* {selectedTab === "내 종목" ? <Account /> : <></>} */}
       </ContentContainer>
     </S.Container>
   );
