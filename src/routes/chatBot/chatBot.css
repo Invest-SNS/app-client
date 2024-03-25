@@ -41,22 +41,6 @@
     max-width: 60%; /* 최대 너비 설정 */
 }
 
-form {
-    display: flex;
-    margin: 20px; /* 폼 주위에 마진 추가 */
-    width: calc(100% - 40px); /* 채팅 박스 마진 고려하여 폼 너비 조절 */
-}
-
-input {
-    flex-grow: 1;
-    padding: 10px;
-    margin-right: 5px; /* 입력 필드와 버튼 사이의 간격 */
-}
-
-button {
-    padding: 10px;
-}
-
 .loading-message {
     padding: 10px 10px; /* 말풍선 내부의 여백을 조정 */
     min-width: 80px; /* 말풍선의 최소 너비를 설정 */
