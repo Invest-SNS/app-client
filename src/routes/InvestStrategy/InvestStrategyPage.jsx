@@ -4,10 +4,12 @@ import * as S from "../../style/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { getStrategyDatas } from "../../store/reducers/Strategy/getStrategy";
 import { decode } from "html-entities";
+import { PuffLoader } from 'react-spinners';
 
 export default function InvestStrategyPage() {
   const dispatch = useDispatch();
   const strategy = useSelector((state) => state.strategy.strategy);
+  const loading = useSelector((state) => state.strategy.loading);
 
   useEffect(() => {
     dispatch(getStrategyDatas())
@@ -15,55 +17,55 @@ export default function InvestStrategyPage() {
 
   return (
     <S.Container>
-      {strategy && (
-        <Container>
-          <>
-            <MainDiv>
-              <IconImg src="https://em-content.zobj.net/source/microsoft/379/clipboard_1f4cb.png" />
-              <MainFont>{strategy.shinhanDaily?.bbs_name}</MainFont>
-            </MainDiv>
-            <FileDiv href={`${strategy.shinhanDaily?.attachment_url}`} target="_blank">
-              <FileFont>{strategy.shinhanDaily?.title}.pdf</FileFont>
-            </FileDiv>
-          </>
-          <>
-            <MainDiv>
-              <IconImg src="https://em-content.zobj.net/source/microsoft/379/flashlight_1f526.png" />
-              <MainFont>{strategy.marketIssue?.bbs_name}</MainFont>
-            </MainDiv>
-            <FileDiv href={`${strategy.marketIssue?.attachment_url}`} target="_blank">
-              <FileFont>{strategy.marketIssue?.title}.pdf</FileFont>
-            </FileDiv>
-            {/* <ContentFont>{decode(strategy.marketIssue?.content)}</ContentFont> */}
-            {strategy.marketIssue?.content.split('\n\n')[0].split('\n').map((item, idx) => 
-              <SubDiv key={idx}>
-                <span>•</span>
-                <SubFont key={idx}>{decode(item)}</SubFont>
-              </SubDiv>
-            )}
-          </>
-          <>
-            <MainDiv>
-              <IconImg src="https://em-content.zobj.net/source/microsoft/379/chart-increasing_1f4c8.png" />
-              <MainFont>{strategy.economicAnalysis?.bbs_name}</MainFont>
-            </MainDiv>
-            <FileDiv href={`${strategy.economicAnalysis?.attachment_url}`} target="_blank">
-              <FileFont>{strategy.economicAnalysis?.title}.pdf</FileFont>
-            </FileDiv>
-            <ContentFont>{decode(strategy.economicAnalysis?.content)}</ContentFont>
-          </>
-          <>
-            <MainDiv>
-              <IconImg src="https://em-content.zobj.net/source/microsoft/379/memo_1f4dd.png" />
-              <MainFont>{strategy.corporateAnalysis?.bbs_name}</MainFont>
-            </MainDiv>
-            <FileDiv href={`${strategy.corporateAnalysis?.attachment_url}`} target="_blank">
-              <FileFont>{strategy.corporateAnalysis?.title}.pdf</FileFont>
-            </FileDiv>
-            <ContentFont>{decode(strategy.corporateAnalysis?.content)}</ContentFont>
-          </>
-        </Container>
-      )}
+      <Container>
+        {loading ? (
+          <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <PuffLoader color="#FF7D75" />
+          </div>
+        ) : (
+          strategy && (
+            <>
+              <MainDiv>
+                <IconImg src="https://em-content.zobj.net/source/microsoft/379/clipboard_1f4cb.png" />
+                <MainFont>{strategy.shinhanDaily?.bbs_name}</MainFont>
+              </MainDiv>
+              <FileDiv href={`${strategy.shinhanDaily?.attachment_url}`} target="_blank">
+                <FileFont>{strategy.shinhanDaily?.title}.pdf</FileFont>
+              </FileDiv>
+              <MainDiv>
+                <IconImg src="https://em-content.zobj.net/source/microsoft/379/flashlight_1f526.png" />
+                <MainFont>{strategy.marketIssue?.bbs_name}</MainFont>
+              </MainDiv>
+              <FileDiv href={`${strategy.marketIssue?.attachment_url}`} target="_blank">
+                <FileFont>{strategy.marketIssue?.title}.pdf</FileFont>
+              </FileDiv>
+              {/* <ContentFont>{decode(strategy.marketIssue?.content)}</ContentFont> */}
+              {strategy.marketIssue?.content.split('\n\n')[0].split('\n').map((item, idx) => 
+                <SubDiv key={idx}>
+                  <span>•</span>
+                  <SubFont key={idx}>{decode(item)}</SubFont>
+                </SubDiv>
+              )}
+              <MainDiv>
+                <IconImg src="https://em-content.zobj.net/source/microsoft/379/chart-increasing_1f4c8.png" />
+                <MainFont>{strategy.economicAnalysis?.bbs_name}</MainFont>
+              </MainDiv>
+              <FileDiv href={`${strategy.economicAnalysis?.attachment_url}`} target="_blank">
+                <FileFont>{strategy.economicAnalysis?.title}.pdf</FileFont>
+              </FileDiv>
+              <ContentFont>{decode(strategy.economicAnalysis?.content)}</ContentFont>
+              <MainDiv>
+                <IconImg src="https://em-content.zobj.net/source/microsoft/379/memo_1f4dd.png" />
+                <MainFont>{strategy.corporateAnalysis?.bbs_name}</MainFont>
+              </MainDiv>
+              <FileDiv href={`${strategy.corporateAnalysis?.attachment_url}`} target="_blank">
+                <FileFont>{strategy.corporateAnalysis?.title}.pdf</FileFont>
+              </FileDiv>
+              <ContentFont>{decode(strategy.corporateAnalysis?.content)}</ContentFont>
+            </>
+          )
+        )}
+      </Container>
     </S.Container>
   )
 }
@@ -71,6 +73,7 @@ export default function InvestStrategyPage() {
 const Container = styled.div`
   background-color: #FFF;
   overflow-y: scroll;
+  height: 100vh;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -134,4 +137,5 @@ const ContentFont = styled.div`
   padding: 10px 20px;
   font-size: 15px;
   font-weight: 600;
+  color: rgba(0, 0, 0, 0.8)
 `
