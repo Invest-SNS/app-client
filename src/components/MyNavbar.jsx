@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 // import useAuth from "~/lib/hooks/useAuth";
 import { useSelector } from "react-redux";
 import ChatBot from "../routes/chatBot/chatBot";
+import LogoIcon from '../../public/icon/logo.svg'
+
 
 const EXPAND_BREAKPOINT = "md";
 
@@ -53,40 +55,76 @@ const MyNavbar = ({ offCanvasTitle }) => {
   //   }
   // }, [token]);
   return (
-    <>
-      <Navbar expand={EXPAND_BREAKPOINT} sticky="top" style={{ borderBottom: "1px solid black" }}>
-        <Container fluid>
-          <Navbar.Brand href="#">invest-SNS</Navbar.Brand>
-
-          <Navbar.Toggle aria-controls={`Navbar-expand-${EXPAND_BREAKPOINT}`} />
-          <Navbar.Offcanvas
-            id={`Navbar-expand-${EXPAND_BREAKPOINT}`}
-            aria-labelledby={`NavbarLabel-expand-${EXPAND_BREAKPOINT}`}
-            placement="end"
-          >
-            {/* Offcanvas 내용 */}
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title id={`NavbarLabel-expand-${EXPAND_BREAKPOINT}`}>
-                {offCanvasTitle || "invest-SNS"}
-              </Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body className="flex-row-reverse">
-              <Nav className={`justify-content-around flex-row pb-4 pb-${EXPAND_BREAKPOINT}-0`}>
-                <div style={{ display: "flex", gap: "15px" }}>
-                  {/* 토글 버튼 */}
-                  <Button variant="outline-primary" onClick={toggleChatBot} >
-                    ChatBot
-                  </Button>
-                  <Nav.Link as={Link} to="/login">로그인</Nav.Link>
-                  <Nav.Link as={Link} to="/signup">회원가입</Nav.Link>
-                </div>
-              </Nav>
-            </Offcanvas.Body>
-          </Navbar.Offcanvas>
-        </Container>
-      </Navbar>
-
-      {/* ChatBot 모달 */}
+    <Navbar
+      expand={EXPAND_BREAKPOINT}
+      sticky="top"
+      style={{ borderBottom: "1px solid black" }}
+    >
+      <Container fluid>
+        <Navbar.Brand href="#" style={{ display: 'flex', gap: '10px', alignItems: 'center', fontWeight: '100' }}>
+          <img src={LogoIcon} width={37} />
+          StockMate
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls={`Navbar-expand-${EXPAND_BREAKPOINT}`} />
+        <Navbar.Offcanvas
+          id={`Navbar-expand-${EXPAND_BREAKPOINT}`}
+          aria-labelledby={`NavbarLabel-expand-${EXPAND_BREAKPOINT}`}
+          placement="end"
+        >
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title id={`NavbarLabel-expand-${EXPAND_BREAKPOINT}`}>
+              {offCanvasTitle || "invest-SNS"}
+            </Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body className="flex-row-reverse">
+            <Nav
+              className={`justify-content-around flex-row pb-4 pb-${EXPAND_BREAKPOINT}-0`}
+            >
+              {/* {!user ? ( */}
+              <div style={{ display: "flex", gap: "15px" }}>
+              
+              {/* 챗봇 토글 버튼 */}
+                <Button variant="outline-primary" onClick={toggleChatBot} >
+                  ChatBot
+                </Button>
+                <Nav.Link
+                  as={Link}
+                  className="flex-grow-1 text-center"
+                  to="/login"
+                >
+                  로그인
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  className="flex-grow-1 text-center"
+                  to="/signup"
+                >
+                  회원가입
+                </Nav.Link>
+              </div>
+              {/* ) : (
+                <>
+                  <Nav.Link
+                    as="div"
+                    className="flex-grow-1 text-center border border-dark"
+                  >
+                    {user.nickname}
+                  </Nav.Link>
+                  <Nav.Link
+                    as="div"
+                    className="flex-grow-1 text-center border border-dark"
+                    onClick={postLogout}
+                  >
+                    로그아웃
+                  </Nav.Link>
+                </>
+              )} */}
+            </Nav>
+          </Offcanvas.Body>
+        </Navbar.Offcanvas>
+      </Container>
+    </Navbar>
+    {/* ChatBot 모달 */}
       <Modal show={showChatBot} onHide={toggleChatBot} size="lg" centered>
         <Modal.Header closeButton>
           <Modal.Title>ChatBot</Modal.Title>
@@ -100,7 +138,6 @@ const MyNavbar = ({ offCanvasTitle }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
   );
 };
 

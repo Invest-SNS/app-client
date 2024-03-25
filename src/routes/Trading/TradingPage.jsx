@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import default_Img from "../../../public/icon/+.svg";
-import { Container } from "react-bootstrap";
-import PriceBook from "../../components/invest/right-bar/PriceBook";
-import OrderBook from "../../components/invest/right-bar/OrderBook";
+import PriceBook from "../../components/invest/right-bar/OrderManagement/PriceBook";
+import OrderBook from "../../components/invest/right-bar/OrderManagement/OrderBook";
+import OrderList from "../../components/invest/right-bar/OrderHistory/OrderHistoryList";
+import NewIcon from "../../components/invest/right-bar/OrderHistory/NewIcon";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedTab } from "../../store/reducers/Trading/trading";
 
 export default function TradingPage() {
-  const [selectedTab, setSelectedTab] = useState("매수");
+  const dispatch = useDispatch();
+  const { selectedTab } = useSelector((state) => state.trading);
 
   const handleTabClick = (tab) => {
-    setSelectedTab(tab);
+    dispatch(setSelectedTab(tab));
   };
 
   const getLogoFileName = (name, code) => {
@@ -98,6 +102,7 @@ export default function TradingPage() {
                 ? "1.5px solid red"
                 : "1.5px solid #D9D9D9",
             fontSize: "0.85rem",
+            cursor: "pointer",
           }}
           onClick={() => handleTabClick("매수")}
         >
@@ -115,6 +120,7 @@ export default function TradingPage() {
                 ? "1.5px solid red"
                 : "1.5px solid #D9D9D9",
             fontSize: "0.85rem",
+            cursor: "pointer",
           }}
           onClick={() => handleTabClick("매도")}
         >
@@ -132,10 +138,12 @@ export default function TradingPage() {
                 ? "1.5px solid red"
                 : "1.5px solid #D9D9D9",
             fontSize: "0.85rem",
+            cursor: "pointer",
           }}
           onClick={() => handleTabClick("주문내역")}
         >
           주문내역
+          <NewIcon />
         </div>
       </div>
       {selectedTab === "매수" || selectedTab === "매도" ? (
@@ -144,12 +152,21 @@ export default function TradingPage() {
             display: "flex",
             flexDirection: "row",
             height: "100%",
-            overflow: "auto",
+            width: "100%",
           }}
         >
-          <PriceBook /> <OrderBook />
+          <PriceBook />
+          {/* <OrderBook /> */}
         </div>
-      ) : null}
+      ) : (
+        <></>
+        // <div style={{ height: "80%" }}>
+        //   <OrderList
+        //     pedingOrderList={pendingOrders}
+        //     filledOrderList={filledOrders}
+        //   />
+        // </div>
+      )}
     </Container>
   );
 }

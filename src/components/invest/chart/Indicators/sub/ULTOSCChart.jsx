@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LineSeries, SingleValueTooltip, XAxis, YAxis } from 'react-financial-charts';
+import { LineSeries, SingleValueTooltip, StraightLine, XAxis, YAxis } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getULTOSCChart } from '../../../../../store/reducers/Chart/Indicators/sub';
@@ -11,24 +11,11 @@ export default function ULTOSCChart({ datas, isShow }) {
   const ULTOSCValue = useSelector((state) => state.indicatorValues.values.ULTOSC);
 
   const calculateULTOSC = (data) => {
-    const updatedDatas = datas.map(item => {
-      const newItem = { ...item };
-      delete newItem.ultosc;
-      return newItem;
-    });
-
-    const newData = [...updatedDatas];
-    
-    const f_idx = data.begIndex;
-    const l_idx = data.nbElement;
-    const ultosc = data.result.outReal;
-    for (let i = 0; i < l_idx; i++) {
-      newData[f_idx + i] = {
-        ...newData[f_idx + i], // 기존 객체를 복사
-        ["ultosc"]: ultosc[i], // 새로운 속성 추가
-      };
-    }
-    dispatch(setChartDatas(newData));
+    dispatch(setChartDatas({
+      newData: datas, 
+      data: data, 
+      name: 'ULTOSC'
+    }));
   }
 
   useEffect(() => {
@@ -57,12 +44,14 @@ export default function ULTOSCChart({ datas, isShow }) {
     <>
       <XAxis showGridLines gridLinesStrokeStyle="#e0e3eb" />
       <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
-      <LineSeries yAccessor={d => d.ultosc} strokeStyle='#680A08' />
+      <StraightLine yValue={0} lineDash={"ShortDash2"} strokeStyle='#aeafb0' />
+      <LineSeries yAccessor={d => d.ultosc} strokeStyle='#ada50c' strokeWidth={1.3} />
       <SingleValueTooltip
         origin={[12, 30]}
         yAccessor={d => d.ultosc}
         yLabel="Ultimate Oscillator"
         yDisplayFormat={format(",")}
+        labelFill='#ada50c'
       />
     </>
   )
