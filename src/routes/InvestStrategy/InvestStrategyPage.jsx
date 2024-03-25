@@ -3,13 +3,11 @@ import styled from "styled-components";
 import * as S from "../../style/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { getStrategyDatas } from "../../store/reducers/Strategy/getStrategy";
+import { decode } from "html-entities";
 
 export default function InvestStrategyPage() {
   const dispatch = useDispatch();
   const strategy = useSelector((state) => state.strategy.strategy);
-
-  const marketIssue = strategy.marketIssue.content.split('\n\n')[0];
-  const corporateAnalysis = strategy.corporateAnalysis.content.split('\n\n\n')[0];
 
   useEffect(() => {
     dispatch(getStrategyDatas())
@@ -17,57 +15,55 @@ export default function InvestStrategyPage() {
 
   return (
     <S.Container>
-      <Container>
-        <>
-          <MainDiv>
-            <IconImg src="https://em-content.zobj.net/source/microsoft/379/clipboard_1f4cb.png" />
-            <MainFont>{strategy.shinhanDaily.bbs_name}</MainFont>
-          </MainDiv>
-          <FileDiv href={`${strategy.shinhanDaily.attachment_url}`} target="_blank">
-            <FileFont>{strategy.shinhanDaily.title}.pdf</FileFont>
-          </FileDiv>
-        </>
-        <>
-          <MainDiv>
-            <IconImg src="https://em-content.zobj.net/source/microsoft/379/flashlight_1f526.png" />
-            <MainFont>{strategy.marketIssue.bbs_name}</MainFont>
-          </MainDiv>
-          <FileDiv href={`${strategy.marketIssue.attachment_url}`} target="_blank">
-            <FileFont>{strategy.marketIssue.title}.pdf</FileFont>
-          </FileDiv>
-          {marketIssue.split('\n').map((item, idx) => 
-            <SubDiv key={idx}>
-              <span>•</span>
-              <SubFont key={idx}>{item.replace(/&middot;/g, "·").replace(/&nbsp;/g, "")}</SubFont>
-            </SubDiv>
-          )}
-        </>
-        <>
-          <MainDiv>
-            <IconImg src="https://em-content.zobj.net/source/microsoft/379/chart-increasing_1f4c8.png" />
-            <MainFont>{strategy.economicAnalysis.bbs_name}</MainFont>
-          </MainDiv>
-          <FileDiv href={`${strategy.economicAnalysis.attachment_url}`} target="_blank">
-            <FileFont>{strategy.economicAnalysis.title}.pdf</FileFont>
-          </FileDiv>
-          <ContentFont>{strategy.economicAnalysis.content.replace(/&nbsp;/g, "")}</ContentFont>
-        </>
-        <>
-          <MainDiv>
-            <IconImg src="https://em-content.zobj.net/source/microsoft/379/memo_1f4dd.png" />
-            <MainFont>{strategy.corporateAnalysis.bbs_name}</MainFont>
-          </MainDiv>
-          <FileDiv href={`${strategy.corporateAnalysis.attachment_url}`} target="_blank">
-            <FileFont>{strategy.corporateAnalysis.title}.pdf</FileFont>
-          </FileDiv>
-          {corporateAnalysis.split('\n').map((item, idx) => 
-            <SubDiv key={idx}>
-              <span>•</span>
-              <SubFont key={idx}>{item.replace(/&middot;/g, "·").replace(/&nbsp;/g, "")}</SubFont>
-            </SubDiv>
-          )}
-        </>
-      </Container>
+      {strategy && (
+        <Container>
+          <>
+            <MainDiv>
+              <IconImg src="https://em-content.zobj.net/source/microsoft/379/clipboard_1f4cb.png" />
+              <MainFont>{strategy.shinhanDaily?.bbs_name}</MainFont>
+            </MainDiv>
+            <FileDiv href={`${strategy.shinhanDaily?.attachment_url}`} target="_blank">
+              <FileFont>{strategy.shinhanDaily?.title}.pdf</FileFont>
+            </FileDiv>
+          </>
+          <>
+            <MainDiv>
+              <IconImg src="https://em-content.zobj.net/source/microsoft/379/flashlight_1f526.png" />
+              <MainFont>{strategy.marketIssue?.bbs_name}</MainFont>
+            </MainDiv>
+            <FileDiv href={`${strategy.marketIssue?.attachment_url}`} target="_blank">
+              <FileFont>{strategy.marketIssue?.title}.pdf</FileFont>
+            </FileDiv>
+            {/* <ContentFont>{decode(strategy.marketIssue?.content)}</ContentFont> */}
+            {strategy.marketIssue?.content.split('\n\n')[0].split('\n').map((item, idx) => 
+              <SubDiv key={idx}>
+                <span>•</span>
+                <SubFont key={idx}>{decode(item)}</SubFont>
+              </SubDiv>
+            )}
+          </>
+          <>
+            <MainDiv>
+              <IconImg src="https://em-content.zobj.net/source/microsoft/379/chart-increasing_1f4c8.png" />
+              <MainFont>{strategy.economicAnalysis?.bbs_name}</MainFont>
+            </MainDiv>
+            <FileDiv href={`${strategy.economicAnalysis?.attachment_url}`} target="_blank">
+              <FileFont>{strategy.economicAnalysis?.title}.pdf</FileFont>
+            </FileDiv>
+            <ContentFont>{decode(strategy.economicAnalysis?.content)}</ContentFont>
+          </>
+          <>
+            <MainDiv>
+              <IconImg src="https://em-content.zobj.net/source/microsoft/379/memo_1f4dd.png" />
+              <MainFont>{strategy.corporateAnalysis?.bbs_name}</MainFont>
+            </MainDiv>
+            <FileDiv href={`${strategy.corporateAnalysis?.attachment_url}`} target="_blank">
+              <FileFont>{strategy.corporateAnalysis?.title}.pdf</FileFont>
+            </FileDiv>
+            <ContentFont>{decode(strategy.corporateAnalysis?.content)}</ContentFont>
+          </>
+        </Container>
+      )}
     </S.Container>
   )
 }
@@ -110,7 +106,7 @@ const MainFont = styled.div`
 `
 
 const FileDiv = styled.a`
-  text-decoration: none;
+  color: #FF7D75;
 `
 
 const FileFont = styled.div`
@@ -129,9 +125,11 @@ const SubDiv = styled.div`
 const SubFont = styled.div`
   word-break: keep-all;
   font-weight: 600;
+  font-size: 15px;
 `
 
 const ContentFont = styled.div`
+  // box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
   white-space: pre-line;
   padding: 10px 20px;
   font-size: 15px;
