@@ -23,6 +23,8 @@ import getSubIndicatorReducer from "./reducers/Chart/Indicators/sub.jsx";
 import searchReducer from "./reducers/Trading/search";
 import userReducer from "./reducers/User/user";
 import feedReducer from "./reducers/Feed/feed";
+import hotStockReducer from './reducers/Hot/getStockInfo.jsx';
+import strategyReducer from './reducers/Strategy/getStrategy.jsx';
 
 const rootPersistConfig = {
   key: "root",
@@ -55,6 +57,8 @@ const rootReducer = persistReducer(
     search: searchReducer,
     user: userReducer,
     feed: feedReducer,
+    hot: hotStockReducer,
+    strategy: strategyReducer,
   })
 );
 const myMiddlewares = [logger];

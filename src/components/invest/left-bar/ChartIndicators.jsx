@@ -4,7 +4,7 @@ import IndicatorDetail from "./IndicatorDetail";
 // import chartData from "../../../../public/Json/chartData.json";
 import chartData from '../../../Json/chartData.json'
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveSub, setDisactiveSub } from "../../../store/reducers/Chart/Indicators/clickIndicators";
+import { setActiveSub, setChartIndi, setDisactiveSub } from "../../../store/reducers/Chart/Indicators/clickIndicators";
 
 const ChartIndicators = ({ onClose }) => {
   const [showDetail, setShowDetail] = useState(
@@ -19,18 +19,29 @@ const ChartIndicators = ({ onClose }) => {
     });
   };
 
-  // 데이터를 넣을 빈배열
   const dispatch = useDispatch();
+  const isActive = useSelector((state) => state.clickIndicator);
+  const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
   // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
   const onCheckedElement = (checked, item) => {
-    if (checked) {
-      dispatch(setActiveSub(item))
-    } else if (!checked) {
+    if (chartIndi.length < 4) {
+      if (checked) {
+        dispatch(setActiveSub(item))
+        dispatch(setChartIndi([...chartIndi, item]))
+      }
+    } else {
+      if (checked) {
+        dispatch(setActiveSub(item))
+        dispatch(setChartIndi([...chartIndi.filter((el, idx) => idx !== 0), item]))
+        dispatch(setDisactiveSub(chartIndi[0]))
+      }
+    }
+
+    if (!checked) {
       dispatch(setDisactiveSub(item))
+      dispatch(setChartIndi(chartIndi.filter(el => el !== item)))
     }
   };
-
-  const isActive = useSelector((state) => state.clickIndicator);
 
   return (
     
