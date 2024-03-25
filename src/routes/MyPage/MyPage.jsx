@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import * as S from "../../style/GlobalStyle";
 
-// import Feed from "../../components/Feed/FeedShow/Feed";
-// import Account from "../../components/Feed/Account";
+
+import Feed from "../../components/Feed/FeedShow/Feed";
+//import Account from "../../components/Feed/Account";
+
 
 export default function MyPage() {
   const [selectedTab, setSelectedTab] = useState("내 피드");
