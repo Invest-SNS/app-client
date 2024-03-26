@@ -47,11 +47,12 @@ const clickSubSlice = createSlice({
     },
     setSubIndi(state, action) {
       state.subIndi = action.payload;
-    }
+    },
   },
 });
 
-const { setActiveSub, setDisactiveSub, setChartIndi, setSubIndi } = clickSubSlice.actions;
+const { setActiveSub, setDisactiveSub, setChartIndi, setSubIndi } =
+  clickSubSlice.actions;
 export { setActiveSub, setDisactiveSub, setChartIndi, setSubIndi };
 
 export default clickSubSlice.reducer;

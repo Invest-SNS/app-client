@@ -10,6 +10,7 @@ import HotStockPage from "../routes/HotStock/HotStockPage";
 import FeedPage from "../routes/Feed/FeedPage";
 import MyPage from "../routes/MyPage/MyPage";
 import SideLayout from "../routes/SideLayout";
+import ChatBot from "../routes/chatBot/chatBot";
 
 export const mainRoutes = [
   {

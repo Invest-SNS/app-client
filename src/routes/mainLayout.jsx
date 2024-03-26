@@ -68,7 +68,6 @@ const LeftContainer = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  // flex-grow: 1;
   transition: margin-left 0.3s ease;
   z-index: 99;
 `;

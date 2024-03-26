@@ -5,6 +5,7 @@ import {
   postSearch,
   postSearchUser,
   postLikeStock,
+  fetchLikeStock,
 } from "~/store/reducers/Trading/search";
 import { postLogin } from "~/store/reducers/User/user";
 import { setFavoriteArr } from "~/store/reducers/Trading/search";
@@ -12,29 +13,25 @@ import { setFavoriteArr } from "~/store/reducers/Trading/search";
 //TODO : 로고 사진 변경
 import default_Img from "/icon/+.svg";
 import { getCookie } from "~/lib/apis/cookie";
-import clickCompany, { setClickCompany } from "../../../store/reducers/Chart/clickCompany";
+import clickCompany, {
+  setClickCompany,
+} from "../../../store/reducers/Chart/clickCompany";
 
 const MyStockList = () => {
   const isLogin = !!getCookie("token");
   const [showSearch, setShowSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  // const [searchResults, setSearchResults] = useState([]);
-  // const [favoriteArr, setFavoriteArr] = useState([]);
+  const [isClick, setIsClick] = useState(false);
+
   const searchRef = useRef(null);
 
   const dispatch = useDispatch();
   const favoriteArr = useSelector((state) => state.search.favoriteArr);
   const searchResults = useSelector((state) => state.search.searchResults);
   console.log("favoriteArr", favoriteArr);
-  useEffect(() => {
-    // 예시
-    const fetchSearchResults = async () => {};
-    if (searchInput) {
-      fetchSearchResults();
-    } else {
-      // setSearchResults([]);
-    }
-  }, [searchInput]);
+
+  const myFavoriteArr = useSelector((state) => state.search.myFavoriteArr);
+  console.log("myfav", myFavoriteArr);
 
   const searchFunc = (prop) => {
     const actionToDispatch = isLogin ? postSearchUser(prop) : postSearch(prop);
@@ -51,6 +48,10 @@ const MyStockList = () => {
     dispatch(postLogin({ email: "ddu@naver.com", password: "1234" }));
   }, []);
 
+  useEffect(() => {
+    dispatch(fetchLikeStock());
+  }, [dispatch, isClick]);
+
   const onChangeInput = async (e) => {
     setSearchInput(e.target.value);
     console.log("searchInput", e.target.value);
@@ -60,9 +61,10 @@ const MyStockList = () => {
   const addToFavorites = (result) => {
     console.log(result);
     console.log("favoriteArr", favoriteArr);
+    setIsClick((prev) => !prev);
     if (!result.isLike) {
-      const updatedArr = [...favoriteArr, result.code]; // Update favoriteArr directly
-      dispatch(setFavoriteArr(updatedArr)); // Dispatch the updated favoriteArr
+      const updatedArr = [...favoriteArr, result.code];
+      dispatch(setFavoriteArr(updatedArr));
       dispatch(postLikeStock({ likeStock: updatedArr }));
       dispatch(postSearchUser({ searchQuery: searchInput }));
       console.log(`관심 종목으로 추가: ${result.name} :${result.code} `);
@@ -72,9 +74,10 @@ const MyStockList = () => {
         (item) => item !== result.code
       );
 
-      dispatch(setFavoriteArr(updatedFavoriteArr)); // Dispatch the updated favoriteArr
+      dispatch(setFavoriteArr(updatedFavoriteArr));
       dispatch(postLikeStock({ likeStock: updatedFavoriteArr }));
       dispatch(postSearchUser({ searchQuery: searchInput }));
+
       console.log(`관심 종목에서 삭제: ${result.name} :${result.code}`);
       console.log("favoriteArr", updatedFavoriteArr);
     }
@@ -155,7 +158,6 @@ const MyStockList = () => {
                     <SearchResult
                       key={result._id}
                       onClick={() => {
-                        console.log("");
                         dispatch(setClickCompany(result));
                       }}
                     >
@@ -175,7 +177,9 @@ const MyStockList = () => {
                         <StockName>{result.name}</StockName>
                         <RowDiv>
                           <StockCode>{result.code}</StockCode>
-                          <StockIndex>{result.market}</StockIndex>
+                          <StockIndex>
+                            {result.market === "kospi" ? "코스피" : "코스닥"}
+                          </StockIndex>
                         </RowDiv>
                       </StockDiv>
                       <StarImg
@@ -186,6 +190,7 @@ const MyStockList = () => {
                             : "/icon/BlankStar.svg"
                         }
                         alt={result.isLike ? "filledstar" : "blankstar"}
+                        $hover="hover"
                       />
                     </SearchResult>
                   ))}
@@ -204,39 +209,42 @@ const MyStockList = () => {
           )}
         </SearchContainer>
         <MyListContainer>
-          {/* {favoriteArr?.map((item, idx) => ( */}
-          <MyListDiv>
-            <ImgDiv>
-              {/* <ToggleImg
+          {myFavoriteArr?.map((item, idx) => (
+            <MyListDiv
+              key={item.code}
+              onClick={() => {
+                dispatch(setClickCompany(item));
+              }}
+            >
+              <ImgDiv>
+                <img
                   src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
                     item.name,
                     item.code
                   )}.png`}
+                  style={{
+                    width: "30px",
+                    borderRadius: 100,
+                    margin: "0px 10px",
+                  }}
                   onError={onErrorImg}
                 />
-                <ToggleImg2
-                  onClick={() => addToFavorites(item)}
-                  src={
-                    item.isLike ? "/icon/FilledStar.svg" : "/icon/BlankStar.svg"
-                  }
-                  alt={item.isLike ? "filledstar" : "blankstar"}
-                /> */}
-            </ImgDiv>
-            <StockDiv>
-              <StockName>ㅎㅎ</StockName>
-              <RowDiv>
-                <StockCode>12345</StockCode>
-                <StockIndex>kospi</StockIndex>
-                <StockVolume>11111</StockVolume>
-              </RowDiv>
-            </StockDiv>
-            <PriceDiv $returns="1111">
-              <CurrentPrice>111</CurrentPrice>
-              <ChangeReturns>111</ChangeReturns>
-              <PrevVariance>1111</PrevVariance>
-            </PriceDiv>
-          </MyListDiv>
-          {/* ))} */}
+              </ImgDiv>
+              <StockDiv>
+                <StockName>{item.name}</StockName>
+                <RowDiv>
+                  <StockCode>{item.code}</StockCode>
+                  <StockIndex>{item.market}</StockIndex>
+                </RowDiv>
+              </StockDiv>
+              <StarImg
+                onClick={() => addToFavorites(item)}
+                src="/icon/FilledStar.svg"
+                alt="filledstar"
+                $hover="hover"
+              />
+            </MyListDiv>
+          ))}
         </MyListContainer>
       </MyItemContainer>
     </LeftContainer>
@@ -348,8 +356,8 @@ const SearchResults = styled.ul`
   width: 100%;
   padding-left: 0;
   list-style: none;
-  max-height: calc((100vh - 151px) / 2);
-  height: max-content;
+  max-height: calc(100vh - 151px);
+  height: calc(100vh - 151px);
   overflow: auto;
   padding-bottom: 5px;
   box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.25);
@@ -370,7 +378,7 @@ const SearchResult = styled.li`
 
   cursor: pointer;
   &:hover {
-    background-color: #e8e8e8;
+    background-color: #f0f0f0;
   }
 `;
 
@@ -399,38 +407,43 @@ const RowDiv = styled.div`
   line-height: normal;
 `;
 
-const StarImg = styled.img``;
+const StarImg = styled.img`
+  &:hover {
+    transform: ${(props) =>
+      props.$hover == "hover" ? `scale(1.5)` : "scale(1)"};
+  }
+`;
 
 const MyListContainer = styled.div`
-  position: absolute;
-  top: 88px;
-  left: 0;
-  min-width: 250px;
-  width: 250px;
+  overflow: auto;
+  height: calc(100vh - 145px);
+  padding-bottom: 5px;
+  background-color: white;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const MyListDiv = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 5px 10px;
+  padding: 10px 10px;
   text-align: left;
-  height: 60px;
+  min-height: 60px;
+  width: 249px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `;
 
 const StockCode = styled.div`
   margin-right: 3px;
-
-  ${MyListDiv}:hover & {
-    display: none;
-  }
 `;
 
-const StockIndex = styled.div`
-  ${MyListDiv}:hover & {
-    display: none;
-  }
-`;
+const StockIndex = styled.div``;
 
 const StockVolume = styled.div`
   display: none;

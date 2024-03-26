@@ -4,10 +4,12 @@ import * as S from "../../style/GlobalStyle";
 
 import FeedWriting from "~/components/Feed/FeedWriting";
 import Feed from "../../components/Feed/FeedShow/Feed";
+import { useLocation } from "react-router-dom";
 
 const FeedPage = () => {
   const [isWrite, setIsWrite] = useState(false);
-
+  const location = useLocation();
+  const path = location.pathname;
   const write = () => {
     setIsWrite(true);
   };
@@ -49,7 +51,7 @@ const FeedPage = () => {
         </WritingContainer>
       )}
       <FeedContainer>
-        <Feed />
+        <Feed path={path} />
       </FeedContainer>
     </S.Container>
   );
@@ -87,8 +89,8 @@ const InputDiv = styled.div`
 const FeedContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: auto;
+  /* height: 100%; */
+  overflow: scroll;
   &::-webkit-scrollbar {
     display: none;
   }
