@@ -44,9 +44,9 @@ const MyStockList = () => {
     setShowSearch(false);
   }, []);
 
-  useEffect(() => {
-    dispatch(postLogin({ email: "ddu@naver.com", password: "1234" }));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(postLogin({ email: "ddu@naver.com", password: "1234" }));
+  // }, []);
 
   useEffect(() => {
     dispatch(fetchLikeStock());

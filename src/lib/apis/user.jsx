@@ -1,4 +1,4 @@
-import { baseInstance } from "./api";
+import { baseInstance, baseUserInstance } from "./api";
 import { setCookie } from "~/lib/apis/cookie";
 
 export const signup = async (email, password, nickname) => {
@@ -7,10 +7,10 @@ export const signup = async (email, password, nickname) => {
     const response = await baseInstance.post(baseUrl, {
       email: email,
       password: password,
-      nickName: nickname,
+      nickname: nickname,
     });
 
-    return response.data;
+    return response;
   } catch (err) {
     // console.error(err);
     return err;
@@ -25,7 +25,19 @@ export const login = async (email, password) => {
       password: password,
     });
 
-    return response.data;
+    return response;
+  } catch (err) {
+    // console.error(err);
+    return err;
+  }
+};
+
+export const logout = async () => {
+  const baseUrl = "/user/logout";
+  try {
+    const response = await baseUserInstance.post(baseUrl);
+
+    return response;
   } catch (err) {
     // console.error(err);
     return err;

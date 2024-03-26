@@ -5,9 +5,10 @@ import { Link } from "react-router-dom";
 // import { getCookie, removeCookie } from "~/lib/apis/cookie";
 // import { IsLoginContext, useIsLoginState } from "~/lib/hooks/isLoginContext";
 // import useAuth from "~/lib/hooks/useAuth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ChatBot from "../routes/chatBot/chatBot";
 import LogoIcon from '../../public/icon/logo.svg'
+import { postLogout } from "../store/reducers/User/user";
 
 
 const EXPAND_BREAKPOINT = "md";
@@ -15,6 +16,9 @@ const EXPAND_BREAKPOINT = "md";
 const MyNavbar = ({ offCanvasTitle }) => {
   const [showChatBot, setShowChatBot] = useState(false); // ChatBot 표시 상태
   const toggleChatBot = () => setShowChatBot(prev => !prev);
+  const dispatch = useDispatch();
+  const User = useSelector((state) => state.user.user);
+  console.log(User)
 
   // const [user, setUser] = useState("");
   //   const [userId, setUserId] = useState("");
@@ -25,17 +29,19 @@ const MyNavbar = ({ offCanvasTitle }) => {
 
   //   const { user, clientLogout } = useAuth();
 
-  // const postLogout = async () => {
-  //   try {
-  //     const response = await logout();
-  //     console.log(response);
-  //     removeCookie("token");
-  //     setIsLogin(false);
-  //     clientLogout();
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  const logout = async () => {
+    dispatch(postLogout())
+      .then((res) => console.log('로그아웃', res))
+    // try {
+    //   const response = await logout();
+    //   console.log(response);
+    //   removeCookie("token");
+    //   setIsLogin(false);
+    //   clientLogout();
+    // } catch (err) {
+    //   console.error(err);
+    // }
+  };
 
   // const aboutUser = async () => {
   //   try {
@@ -80,45 +86,46 @@ const MyNavbar = ({ offCanvasTitle }) => {
             <Nav
               className={`justify-content-around flex-row pb-4 pb-${EXPAND_BREAKPOINT}-0`}
             >
-              {/* {!user ? ( */}
-              <div style={{ display: "flex", gap: "15px" }}>
-              
-              {/* 챗봇 토글 버튼 */}
-                <Button variant="outline-primary" onClick={toggleChatBot} >
-                  ChatBot
-                </Button>
-                <Nav.Link
-                  as={Link}
-                  className="flex-grow-1 text-center"
-                  to="/signin"
-                >
-                  로그인
-                </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  className="flex-grow-1 text-center"
-                  to="/signup"
-                >
-                  회원가입
-                </Nav.Link>
-              </div>
-              {/* ) : (
+              {!User?.token ? (
+                <div style={{ display: "flex", gap: "15px" }}>
+                
+                {/* 챗봇 토글 버튼 */}
+                  <Button variant="outline-primary" onClick={toggleChatBot} >
+                    ChatBot
+                  </Button>
+                  <Nav.Link
+                    as={Link}
+                    className="flex-grow-1 text-center"
+                    to="/signin"
+                  >
+                    로그인
+                  </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    className="flex-grow-1 text-center"
+                    to="/signup"
+                  >
+                    회원가입
+                  </Nav.Link>
+                </div>
+              ) : ( 
                 <>
                   <Nav.Link
                     as="div"
-                    className="flex-grow-1 text-center border border-dark"
+                    className="flex-grow-1 text-center"
                   >
-                    {user.nickname}
+                    {User.nickname}
                   </Nav.Link>
                   <Nav.Link
-                    as="div"
-                    className="flex-grow-1 text-center border border-dark"
-                    onClick={postLogout}
+                    as={Link}
+                    className="flex-grow-1 text-center"
+                    // to="/"
+                    onClick={logout}
                   >
                     로그아웃
                   </Nav.Link>
                 </>
-              )} */}
+              )}
               {/* ChatBot 모달 */}
               <Modal show={showChatBot} onHide={toggleChatBot} size="lg" centered>
                 <Modal.Header closeButton>

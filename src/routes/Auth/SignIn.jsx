@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { login } from "~/lib/apis/user";
 import { setCookie } from "~/lib/apis/cookie";
 import { useNavigate } from "react-router-dom";
@@ -6,41 +6,29 @@ import styled from "styled-components";
 import LogoIcon from '../../../public/icon/logo.svg';
 import EmailIcon from '../../../public/icon/email.svg';
 import PasswordIcon from '../../../public/icon/password.svg';
+import { useDispatch, useSelector } from "react-redux";
+import { postLogin, setError } from "../../store/reducers/User/user";
 
 const SignIn = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isAlert, setIsAlert] = useState(false);
 
-  const postLogin = async (email, password) => {
-    try {
-      const response = await login(email, password);
-      if (
-        response.response &&
-        response.response.data.message === "email, password를 확인해주세요."
-      ) {
-        alert("email, password를 확인해주세요.");
-        return;
-      }
-      setCookie("token", response.data.token, {
-        path: "/",
-        // secure: true,
-      });
-      const user = response.data;
-      if (user.token) {
-        navigate("/");
-        window.scrollTo(0, 0);
-      }
-
-      return response;
-    } catch (err) {
-      // console.error(err);
-    }
-  };
+  const Error = useSelector((state) => state.user.error);
+  const User = useSelector((state) => state.user.user);
 
   const onLogin = (e) => {
     e.preventDefault();
-    postLogin(email, password);
+    const data = {
+      email,
+      password
+    }
+    dispatch(postLogin(data))
+      .then((res) => {
+        console.log(res.payload)
+      })
 
     setEmail("");
     setPassword("");
@@ -52,7 +40,7 @@ const SignIn = () => {
         <img src={LogoIcon} style={{ width: 80 }} />
         <span>StockMate</span>
       </LogoDiv>
-      <Form onSubmit={onLogin}>
+      <Form onSubmit={(e) => onLogin(e)}>
         <Label>
           <Img src={EmailIcon} alt="이메일" />
           <StyledInput

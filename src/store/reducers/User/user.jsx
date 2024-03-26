@@ -1,15 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { login } from "../../../lib/apis/user";
+import { login, logout } from "../../../lib/apis/user";
 
 const initialState = {
-  user: null,
+  user: {},
   loading: "idle",
+  error: ""
 };
 
-const postLogin = createAsyncThunk(
+export const postLogin = createAsyncThunk(
   "user/login",
-  async ({ email, password }, thunkAPI) => {
-    const response = await login(email, password);
+  async (data, thunkAPI) => {
+    const response = await login(data.email, data.password);
+    return response;
+  }
+);
+
+export const postLogout = createAsyncThunk(
+  "user/logout",
+  async (data, thunkAPI) => {
+    const response = await logout();
     return response;
   }
 );
@@ -17,12 +26,18 @@ const postLogin = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    setError(state, action) {
+      state.error = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(postLogin.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.loading = "fulfilled";
+        if (action.payload.response.status === '201') {
+          state.user = action.payload.data;
+          state.loading = "fulfilled";
+        }
       })
       .addCase(postLogin.pending, (state) => {
         state.loading = "pending";
@@ -30,8 +45,23 @@ const userSlice = createSlice({
       .addCase(postLogin.rejected, (state) => {
         state.loading = "rejected";
       });
+    builder
+      .addCase(postLogout.fulfilled, (state, action) => {
+          // state.error = action.payload.response.data.error;
+          state.user = {};
+          state.loading = "fulfilled";
+        }
+      )
+      .addCase(postLogout.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(postLogout.rejected, (state) => {
+        state.loading = "rejected";
+      });
   },
 });
 
-export { postLogin };
+const { setError } = userSlice.actions;
+export { setError };
+
 export default userSlice.reducer;

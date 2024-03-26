@@ -17,18 +17,17 @@ const SignUp = () => {
   const postSignup = async (email, password, nickname) => {
     try {
       const response = await signup(email, password, nickname);
-      console.log(response)
-      // if (
-      //   response.response &&
-      //   response.response.data.message ===
-      //     "email, password, nickName을 정확히 입력해주세요."
-      // ) {
-      //   alert("이미 가입된 이메일입니다.");
-      //   return;
-      // }
-      // alert("회원가입이 완료되었습니다.");
-      // navigate("/signin");
-      // window.scrollTo(0, 0);
+      if (
+        response.response &&
+        response.response.data.error ===
+          "해당 이메일은 이미 사용 중 입니다."
+      ) {
+        alert("이미 가입된 이메일입니다.");
+        return;
+      }
+      alert("회원가입이 완료되었습니다.");
+      navigate("/signin");
+      window.scrollTo(0, 0);
     } catch (error) {
       // console.error(error);
     }
