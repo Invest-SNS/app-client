@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getSARChart } from '../../../../../store/reducers/Chart/Indicators/chart';
-import { SARSeries, SingleTooltip } from 'react-financial-charts';
+import { SARSeries, SingleTooltip, SingleValueTooltip } from 'react-financial-charts';
 
 export default function SARChart({ datas, isShow, chartIndi }) {
   const dispatch = useDispatch();
@@ -38,10 +38,10 @@ export default function SARChart({ datas, isShow, chartIndi }) {
 
   return (
     <>
-      <SingleTooltip
-        origin={[12, 40 + (chartIndi.indexOf('SAR') * 15)]}
-        yLabel="Parabolic SAR"
-      />
+      <SingleValueTooltip
+        yLabel={`SAR (${SARValue[0]}, ${SARValue[1]})`}
+        yAccessor={d => d.sar}
+        origin={[12, 40 + (chartIndi.indexOf('SAR') * 50)]}/>
       <SARSeries yAccessor={d => d.sar} />
     </>
   )

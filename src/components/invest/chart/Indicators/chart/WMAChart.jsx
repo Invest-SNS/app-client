@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LineSeries, SingleTooltip } from 'react-financial-charts';
+import { LineSeries, MovingAverageTooltip, SingleTooltip } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getWMAChart } from '../../../../../store/reducers/Chart/Indicators/chart';
@@ -44,10 +44,40 @@ export default function WMAChart({ datas, isShow, chartIndi }) {
 
   return (
     <>
-      <SingleTooltip
-        origin={[12, 40 + (chartIndi.indexOf('WMA') * 15)]}
-        yLabel="가중 이동평균선"
-        yValue={`${WMAValue[0]} ${WMAValue[1]} ${WMAValue[2]} ${WMAValue[3]} ${WMAValue[4]}`}
+      <MovingAverageTooltip
+        origin={[12, 40 + (chartIndi.indexOf('WMA') * 40)]}
+        options={[
+          {
+            yAccessor: d => d[`wma${WMAValue[0]}`],
+            type: `WMA`,
+						stroke: '#b3009e',
+            windowSize: WMAValue[0]
+          },
+          {
+            yAccessor: d => d[`wma${WMAValue[1]}`],
+            type: `WMA`,
+						stroke: '#b33300',
+            windowSize: WMAValue[1]
+          },
+          {
+            yAccessor: d => d[`wma${WMAValue[2]}`],
+            type: `WMA`,
+						stroke: '#edda02',
+            windowSize: WMAValue[2]
+          },
+          {
+            yAccessor: d => d[`wma${WMAValue[3]}`],
+            type: `WMA`,
+						stroke: '#00b33f',
+            windowSize: WMAValue[3]
+          },
+          {
+            yAccessor: d => d[`wma${WMAValue[4]}`],
+            type: `WMA`,
+						stroke: '#0277ed',
+            windowSize: WMAValue[4]
+          },
+        ]}
       />
       {WMAValue.map((value, index) => (
         <LineSeries

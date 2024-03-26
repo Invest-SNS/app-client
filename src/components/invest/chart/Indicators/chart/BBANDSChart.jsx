@@ -41,8 +41,14 @@ export default function BBANDSChart({ datas, isShow }) {
 
   return (
     <>
-      {/* <BollingerBandTooltip
+      <BollingerBandTooltip
         origin={[12, 40]}
+        options={{
+          sourcePath: 'close',
+          multiplier: BBANDSValue[1],
+          windowSize: BBANDSValue[0],
+          movingAverageType: 'SMA'
+        }}
         yAccessor={d => (
           {
             top: d.upper,
@@ -50,7 +56,7 @@ export default function BBANDSChart({ datas, isShow }) {
             bottom: d.lower
           }
         )}
-      /> */}
+      />
       <BollingerSeries
         yAccessor={d => (
           {

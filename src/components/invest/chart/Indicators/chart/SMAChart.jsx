@@ -45,9 +45,40 @@ export default function SMAChart({ datas, isShow, chartIndi }) {
 
   return (
     <>
-      <SingleTooltip
-        origin={[12, 40 + (chartIndi.indexOf('SMA') * 15)]}
-        yLabel="단순 이동평균"
+      <MovingAverageTooltip
+        origin={[12, 40 + (chartIndi.indexOf('SMA') * 40)]}
+        options={[
+          {
+            yAccessor: d => d[`sma${SMAValue[0]}`],
+            type: `SMA`,
+						stroke: '#b3009e',
+            windowSize: SMAValue[0]
+          },
+          {
+            yAccessor: d => d[`sma${SMAValue[1]}`],
+            type: `SMA`,
+						stroke: '#b33300',
+            windowSize: SMAValue[1]
+          },
+          {
+            yAccessor: d => d[`sma${SMAValue[2]}`],
+            type: `SMA`,
+						stroke: '#edda02',
+            windowSize: SMAValue[2]
+          },
+          {
+            yAccessor: d => d[`sma${SMAValue[3]}`],
+            type: `SMA`,
+						stroke: '#00b33f',
+            windowSize: SMAValue[3]
+          },
+          {
+            yAccessor: d => d[`sma${SMAValue[4]}`],
+            type: `SMA`,
+						stroke: '#0277ed',
+            windowSize: SMAValue[4]
+          },
+        ]}
       />
       {SMAValue.map((value, index) => (
         <LineSeries
