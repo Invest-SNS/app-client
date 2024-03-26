@@ -3,6 +3,7 @@ import { fetchChatBot } from '../../lib/apis/chatBot';
 import { Container, Form, Button, InputGroup, FormControl, Row, Col} from 'react-bootstrap';
 import './chatBot.css'; 
 import { commander } from '../../service/commander';
+import chatbotImg from '../../../public/icon/chat_mate.jpg';
 
 function ChatBot() {
   const [messages, setMessages] = useState([]);
@@ -13,7 +14,7 @@ function ChatBot() {
   useEffect(() => {
     // 챗봇의 초기 메시지를 추가
     const initialMessage = {
-      text: '안녕하세요? 챗봇이에요',
+      text: '안녕하세요? 궁금하신 사항이 있나요?',
       sender: 'bot'
     };
     setMessages([initialMessage]);
@@ -66,9 +67,16 @@ function ChatBot() {
         <Col>
           <div className="chat-box" ref={chatBoxRef} >
             {messages.map((message, index) => (
-              <div key={index} className={`message ${message.sender}`} style={{ whiteSpace: 'pre-line' }}>
-                {message.text}
-              </div>
+              <>
+                <div>
+                  {message.sender === 'bot' && (
+                    <img src={chatbotImg} alt="Robot" style={{ width: '40px', height: '40px', marginRight: '10px', borderRadius: '20px' }}/>
+                  )}
+                </div>
+                <div key={index} className={`message ${message.sender}`} style={{ whiteSpace: 'pre-line' }}>
+                  {message.text}
+                </div>
+              </>
             ))}
             {isWaitingForResponse && (
               <div className="message bot loading-message">
@@ -82,8 +90,8 @@ function ChatBot() {
                 <FormControl
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="챗봇에서 질문하세요!"
-                  aria-label="챗봇에서 질문하세요!"
+                  placeholder="챗 메이트에게 질문하세요!"
+                  aria-label="챗 메이트에데 질문하세요!"
                 />
                 <Button variant="outline-secondary" type="submit">질문하기</Button>
               </InputGroup>
@@ -91,7 +99,7 @@ function ChatBot() {
           </div>
         </Col>
       </Row>
-      <text style={{marginLeft:'10px', fontSize:'12px', color:'#808080'}}>활용 Tip💡 /가이드 /매수매도 /차트지표 /보조지표 /SNS 등의 커멘더키를 사용해보세요!</text>
+      <text style={{marginLeft:'10px', fontSize:'12px', color:'#808080'}}>활용 Tip💡 /설명 /가이드 /매수매도 /차트지표 /보조지표 /SNS 등의 커멘더키를 사용해보세요!</text>
     </Container>
   );
 }
