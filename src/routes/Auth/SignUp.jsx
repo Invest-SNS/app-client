@@ -6,6 +6,8 @@ import LogoIcon from '../../../public/icon/logo.svg';
 import NicknameIcon from '../../../public/icon/nickname.svg';
 import EmailIcon from '../../../public/icon/email.svg';
 import PasswordIcon from '../../../public/icon/password.svg';
+import { useDispatch } from "react-redux";
+import { postSignup } from "../../store/reducers/User/user";
 
 const SignUp = () => {
   const [nickname, setNickname] = useState("");
@@ -13,40 +15,45 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const postSignup = async (email, password, nickname) => {
-    try {
-      const response = await signup(email, password, nickname);
-      if (
-        response.response &&
-        response.response.data.error ===
-          "해당 이메일은 이미 사용 중 입니다."
-      ) {
-        alert("이미 가입된 이메일입니다.");
-        return;
-      }
-      alert("회원가입이 완료되었습니다.");
-      navigate("/signin");
-      window.scrollTo(0, 0);
-    } catch (error) {
-      // console.error(error);
-    }
-  };
+  const [error1, setError1] = useState("");
+  const [error2, setError2] = useState("");
 
   const onSignup = (e) => {
     e.preventDefault();
     if (emailCheck(email)) {
-      alert("유효한 이메일 형식으로 입력해주세요.");
+      setError1("유효한 이메일 형식으로 입력해주세요.");
+      setError2("");
     } else if (password === passwordCheck) {
-      postSignup(email, password, nickname);
+      const data = {
+        email,
+        password,
+        nickname
+      }
+      dispatch(postSignup(data))
+        .then((res) => {
+          console.log(res.payload)
+          if (res.payload.status === 201) {
+            alert('회원가입이 완료되었습니다.');
+            navigate('/signin');
+          } else {
+            alert("해당 이메일은 이미 사용 중 입니다.");
+            return;
+          }
+        })
+
       setEmail("");
       setPassword("");
       setPasswordCheck("");
       setNickname("");
+      setError1("");
+      setError2("");
     } else {
-      alert("비밀번호가 일치하지 않습니다.");
+      setError2("비밀번호가 일치하지 않습니다.");
       setPassword("");
       setPasswordCheck("");
+      setError1("");
     }
   };
 
@@ -78,6 +85,7 @@ const SignUp = () => {
             onChange={(e) => setEmail(e.target.value)}
           ></StyledInput>
         </Label>
+        {error1 && <Error>{error1}</Error>}
         <Label>
           <Img src={PasswordIcon} alt="비밀번호" />
           <StyledInput
@@ -98,6 +106,7 @@ const SignUp = () => {
             autoComplete="off"
           ></StyledInput>
         </Label>
+        {error2 && <Error>{error2}</Error>}
         <StyledButton type="submit">회원가입</StyledButton>
       </Form>
       <div style={{ display: 'flex', gap: '20px' }}>
@@ -189,4 +198,9 @@ const LogoDiv = styled.div`
   font-size: 36px;
   font-weight: 100;
   gap: 10px;
+`
+
+const Error = styled.span`
+  color: #ff3333;
+  font-size: 13px;
 `

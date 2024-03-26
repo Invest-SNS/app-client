@@ -1,23 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { login } from "~/lib/apis/user";
-import { setCookie } from "~/lib/apis/cookie";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LogoIcon from '../../../public/icon/logo.svg';
 import EmailIcon from '../../../public/icon/email.svg';
 import PasswordIcon from '../../../public/icon/password.svg';
-import { useDispatch, useSelector } from "react-redux";
-import { postLogin, setError } from "../../store/reducers/User/user";
+import { useDispatch } from "react-redux";
+import { postLogin, setUser } from "../../store/reducers/User/user";
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isAlert, setIsAlert] = useState(false);
-
-  const Error = useSelector((state) => state.user.error);
-  const User = useSelector((state) => state.user.user);
+  const [error, setError] = useState("");
 
   const onLogin = (e) => {
     e.preventDefault();
@@ -28,6 +23,13 @@ const SignIn = () => {
     dispatch(postLogin(data))
       .then((res) => {
         console.log(res.payload)
+        if (res.payload.status === 201) {
+          console.log('여기')
+          dispatch(setUser(res.payload.data));
+          navigate('/');
+        } else {
+          setError("이메일 혹은 비밀번호가 옳지 않습니다.");
+        }
       })
 
     setEmail("");
@@ -62,6 +64,7 @@ const SignIn = () => {
         </Label>
         <StyledButton type="submit">로그인</StyledButton>
       </Form>
+      {error && <ErrorFont>이메일 혹은 비밀번호가 옳지 않습니다.</ErrorFont>}
       <div style={{ display: 'flex', gap: '20px' }}>
         <NavDiv onClick={() => navigate("/")}>홈으로</NavDiv>
         <NavDiv>|</NavDiv>
@@ -151,4 +154,8 @@ const LogoDiv = styled.div`
   font-size: 36px;
   font-weight: 100;
   gap: 10px;
+`
+
+const ErrorFont = styled.span`
+  color: #ff3333;
 `

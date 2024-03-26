@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useMemo } from "react";
 import { Container, Navbar, Nav, Offcanvas, Button, Modal } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import { fetchAboutUser, logout } from "~/lib/apis/user";
 // import { getCookie, removeCookie } from "~/lib/apis/cookie";
 // import { IsLoginContext, useIsLoginState } from "~/lib/hooks/isLoginContext";
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ChatBot from "../routes/chatBot/chatBot";
 import LogoIcon from '../../public/icon/logo.svg'
-import { postLogout } from "../store/reducers/User/user";
+import { postLogout, setUser } from "../store/reducers/User/user";
 
 
 const EXPAND_BREAKPOINT = "md";
@@ -16,50 +16,26 @@ const EXPAND_BREAKPOINT = "md";
 const MyNavbar = ({ offCanvasTitle }) => {
   const [showChatBot, setShowChatBot] = useState(false); // ChatBot 표시 상태
   const toggleChatBot = () => setShowChatBot(prev => !prev);
-  const dispatch = useDispatch();
   const User = useSelector((state) => state.user.user);
-  console.log(User)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // const [user, setUser] = useState("");
-  //   const [userId, setUserId] = useState("");
-  // const [isLogin, setIsLogin] = useState(false);
-  //   const token = getCookie("token");
-  //   const { setIsLogin } = useContext(IsLoginContext);
-  //   const isLogin = useIsLoginState();
-
-  //   const { user, clientLogout } = useAuth();
+  console.log('User', User)
 
   const logout = async () => {
-    dispatch(postLogout())
-      .then((res) => console.log('로그아웃', res))
-    // try {
-    //   const response = await logout();
-    //   console.log(response);
-    //   removeCookie("token");
-    //   setIsLogin(false);
-    //   clientLogout();
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    if (confirm('로그아웃 하시겠습니까?')) {
+      dispatch(postLogout(User.token))
+        .then((res) => {
+          if (res.payload.status === 200) {
+            dispatch(setUser({}))
+          }
+        })
+      navigate('/')
+    } else {
+      return;
+    }
   };
-
-  // const aboutUser = async () => {
-  //   try {
-  //     const userObj = await fetchAboutUser();
-  //     console.log(userObj);
-  //     // setUser(userObj.data.nickname);
-  //     setUserId(userObj.data._id);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (token) {
-  //     // aboutUser();
-  //   } else {
-  //   }
-  // }, [token]);
+  
   return (
     <Navbar
       expand={EXPAND_BREAKPOINT}
@@ -84,12 +60,12 @@ const MyNavbar = ({ offCanvasTitle }) => {
           </Offcanvas.Header>
           <Offcanvas.Body className="flex-row-reverse">
             <Nav
-              className={`justify-content-around flex-row pb-4 pb-${EXPAND_BREAKPOINT}-0`}
+              className={`gap-2 justify-content-around flex-row pb-4 pb-${EXPAND_BREAKPOINT}-0`}
             >
               {!User?.token ? (
                 <div style={{ display: "flex", gap: "15px" }}>
                 
-                {/* 챗봇 토글 버튼 */}
+                  {/* 챗봇 토글 버튼 */}
                   <Button variant="outline-primary" onClick={toggleChatBot} >
                     ChatBot
                   </Button>
@@ -110,6 +86,10 @@ const MyNavbar = ({ offCanvasTitle }) => {
                 </div>
               ) : ( 
                 <>
+                  {/* 챗봇 토글 버튼 */}
+                  <Button variant="outline-primary" onClick={toggleChatBot} >
+                    ChatBot
+                  </Button>
                   <Nav.Link
                     as="div"
                     className="flex-grow-1 text-center"

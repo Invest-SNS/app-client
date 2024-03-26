@@ -32,10 +32,17 @@ export const login = async (email, password) => {
   }
 };
 
-export const logout = async () => {
+export const logout = async (token) => {
   const baseUrl = "/user/logout";
   try {
-    const response = await baseUserInstance.post(baseUrl);
+    const response = await baseInstance.post(baseUrl,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      }
+    );
 
     return response;
   } catch (err) {
