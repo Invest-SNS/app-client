@@ -39,6 +39,7 @@ const rootPersistConfig = {
     "getChartIndicator",
     "getSubIndicator",
     "company",
+    "user"
   ],
 };
 
