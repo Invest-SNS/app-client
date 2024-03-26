@@ -35,11 +35,11 @@ const FeedPage = () => {
       return `kr/${code}`;
     }
   };
-
+/*
   const onErrorImg = (e) => {
     e.target.src = default_Img;
-  };
-
+    };
+*/
   return (
     <S.Container>
       {isWrite ? (
