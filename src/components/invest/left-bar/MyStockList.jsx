@@ -362,7 +362,7 @@ const SearchResults = styled.ul`
   padding-bottom: 5px;
   box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.25);
   background-color: white;
-  z-index: 999;
+  z-index: 98;
   &::-webkit-scrollbar {
     display: none;
   }

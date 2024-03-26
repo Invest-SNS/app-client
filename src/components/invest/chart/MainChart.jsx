@@ -62,20 +62,14 @@ import AROONOSCChart from "./Indicators/sub/AROONOSCChart";
 import STOCHRSIChart from "./Indicators/sub/STOCHRSIChart";
 import ULTOSCChart from "./Indicators/sub/ULTOSCChart";
 import PPOChart from "./Indicators/sub/PPOChart";
-import { setCompanyCode } from "../../../store/reducers/Chart/clickCompany";
-import { setChartIndi, setDisactiveSub, setSubIndi } from "../../../store/reducers/Chart/Indicators/clickIndicators";
-import { getBBANDSChart, getSARChart } from "../../../store/reducers/Chart/Indicators/chart";
-import { useWebSocket } from "../../../lib/hooks/useWebSocket";
 
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas);
   const clickDate = useSelector((state) => state.chart.date);
   const company = useSelector((state) => state.company.data);
-  const companyCode = useSelector((state) => state.company.companyCode);
   const dispatch = useDispatch();
   const [isShow, setIsShow] = useState(false);
-  console.log("company", company);
-  console.log("companyCode", companyCode);
+
   // 클릭한 보조지표
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
@@ -102,13 +96,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   }
 
   useEffect(() => {
-    // 실시간 데이터 받아올 때 수정해야할 수도 있는 부분
-    // 새로운 기업을 클릭했을 때만 데이터 갱신
-    if (companyCode !== company.code) {
-      getData("D");
-      dispatch(setClickDate("D"));
-      dispatch(setCompanyCode(company.code));
-    }
+    getData(clickDate);
   }, [company]);
 
   // 일, 주, 월, 년 버튼 색상 변경
@@ -133,7 +121,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const margin = { left: 0, right: 78, top: 0, bottom: 24 };
 
   // window 사이즈에 맞춘 넓이/높이
-  const height = window.innerHeight - 160;
+  const height = window.innerHeight - 170;
   const width = window.innerWidth - 660;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(dataList);

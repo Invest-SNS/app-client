@@ -45,7 +45,7 @@ const rootPersistConfig = {
 const rootReducer = persistReducer(
   rootPersistConfig,
   combineReducers({
-    trading: tradingReducer,
+    // trading: tradingReducer,
     chart: chartReducer,
     company: companyReducer,
     chartValues: chartValuesReducer,

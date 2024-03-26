@@ -69,6 +69,7 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   transition: margin-left 0.3s ease;
+  z-index: 99;
 `;
 
 const Content = styled.div`

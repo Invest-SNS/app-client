@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useWebSocket } from "../../../../lib/hooks/useWebSocket";
 import PriceItem from "./PriceItem";
-import { setScrollPosition } from "../../../../store/reducers/Trading/trading";
+// import { setScrollPosition } from "../../../../store/reducers/Trading/trading";
 import { useDispatch, useSelector } from "react-redux";
 
 const PriceBook = () => {
@@ -18,7 +18,7 @@ const PriceBook = () => {
   }, [scrollPosition, askPrice]);
 
   const handleScroll = (e) => {
-    dispatch(setScrollPosition(e.target.scrollTop));
+    // dispatch(setScrollPosition(e.target.scrollTop));
   };
 
   return (
