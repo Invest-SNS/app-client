@@ -1,21 +1,33 @@
 import { baseInstance } from "./api";
 import { setCookie } from "~/lib/apis/cookie";
 
-export const postLogin = async (email, password) => {
+export const signup = async (email, password, nickname) => {
+  const baseUrl = "/user/sign-up";
+  try {
+    const response = await baseInstance.post(baseUrl, {
+      email: email,
+      password: password,
+      nickName: nickname,
+    });
+
+    return response.data;
+  } catch (err) {
+    // console.error(err);
+    return err;
+  }
+};
+
+export const login = async (email, password) => {
   const baseUrl = "/user/login";
   try {
     const response = await baseInstance.post(baseUrl, {
-      email,
-      password,
+      email: email,
+      password: password,
     });
-    setCookie("token", response.data.token, {
-      path: "/",
-      secure: true,
-    });
-    const data = response.data;
-    console.log(data);
-    return data;
+
+    return response.data;
   } catch (err) {
-    console.error(err);
+    // console.error(err);
+    return err;
   }
 };

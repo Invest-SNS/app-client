@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { postLogin as reqPostLogin } from "~/lib/apis/user";
+import { login } from "../../../lib/apis/user";
 
 const initialState = {
   user: null,
@@ -9,7 +9,7 @@ const initialState = {
 const postLogin = createAsyncThunk(
   "user/login",
   async ({ email, password }, thunkAPI) => {
-    const response = await reqPostLogin(email, password);
+    const response = await login(email, password);
     return response;
   }
 );

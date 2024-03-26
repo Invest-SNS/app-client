@@ -90,7 +90,7 @@ const MyNavbar = ({ offCanvasTitle }) => {
                 <Nav.Link
                   as={Link}
                   className="flex-grow-1 text-center"
-                  to="/login"
+                  to="/signin"
                 >
                   로그인
                 </Nav.Link>
