@@ -21,6 +21,7 @@ import {
   MACDSeries,
   MovingAverageTooltip,
   SingleValueTooltip,
+  LineSeries,
 } from "react-financial-charts";
 
 import default_Img from "../../../../public/icon/+.svg";
@@ -32,6 +33,7 @@ import {
   getMinuteDatas,
   setChartDatas,
   setClickDate,
+  setLiveData,
 } from "../../../store/reducers/Chart/chart";
 
 // 차트지표
@@ -76,11 +78,6 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
 
   console.log('보조지표', subIndi);
   console.log('차트지표', chartIndi);
-
-  // const { askPrice, nowPrice } = useWebSocket();
-  // useEffect(() => {
-  //   console.log('nowPrice',nowPrice)
-  // }, [nowPrice])
   
   function getData(format) {
     const date = new Date();
@@ -118,6 +115,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
       const nDate = `${year}-${month}-${day}`;
       return new Date(nDate);
     });
+
   const margin = { left: 0, right: 78, top: 0, bottom: 24 };
 
   // window 사이즈에 맞춘 넓이/높이

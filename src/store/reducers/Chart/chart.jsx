@@ -279,6 +279,10 @@ const chartSlice = createSlice({
         });
       }
     },
+    setLiveData(state, action) {
+      state.datas.pop();
+      state.datas.push(action.payload)
+    },
     setClickDate(state, action) {
       state.date = action.payload;
     }
@@ -293,7 +297,7 @@ const chartSlice = createSlice({
   },
 });
 
-const { setChartDatas, setClickDate } = chartSlice.actions;
-export { setChartDatas, setClickDate };
+const { setChartDatas, setClickDate, setLiveData } = chartSlice.actions;
+export { setChartDatas, setClickDate, setLiveData };
 
 export default chartSlice.reducer;
