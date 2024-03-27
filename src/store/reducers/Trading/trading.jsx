@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   selectedTab: "매수",
-  priceGap: 0,
-  maxQuantity: 0,
-  selectedPrice: 0,
+  selectedPrice: null,
+  selectedQuantity: 0,
   scrollPosition: 100,
+  disabledPriceInput: false, // 시장가, 지정가 가격 input
 };
 
 const tradingSlice = createSlice({
@@ -15,24 +15,37 @@ const tradingSlice = createSlice({
     setSelectedTab(state, action) {
       state.selectedTab = action.payload;
     },
-    setPriceGap(state, action) {
-      state.priceGap = action.payload;
-    },
     setSelectedPrice(state, action) {
       state.selectedPrice = action.payload;
     },
+    setSelectedQuantity(state, action) {
+      state.selectedQuantity = action.payload;
+    },
     setScrollPosition(state, action) {
       state.scrollPosition = action.payload;
+    },
+    setDisabledPriceInput(state, action) {
+      state.disabledPriceInput = action.payload;
+    },
+    increaseSelectedQuantity(state) {
+      state.selectedQuantity += 1;
+    },
+    decreaseSelectedQuantity(state) {
+      if (state.selectedQuantity > 0) {
+        state.selectedQuantity -= 1;
+      }
     },
   },
   extraReducers: (builder) => {},
 });
 
 export const {
-  setPriceGap,
-  selectedPrice,
   setSelectedPrice,
   setScrollPosition,
   setSelectedTab,
+  setDisabledPriceInput,
+  setSelectedQuantity,
+  increaseSelectedQuantity,
+  decreaseSelectedQuantity,
 } = tradingSlice.actions;
 export default tradingSlice.reducer;

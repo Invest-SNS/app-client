@@ -7,7 +7,7 @@ const TradingInputButton = ({ onClick, children, borderRadius, disabled }) => {
       disabled={disabled}
       style={{
         padding: "0.2rem 0.7rem",
-        cursor: "pointer",
+        pointer: "cursor",
         height: "17px",
         fontSize: "0.6rem",
         display: "flex",

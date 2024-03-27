@@ -6,14 +6,27 @@ import OrderBook from "../../components/invest/right-bar/OrderManagement/OrderBo
 import OrderList from "../../components/invest/right-bar/OrderHistory/OrderHistoryList";
 import NewIcon from "../../components/invest/right-bar/OrderHistory/NewIcon";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedTab } from "../../store/reducers/Trading/trading";
+import {
+  setSelectedTab,
+  setSelectedPrice,
+  setSelectedQuantity,
+} from "../../store/reducers/Trading/trading";
+import { useWebSocket } from "../../lib/hooks/useWebSocket";
 
 export default function TradingPage() {
   const dispatch = useDispatch();
-  const { selectedTab } = useSelector((state) => state.trading);
+  const { selectedTab, disabledPriceInput } = useSelector(
+    (state) => state.trading
+  );
+  const { nowPrice } = useWebSocket();
 
   const handleTabClick = (tab) => {
     dispatch(setSelectedTab(tab));
+    dispatch(setSelectedQuantity(0));
+
+    if (!disabledPriceInput) {
+      dispatch(setSelectedPrice(nowPrice?.message?.close));
+    }
   };
 
   const getLogoFileName = (name, code) => {
@@ -42,15 +55,15 @@ export default function TradingPage() {
     e.target.src = default_Img;
   };
 
-  const Container = styled.div`
-    width: 400px;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-  `;
-
   return (
-    <Container>
+    <div
+      style={{
+        width: "400px",
+        height: "100%",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -147,26 +160,24 @@ export default function TradingPage() {
         </div>
       </div>
       {selectedTab === "매수" || selectedTab === "매도" ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            height: "100%",
-            width: "100%",
-          }}
-        >
-          <PriceBook />
-          {/* <OrderBook /> */}
-        </div>
+        <>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              height: "100%",
+              width: "100%",
+            }}
+          >
+            <PriceBook />
+            <OrderBook />
+          </div>
+        </>
       ) : (
-        <></>
-        // <div style={{ height: "80%" }}>
-        //   <OrderList
-        //     pedingOrderList={pendingOrders}
-        //     filledOrderList={filledOrders}
-        //   />
-        // </div>
+        <div style={{ height: "80%" }}>
+          <OrderList pedingOrderList={[]} filledOrderList={[]} />
+        </div>
       )}
-    </Container>
+    </div>
   );
 }
