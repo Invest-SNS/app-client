@@ -25,9 +25,7 @@ const OrderBook = () => {
   const { selectedPrice, selectedTab, disabledPriceInput, selectedQuantity } =
     useSelector((state) => state.trading);
 
-  // const nowPrice = 100;
-
-  // const askPrice = {
+  // const defaultAskPrice = {
   //   message: {
   //     sellPrice: [100, 101, 102, 103, 104, 104, 104, 104, 104, 104],
   //     sellAmount: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
@@ -35,6 +33,7 @@ const OrderBook = () => {
   //     buyAmount: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
   //   },
   // };
+  // const defaultNowPrice = 100;
 
   useEffect(() => {
     dispatch(setSelectedPrice(nowPrice?.message?.close));
