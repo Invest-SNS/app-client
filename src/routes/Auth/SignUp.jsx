@@ -8,6 +8,7 @@ import EmailIcon from '../../../public/icon/email.svg';
 import PasswordIcon from '../../../public/icon/password.svg';
 import { useDispatch } from "react-redux";
 import { postSignup } from "../../store/reducers/User/user";
+import { Button, Modal } from "react-bootstrap";
 
 const SignUp = () => {
   const [nickname, setNickname] = useState("");
@@ -19,6 +20,10 @@ const SignUp = () => {
 
   const [error1, setError1] = useState("");
   const [error2, setError2] = useState("");
+
+  const [isAlert, setIsAlert] = useState(false);
+  const [alertModal, setAlertModal] = useState("");
+
 
   const onSignup = (e) => {
     e.preventDefault();
@@ -35,11 +40,11 @@ const SignUp = () => {
         .then((res) => {
           console.log(res.payload)
           if (res.payload.status === 201) {
-            alert('회원가입이 완료되었습니다.');
-            navigate('/signin');
+            setIsAlert(true);
+            setAlertModal('회원가입이 완료되었습니다.');
           } else {
-            alert("해당 이메일은 이미 사용 중 입니다.");
-            return;
+            setIsAlert(true);
+            setAlertModal("해당 이메일은 이미 사용 중 입니다.");
           }
         })
 
@@ -65,31 +70,31 @@ const SignUp = () => {
   return (
     <SignupContainer>
       <LogoDiv>
-        <img src={LogoIcon} style={{ width: 80 }} />
+        <img src={LogoIcon} style={{ width: 60 }} />
         <span>StockMate</span>
       </LogoDiv>
       <Form onSubmit={onSignup}>
         <Label>
-          <Img src={NicknameIcon} alt="닉네임" />
+          {/* <Img src={NicknameIcon} alt="닉네임" /> */}
           <StyledInput
-            placeholder="닉네임"
+            placeholder="🤍   닉네임"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           ></StyledInput>
         </Label>
         <Label>
-          <Img src={EmailIcon} alt="이메일" />
+          {/* <Img src={EmailIcon} alt="이메일" /> */}
           <StyledInput
-            placeholder="이메일"
+            placeholder="✉️   이메일"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           ></StyledInput>
         </Label>
         {error1 && <Error>{error1}</Error>}
         <Label>
-          <Img src={PasswordIcon} alt="비밀번호" />
+          {/* <Img src={PasswordIcon} alt="비밀번호" /> */}
           <StyledInput
-            placeholder="비밀번호"
+            placeholder="🔗   비밀번호"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
@@ -97,9 +102,9 @@ const SignUp = () => {
           ></StyledInput>
         </Label>
         <Label>
-          <Img src={PasswordIcon} alt="비밀번호 확인" />
+          {/* <Img src={PasswordIcon} alt="비밀번호 확인" /> */}
           <StyledInput
-            placeholder="비밀번호 확인"
+            placeholder="🔗   비밀번호 확인"
             value={passwordCheck}
             onChange={(e) => setPasswordCheck(e.target.value)}
             type="password"
@@ -114,6 +119,27 @@ const SignUp = () => {
         <NavDiv>|</NavDiv>
         <NavDiv onClick={() => navigate("/signin")}>로그인</NavDiv>
       </div>
+
+      {/* Signup 모달 */}
+      <Modal show={isAlert} onHide={() => setIsAlert(false)} centered>
+        <Modal.Body>
+          <span>{alertModal}</span>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button style={{ backgroundColor: '#FFE3D7', border: '1px solid #FFE3D7', color: '#000' }} 
+            onClick={() => {
+              if (alertModal === "해당 이메일은 이미 사용 중 입니다.") {
+                setIsAlert(false);
+              } else {
+                setIsAlert(false);
+                navigate('/signin');
+              }
+            }}
+          >
+            확인
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </SignupContainer>
   );
 };
@@ -152,20 +178,20 @@ const Img = styled.img`
 `;
 
 const StyledInput = styled.input`
-  width: 320px;
+  width: 400px;
   height: 60px;
   background: #f4f5f7;
   border: none;
   font-size: 18px;
   font-weight: 400;
-  padding: 0 10px;
+  padding: 0 30px;
 
   &::placeholder {
     color: rgba(186, 186, 186, 0.9);
   }
 
   &:focus {
-    outline: 2px solid #FFE3D7;
+    outline: 2px solid #ffd4c2;
   }
 `;
 
@@ -177,7 +203,7 @@ const StyledButton = styled.button`
   height: 55px;
   color: #000;
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 400;
 `;
 
@@ -195,7 +221,7 @@ const NavDiv = styled.div`
 const LogoDiv = styled.div`
   display: flex;
   align-items: center;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 100;
   gap: 10px;
 `

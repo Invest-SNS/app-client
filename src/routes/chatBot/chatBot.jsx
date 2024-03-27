@@ -67,16 +67,16 @@ function ChatBot() {
         <Col>
           <div className="chat-box" ref={chatBoxRef} >
             {messages.map((message, index) => (
-              <>
+              <div key={index}>
                 <div>
                   {message.sender === 'bot' && (
                     <img src={chatbotImg} alt="Robot" style={{ width: '40px', height: '40px', marginRight: '10px', borderRadius: '20px' }}/>
                   )}
                 </div>
-                <div key={index} className={`message ${message.sender}`} style={{ whiteSpace: 'pre-line' }}>
+                <div className={`message ${message.sender}`} style={{ whiteSpace: 'pre-line' }}>
                   {message.text}
                 </div>
-              </>
+              </div>
             ))}
             {isWaitingForResponse && (
               <div className="message bot loading-message">
@@ -99,7 +99,7 @@ function ChatBot() {
           </div>
         </Col>
       </Row>
-      <text style={{marginLeft:'10px', fontSize:'12px', color:'#808080'}}>활용 Tip💡 /설명 /가이드 /매수매도 /차트지표 /보조지표 /SNS 등의 커멘더키를 사용해보세요!</text>
+      <span style={{marginLeft:'10px', fontSize:'13px', color:'#808080'}}>활용 Tip💡 /설명 /가이드 /매수매도 /차트지표 /보조지표 /SNS 등의 커멘더키를 사용해보세요!</span>
     </Container>
   );
 }
