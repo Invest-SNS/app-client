@@ -30,10 +30,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import {
   getChartDatas,
-  getMinuteDatas,
-  setChartDatas,
   setClickDate,
-  setLiveData,
 } from "../../../store/reducers/Chart/chart";
 
 // 차트지표
@@ -80,8 +77,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   console.log('차트지표', chartIndi);
   
   function getData(format) {
-    const date = new Date();
-    const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
     const data = {
       code: company.code,
       start_date: "19990101",
@@ -89,7 +86,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
       time_format: format,
     };
 
-    dispatch(getChartDatas(data)).then(() => setIsShow((prev) => !prev));
+    dispatch(getChartDatas(data))
+      .then((res) => setIsShow((prev) => !prev));
   }
 
   useEffect(() => {
@@ -314,6 +312,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             xExtents={xExtents}
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
           >
+            
             {/* 일반 차트 */}
             <Chart
               id={1}
@@ -369,6 +368,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 lineStroke={openCloseColor}
                 displayFormat={pricesDisplayFormat}
                 yAccessor={yEdgeIndicator}
+                fullWidth={true}
               />
 
               <ZoomButtons />
