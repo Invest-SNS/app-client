@@ -1,24 +1,30 @@
 import React, { useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-// import { useWebSocket } from "../../../../lib/hooks/useWebSocket";
+import { useWebSocket } from "../../../../lib/hooks/useWebSocket";
 import PriceItem from "./PriceItem";
-// import { setScrollPosition } from "../../../../store/reducers/Trading/trading";
+import {
+  setScrollPosition,
+  setSelectedPrice,
+} from "../../../../store/reducers/Trading/trading";
 import { useDispatch, useSelector } from "react-redux";
 
 const PriceBook = () => {
   const containerRef = useRef(null);
   const dispatch = useDispatch();
-  // const { askPrice, nowPrice } = useWebSocket();
-  const { scrollPosition } = useSelector((state) => state.trading);
+  const { askPrice, nowPrice } = useWebSocket();
+  const { scrollPosition, disabledPriceInput, selectedPrice } = useSelector(
+    (state) => state.trading
+  );
 
-  // useEffect(() => {
-  //   if (containerRef.current) {
-  //     containerRef.current.scrollTop = scrollPosition;
-  //   }
-  // }, [scrollPosition, askPrice]);
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = scrollPosition;
+    }
+  }, [scrollPosition, askPrice]);
+  //scrollPosition, askPrice
 
   const handleScroll = (e) => {
-    // dispatch(setScrollPosition(e.target.scrollTop));
+    dispatch(setScrollPosition(e.target.scrollTop));
   };
 
   const handlePriceSelect = (price) => {
@@ -39,7 +45,7 @@ const PriceBook = () => {
         ebkitScrollbar: "none",
       }}
     >
-      {/* <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         {askPrice?.message?.sellPrice
           .map((price, index) => (
             <PriceItem
@@ -54,9 +60,9 @@ const PriceBook = () => {
             />
           ))
           .reverse()}
-      </div> */}
+      </div>
 
-      {/* <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         {askPrice?.message?.buyPrice.map((price, index) => (
           <PriceItem
             key={uuidv4()}
@@ -69,7 +75,7 @@ const PriceBook = () => {
             selectedPrice={selectedPrice}
           />
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };
