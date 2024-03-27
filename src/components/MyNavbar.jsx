@@ -1,53 +1,23 @@
-import React, { useContext, useEffect, useState, useMemo } from "react";
-import { Container, Navbar, Nav, Offcanvas } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Navbar, Nav, Offcanvas, Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
-// import { fetchAboutUser, logout } from "~/lib/apis/user";
-// import { getCookie, removeCookie } from "~/lib/apis/cookie";
-// import { IsLoginContext, useIsLoginState } from "~/lib/hooks/isLoginContext";
-// import useAuth from "~/lib/hooks/useAuth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import ChatBot from "../routes/chatBot/chatBot";
+import LogoIcon from '../../public/icon/logo.svg'
+import { postLogout, setUser } from "../store/reducers/User/user";
+import chatbotImg from '../../public/icon/chat_mate.jpg';
+import styled from "styled-components";
+
 
 const EXPAND_BREAKPOINT = "md";
 
 const MyNavbar = ({ offCanvasTitle }) => {
-  // const [user, setUser] = useState("");
-  //   const [userId, setUserId] = useState("");
-  // const [isLogin, setIsLogin] = useState(false);
-  //   const token = getCookie("token");
-  //   const { setIsLogin } = useContext(IsLoginContext);
-  //   const isLogin = useIsLoginState();
-
-  //   const { user, clientLogout } = useAuth();
-
-  // const postLogout = async () => {
-  //   try {
-  //     const response = await logout();
-  //     console.log(response);
-  //     removeCookie("token");
-  //     setIsLogin(false);
-  //     clientLogout();
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // const aboutUser = async () => {
-  //   try {
-  //     const userObj = await fetchAboutUser();
-  //     console.log(userObj);
-  //     // setUser(userObj.data.nickname);
-  //     setUserId(userObj.data._id);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (token) {
-  //     // aboutUser();
-  //   } else {
-  //   }
-  // }, [token]);
+  const [showChatBot, setShowChatBot] = useState(false); // ChatBot 표시 상태
+  const toggleChatBot = () => setShowChatBot(prev => !prev);
+  const [logoutModal, setLogoutModal] = useState(false);
+  const User = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+  
   return (
     <Navbar
       expand={EXPAND_BREAKPOINT}
@@ -55,7 +25,10 @@ const MyNavbar = ({ offCanvasTitle }) => {
       style={{ borderBottom: "1px solid black" }}
     >
       <Container fluid>
-        <Navbar.Brand href="#">invest-SNS</Navbar.Brand>
+        <Navbar.Brand href="#" style={{ display: 'flex', gap: '10px', alignItems: 'center', fontWeight: '100' }}>
+          <img src={LogoIcon} width={37} />
+          StockMate
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls={`Navbar-expand-${EXPAND_BREAKPOINT}`} />
         <Navbar.Offcanvas
           id={`Navbar-expand-${EXPAND_BREAKPOINT}`}
@@ -69,42 +42,92 @@ const MyNavbar = ({ offCanvasTitle }) => {
           </Offcanvas.Header>
           <Offcanvas.Body className="flex-row-reverse">
             <Nav
-              className={`justify-content-around flex-row pb-4 pb-${EXPAND_BREAKPOINT}-0`}
+              className={`gap-2 justify-content-around flex-row pb-4 pb-${EXPAND_BREAKPOINT}-0`}
             >
-              {/* {!user ? ( */}
-              <div style={{ display: "flex", gap: "15px" }}>
-                <Nav.Link
-                  as={Link}
-                  className="flex-grow-1 text-center"
-                  to="/login"
-                >
-                  로그인
-                </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  className="flex-grow-1 text-center"
-                  to="/signup"
-                >
-                  회원가입
-                </Nav.Link>
-              </div>
-              {/* ) : (
-                <>
+              {!User?.token ? (
+                <div style={{ display: "flex", gap: "15px" }}>
+                
+                  {/* 챗봇 토글 버튼 */}
+                  <ChatBotBtn onClick={toggleChatBot}>
+                    <img src={chatbotImg} alt="Robot" style={{ width: '40px', height: '40px', borderRadius: '20px' }}/>
+                    <span>ChatBot</span>
+                  </ChatBotBtn>
+
                   <Nav.Link
-                    as="div"
-                    className="flex-grow-1 text-center border border-dark"
+                    as={Link}
+                    className="flex-grow-1 text-center"
+                    to="/signin"
                   >
-                    {user.nickname}
+                    로그인
                   </Nav.Link>
                   <Nav.Link
+                    as={Link}
+                    className="flex-grow-1 text-center"
+                    to="/signup"
+                  >
+                    회원가입
+                  </Nav.Link>
+                </div>
+              ) : ( 
+                <>
+                  {/* 챗봇 토글 버튼 */}
+                  <ChatBotBtn onClick={toggleChatBot}>
+                    <img src={chatbotImg} alt="Robot" style={{ width: '40px', height: '40px', borderRadius: '20px' }}/>
+                    <span>ChatBot</span>
+                  </ChatBotBtn>
+                  <Nav.Link
                     as="div"
-                    className="flex-grow-1 text-center border border-dark"
-                    onClick={postLogout}
+                    className="flex-grow-1 text-center"
+                  >
+                    {User.nickname}
+                  </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    className="flex-grow-1 text-center"
+                    // to="/"
+                    onClick={() => setLogoutModal(true)}
                   >
                     로그아웃
                   </Nav.Link>
                 </>
-              )} */}
+              )}
+              {/* ChatBot 모달 */}
+              <Modal show={showChatBot} onHide={toggleChatBot} size="lg" centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>ChatBot</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <ChatBot />
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={toggleChatBot}>
+                    닫기
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+
+              {/* Logout 모달 */}
+              <Modal show={logoutModal} onHide={() => setLogoutModal(false)}>
+                <Modal.Body>
+                  <span>로그아웃 하시겠습니까?</span>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button style={{ backgroundColor: '#6e97ff', border: '1px solid #6e97ff' }} onClick={() => {
+                    dispatch(postLogout(User.token))
+                      .then((res) => {
+                        if (res.payload.status === 200) {
+                          dispatch(setUser({}))
+                          setLogoutModal(false)
+                        }
+                      })
+                  }}>
+                    네
+                  </Button>
+                  <Button variant="secondary" onClick={() => setLogoutModal(false)}>
+                    아니오
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
@@ -114,3 +137,21 @@ const MyNavbar = ({ offCanvasTitle }) => {
 };
 
 export default MyNavbar;
+
+const ChatBotBtn = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: rgba(0, 0, 0, 0.5);
+  animation: ct 1s infinite;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @keyframes ct {
+    50% {
+      color: #ff8b5c;
+    }
+  }
+`

@@ -1,15 +1,31 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { postLogin as reqPostLogin } from "~/lib/apis/user";
+import { login, logout, signup } from "../../../lib/apis/user";
 
 const initialState = {
-  user: null,
+  user: {},
   loading: "idle",
 };
 
-const postLogin = createAsyncThunk(
+export const postSignup = createAsyncThunk(
+  "user/signup",
+  async (data, thunkAPI) => {
+    const response = await signup(data.email, data.password, data.nickname);
+    return response;
+  }
+);
+
+export const postLogin = createAsyncThunk(
   "user/login",
-  async ({ email, password }, thunkAPI) => {
-    const response = await reqPostLogin(email, password);
+  async (data, thunkAPI) => {
+    const response = await login(data.email, data.password);
+    return response;
+  }
+);
+
+export const postLogout = createAsyncThunk(
+  "user/logout",
+  async (data, thunkAPI) => {
+    const response = await logout(data);
     return response;
   }
 );
@@ -17,21 +33,16 @@ const postLogin = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(postLogin.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.loading = "fulfilled";
-      })
-      .addCase(postLogin.pending, (state) => {
-        state.loading = "pending";
-      })
-      .addCase(postLogin.rejected, (state) => {
-        state.loading = "rejected";
-      });
+  reducers: {
+    setUser(state, action) {
+      state.user = action.payload;
+      state.loading = "fulfilled";
+    },
   },
+  extraReducers: (builder) => {},
 });
 
-export { postLogin };
+const { setUser } = userSlice.actions;
+export { setUser  };
+
 export default userSlice.reducer;

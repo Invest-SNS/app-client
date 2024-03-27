@@ -1,9 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const SideNavbar = () => {
   const location = useLocation();
+  console.log(location.pathname);
+
   return (
     <Nav>
       <ul>
@@ -22,22 +25,6 @@ const SideNavbar = () => {
         </li>
         <li>
           <Link
-            to="/market"
-            className={location.pathname === "/market" ? "active" : ""}
-          >
-            <img
-              src={
-                location.pathname === "/market"
-                  ? "/icon/marketOrange.svg"
-                  : "/icon/market.svg"
-              }
-              alt="트레이딩"
-            />
-            <div>시장정보</div>
-          </Link>
-        </li>
-        <li>
-          <Link
             to="/strategy"
             className={location.pathname === "/strategy" ? "active" : ""}
           >
@@ -47,7 +34,7 @@ const SideNavbar = () => {
                   ? "/icon/strategyOrange.svg"
                   : "/icon/strategy.svg"
               }
-              alt="트레이딩"
+              alt="투자전략"
             />
             <div>투자전략</div>
           </Link>
@@ -63,14 +50,14 @@ const SideNavbar = () => {
                   ? "/icon/hotOrange.svg"
                   : "/icon/hot.svg"
               }
-              alt="트레이딩"
+              alt="HOT"
             />
             <div>HOT</div>
           </Link>
         </li>
         <li>
-          <Link
-            to="/feed"
+          <a
+            href="/feed"
             className={location.pathname === "/feed" ? "active" : ""}
           >
             <img
@@ -79,14 +66,14 @@ const SideNavbar = () => {
                   ? "/icon/feedOrange.svg"
                   : "/icon/feed.svg"
               }
-              alt="트레이딩"
+              alt="피드"
             />
             <div>피드</div>
-          </Link>
+          </a>
         </li>
         <li>
-          <Link
-            to="/mypage"
+          <a
+            href="/mypage"
             className={location.pathname === "/mypage" ? "active" : ""}
           >
             <img
@@ -95,10 +82,10 @@ const SideNavbar = () => {
                   ? "/icon/mypageOrange.svg"
                   : "/icon/mypage.svg"
               }
-              alt="트레이딩"
+              alt="마이페이지"
             />
             <div>마이페이지</div>
-          </Link>
+          </a>
         </li>
       </ul>
     </Nav>

@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import * as S from "../../style/GlobalStyle";
-
-// import Feed from "../../components/Feed/FeedShow/Feed";
-// import Account from "../../components/Feed/Account";
+import Feed from "../../components/Feed/FeedShow/Feed";
+import Account from "../../components/Feed/Account";
+import { useLocation } from "react-router-dom";
 
 export default function MyPage() {
   const [selectedTab, setSelectedTab] = useState("내 피드");
   const handleTabClick = (tab) => {
     setSelectedTab(tab);
   };
+  const location = useLocation();
+  const path = location.pathname;
+
+  console.log("path", path);
   return (
     <S.Container>
       <div
@@ -71,8 +75,8 @@ export default function MyPage() {
         </ColumnDiv>
       </UserContainer>
       <ContentContainer>
-        {/* {selectedTab === "내 피드" ? <Feed /> : <></>}
-        {selectedTab === "내 종목" ? <Account /> : <></>} */}
+        {selectedTab === "내 피드" ? <Feed path={path} /> : <></>}
+        {selectedTab === "내 종목" ? <Account /> : <></>}
       </ContentContainer>
     </S.Container>
   );

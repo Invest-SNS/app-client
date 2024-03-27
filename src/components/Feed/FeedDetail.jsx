@@ -14,7 +14,6 @@ const FeedDetail = ({ setShowDetail }) => {
           alt="x"
         />
       </BtnDiv>
-      <FeedBoard />
     </S.Container>
   );
 };

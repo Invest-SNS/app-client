@@ -3,6 +3,7 @@ import { getStrategy } from "../../../lib/apis/strategy";
 
 const initialState = {
   strategy: {},
+  loading: false,
 };
 
 export const getStrategyDatas = createAsyncThunk(
@@ -18,8 +19,12 @@ const strategySlice = createSlice({
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(getStrategyDatas.pending, (state, action) => {
+      state.loading = true;
+    }),
     builder.addCase(getStrategyDatas.fulfilled, (state, action) => {
       state.strategy = action.payload;
+      state.loading = false;
     })
   },
 });

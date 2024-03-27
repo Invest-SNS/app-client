@@ -41,3 +41,14 @@ export const postLikeStock = async (likeStock) => {
     console.error(err);
   }
 };
+
+export const fetchLikeStock = async () => {
+  const baseUrl = `/stockCode/likeStock`;
+  try {
+    const response = await baseUserInstance.get(baseUrl);
+    const data = response.data;
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};

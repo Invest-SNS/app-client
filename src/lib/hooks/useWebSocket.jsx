@@ -5,19 +5,19 @@ import {
   subscribeNowPrice,
   subscribeAskPrice,
 } from "../../store/webSocket/nowPrice";
+import { useSelector } from "react-redux";
 
 const useWebSocketConnection = () => {
   const [askPrice, setAskPrice] = useState(null);
   const [nowPrice, setNowPrice] = useState(null);
-  const [stockCode, setStockCode] = useState("005930");
+  const before = useSelector((state) => state.company.data[0]?.code);
+  const now = useSelector((state) => state.company.data[1]?.code);
+  // const [stockCode, setStockCode] = useState("005930");
 
   useEffect(() => {
-    joinRoom(stockCode);
-
-    return () => {
-      leaveRoom(stockCode);
-    };
-  }, [stockCode]);
+    leaveRoom(before);
+    joinRoom(now);
+  }, [before]);
 
   useEffect(() => {
     const settingAskPrice = subscribeAskPrice((askPriceMessage) => {
@@ -34,7 +34,7 @@ const useWebSocketConnection = () => {
     };
   }, []);
 
-  return { askPrice, nowPrice, setStockCode };
+  return { askPrice, nowPrice };
 };
 
 const WebSocketContext = createContext();

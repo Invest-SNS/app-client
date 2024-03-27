@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LineSeries, SingleTooltip } from 'react-financial-charts';
+import { LineSeries, MovingAverageTooltip, SingleTooltip } from 'react-financial-charts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChartDatas } from '../../../../../store/reducers/Chart/chart';
 import { getEMAChart } from '../../../../../store/reducers/Chart/Indicators/chart';
@@ -44,10 +44,40 @@ export default function EMAChart({ datas, isShow, chartIndi }) {
 
   return (
     <>
-      <SingleTooltip
-        origin={[12, 40 + (chartIndi.indexOf('EMA') * 15)]}
-        yLabel="지수 이동평균선"
-        yValue={`${EMAValue[0]} ${EMAValue[1]} ${EMAValue[2]} ${EMAValue[3]} ${EMAValue[4]}`}
+      <MovingAverageTooltip
+        origin={[12, 40 + (chartIndi.indexOf('EMA') * 40)]}
+        options={[
+          {
+            yAccessor: d => d[`ema${EMAValue[0]}`],
+            type: `EMA`,
+						stroke: '#b3009e',
+            windowSize: EMAValue[0]
+          },
+          {
+            yAccessor: d => d[`ema${EMAValue[1]}`],
+            type: `EMA`,
+						stroke: '#b33300',
+            windowSize: EMAValue[1]
+          },
+          {
+            yAccessor: d => d[`ema${EMAValue[2]}`],
+            type: `EMA`,
+						stroke: '#edda02',
+            windowSize: EMAValue[2]
+          },
+          {
+            yAccessor: d => d[`ema${EMAValue[3]}`],
+            type: `EMA`,
+						stroke: '#00b33f',
+            windowSize: EMAValue[3]
+          },
+          {
+            yAccessor: d => d[`ema${EMAValue[4]}`],
+            type: `EMA`,
+						stroke: '#0277ed',
+            windowSize: EMAValue[4]
+          },
+        ]}
       />
       {EMAValue.map((value, index) => (
         <LineSeries
