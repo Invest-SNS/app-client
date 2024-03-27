@@ -25,6 +25,7 @@ import feedReducer from "./reducers/Feed/feed";
 import commentReducer from "./reducers/Feed/comment";
 import hotStockReducer from "./reducers/Hot/getStockInfo.jsx";
 import strategyReducer from "./reducers/Strategy/getStrategy.jsx";
+import tradingReducer from "./reducers/Trading/trading.jsx";
 
 const rootPersistConfig = {
   key: "root",
@@ -39,14 +40,14 @@ const rootPersistConfig = {
     "getChartIndicator",
     "getSubIndicator",
     "company",
-    "user"
+    "user",
   ],
 };
 
 const rootReducer = persistReducer(
   rootPersistConfig,
   combineReducers({
-    // trading: tradingReducer,
+    trading: tradingReducer,
     chart: chartReducer,
     company: companyReducer,
     chartValues: chartValuesReducer,
