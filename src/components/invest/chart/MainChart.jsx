@@ -73,7 +73,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   // 클릭한 보조지표
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
-
+  
   console.log('보조지표', subIndi);
   console.log('차트지표', chartIndi);
 

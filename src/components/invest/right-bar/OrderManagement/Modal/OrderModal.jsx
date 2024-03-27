@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { postOrderStock } from "../../../../../lib/apis/order.jsx";
 
 const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
   const [modalStyle, setModalStyle] = useState({
@@ -98,7 +99,7 @@ const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
           >
             <div style={{ color: "#666" }}>주문단가</div>
             <div style={{ display: "flex", flexDirection: "row" }}>
-              <div>{price.toLocaleString()}</div>
+              <div>{price !== null ? price.toLocaleString() : ""}</div>
               <div style={{ marginLeft: "0.2rem" }}>원</div>
             </div>
           </div>
@@ -192,6 +193,7 @@ const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
               e.target.style.backgroundColor =
                 userOrderType === "매수" ? "red" : "#015FFF";
             }}
+            onClick={() => {}}
           >
             확인
           </button>
