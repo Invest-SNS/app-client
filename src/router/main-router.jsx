@@ -11,6 +11,8 @@ import FeedPage from "../routes/Feed/FeedPage";
 import MyPage from "../routes/MyPage/MyPage";
 import SideLayout from "../routes/SideLayout";
 import ChatBot from "../routes/chatBot/chatBot";
+import SignIn from "../routes/Auth/SignIn";
+import SignUp from "../routes/Auth/SignUp";
 
 export const mainRoutes = [
   {
@@ -49,6 +51,16 @@ export const mainRoutes = [
         ],
       },
     ],
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
+    children: [],
+  },
+  {
+    path: "/signin",
+    element: <SignIn />,
+    children: [],
   },
 ];
 
