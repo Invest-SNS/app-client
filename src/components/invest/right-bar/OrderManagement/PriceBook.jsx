@@ -21,6 +21,12 @@ const PriceBook = () => {
     // dispatch(setScrollPosition(e.target.scrollTop));
   };
 
+  const handlePriceSelect = (price) => {
+    if (!disabledPriceInput) {
+      dispatch(setSelectedPrice(price));
+    }
+  };
+
   return (
     <div
       ref={containerRef}
@@ -42,7 +48,9 @@ const PriceBook = () => {
               amount={askPrice?.message?.sellAmount[index]}
               backgroundColor="#E7F0FD"
               textColor="#015FFF"
-              nowPrice={nowPrice}
+              nowPrice={nowPrice?.message?.close}
+              onPriceSelect={handlePriceSelect}
+              selectedPrice={selectedPrice}
             />
           ))
           .reverse()}
@@ -56,7 +64,9 @@ const PriceBook = () => {
             amount={askPrice?.message?.buyAmount[index]}
             backgroundColor="#FDE8E7"
             textColor="red"
-            nowPrice={nowPrice}
+            nowPrice={nowPrice?.message?.close}
+            onPriceSelect={handlePriceSelect}
+            selectedPrice={selectedPrice}
           />
         ))}
       </div> */}

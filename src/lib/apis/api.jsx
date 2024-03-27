@@ -15,6 +15,10 @@ export const shinhanInstance = axios.create({
   baseURL: BASE_URL + "/shinhanInfo",
 });
 
+export const orderInstance = axios.create({
+  baseURL: BASE_URL + "/order",
+});
+
 export const baseInstance = axios.create({
   baseURL: BASE_URL,
 });

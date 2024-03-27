@@ -42,13 +42,6 @@ export default function TradingPage() {
     e.target.src = default_Img;
   };
 
-  const Container = styled.div`
-    width: 400px;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-  `;
-
   return (
     <></>
     // <Container>
