@@ -50,7 +50,7 @@ const MyNavbar = ({ offCanvasTitle }) => {
                   {/* 챗봇 토글 버튼 */}
                   <ChatBotBtn onClick={toggleChatBot}>
                     <img src={chatbotImg} alt="Robot" style={{ width: '40px', height: '40px', borderRadius: '20px' }}/>
-                    <span>ChatBot</span>
+                    <span>ChatMate</span>
                   </ChatBotBtn>
 
                   <Nav.Link
@@ -73,13 +73,13 @@ const MyNavbar = ({ offCanvasTitle }) => {
                   {/* 챗봇 토글 버튼 */}
                   <ChatBotBtn onClick={toggleChatBot}>
                     <img src={chatbotImg} alt="Robot" style={{ width: '40px', height: '40px', borderRadius: '20px' }}/>
-                    <span>ChatBot</span>
+                    <span>ChatMate</span>
                   </ChatBotBtn>
                   <Nav.Link
                     as="div"
                     className="flex-grow-1 text-center"
                   >
-                    {User.nickname}
+                    {User.nickname} 님
                   </Nav.Link>
                   <Nav.Link
                     as={Link}
@@ -94,7 +94,7 @@ const MyNavbar = ({ offCanvasTitle }) => {
               {/* ChatBot 모달 */}
               <Modal show={showChatBot} onHide={toggleChatBot} size="lg" centered>
                 <Modal.Header closeButton>
-                  <Modal.Title>ChatBot</Modal.Title>
+                  <Modal.Title>ChatMate</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   <ChatBot />

@@ -181,7 +181,7 @@ const DetailContainer = styled.div`
   width: 250px;
   height: 100%;
   background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
   transform: translateX(${(props) => (props.$showdetail ? "0" : "-100%")});
   transition: transform 0.3s ease;
   position: absolute;

@@ -37,7 +37,7 @@ const SignIn = () => {
   };
 
   return (
-    <SignupContainer>
+    <SigninContainer>
       <LogoDiv>
         <img src={LogoIcon} style={{ width: 60 }} />
         <span>StockMate</span>
@@ -70,17 +70,17 @@ const SignIn = () => {
         <NavDiv>|</NavDiv>
         <NavDiv onClick={() => navigate("/signup")}>회원가입</NavDiv>
       </div>
-    </SignupContainer>
+    </SigninContainer>
   );
 };
 export default SignIn;
 
-const SignupContainer = styled.div`
+const SigninContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 42px);
+  height: 100vh;
   gap: 32px;
 
   @media (max-width: 500px) {
@@ -129,7 +129,7 @@ const StyledButton = styled.button`
   border-radius: 16px;
   border: none;
   background: #FFE3D7;
-  width: 409px;
+  width: 404px;
   height: 55px;
   color: #000;
   text-align: center;

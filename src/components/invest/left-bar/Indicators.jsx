@@ -93,7 +93,7 @@ const CloseButton = styled.img`
   position: absolute;
   right: 10px;
   top: 8px;
-  width: 25px;s
+  width: 25px;
   cursor: pointer;
 `;
 
@@ -109,7 +109,6 @@ const IndicatorDiv = styled.div`
   color: #000;
   text-align: center;
   font-size: 18px;
-  font-style: normal;
   font-weight: 400;
   line-height: normal;
   padding-top: 10px;
@@ -118,7 +117,7 @@ const IndicatorDiv = styled.div`
 
 const ItemContainer = styled.div`
   width: 100%;
-  height: calc(100vh - 101px);
+  height: calc(100vh - 106px);
   overflow: auto;
 
   &::-webkit-scrollbar {
@@ -196,7 +195,7 @@ const DetailContainer = styled.div`
   width: 250px;
   height: 100%;
   background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
   transform: translateX(${(props) => (props.$showdetail ? "0" : "-100%")});
   transition: transform 0.3s ease;
   position: absolute;

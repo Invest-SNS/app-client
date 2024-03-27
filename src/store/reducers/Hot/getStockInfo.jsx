@@ -4,6 +4,7 @@ import { getHotStock, getPopularStock } from "../../../lib/apis/hot";
 const initialState = {
   popularData: [],
   hotData: [],
+  loading: false,
 };
 
 export const getPopularDatas = createAsyncThunk(
@@ -30,11 +31,19 @@ const hotStockSlice = createSlice({
     builder.addCase(getPopularDatas.fulfilled, (state, action) => {
       state.popularData = action.payload;
     }),
+    builder.addCase(getPopularDatas.rejected, (state, action) => {
+      state.popularData = [];
+    }),
     builder.addCase(getHotDatas.fulfilled, (state, action) => {
       state.hotData = action.payload;
+      state.loading = false;
+    }),
+    builder.addCase(getHotDatas.pending, (state, action) => {
+      state.loading = true;
     }),
     builder.addCase(getHotDatas.rejected, (state, action) => {
       state.hotData = [];
+      state.loading = false;
     })
   },
 });
