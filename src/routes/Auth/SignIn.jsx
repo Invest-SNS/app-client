@@ -39,24 +39,24 @@ const SignIn = () => {
   return (
     <SignupContainer>
       <LogoDiv>
-        <img src={LogoIcon} style={{ width: 80 }} />
+        <img src={LogoIcon} style={{ width: 60 }} />
         <span>StockMate</span>
       </LogoDiv>
       <Form onSubmit={(e) => onLogin(e)}>
         <Label>
-          <Img src={EmailIcon} alt="이메일" />
+          {/* <Img src={EmailIcon} alt="이메일" /> */}
           <StyledInput
             type="text"
-            placeholder="이메일"
+            placeholder="✉️   이메일"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           ></StyledInput>
         </Label>
         <Label>
-          <Img src={PasswordIcon} alt="비밀번호" />
+          {/* <Img src={PasswordIcon} alt="비밀번호" /> */}
           <StyledInput
             type="password"
-            placeholder="비밀번호"
+            placeholder="🔗   비밀번호"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="off"
@@ -108,20 +108,20 @@ const Img = styled.img`
 `;
 
 const StyledInput = styled.input`
-  width: 320px;
+  width: 400px;
   height: 60px;
   background: #f4f5f7;
   border: none;
   font-size: 18px;
   font-weight: 400;
-  padding: 0 10px;
+  padding: 0 30px;
 
   &::placeholder {
     color: rgba(186, 186, 186, 0.9);
   }
 
   &:focus {
-    outline: 2px solid #FFE3D7;
+    outline: 2px solid #ffd4c2;
   }
 `;
 
@@ -133,7 +133,7 @@ const StyledButton = styled.button`
   height: 55px;
   color: #000;
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 400;
 `;
 
@@ -151,7 +151,7 @@ const NavDiv = styled.div`
 const LogoDiv = styled.div`
   display: flex;
   align-items: center;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 100;
   gap: 10px;
 `

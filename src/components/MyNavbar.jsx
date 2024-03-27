@@ -1,14 +1,12 @@
-import React, { useContext, useEffect, useState, useMemo } from "react";
+import React, { useState } from "react";
 import { Container, Navbar, Nav, Offcanvas, Button, Modal } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-// import { fetchAboutUser, logout } from "~/lib/apis/user";
-// import { getCookie, removeCookie } from "~/lib/apis/cookie";
-// import { IsLoginContext, useIsLoginState } from "~/lib/hooks/isLoginContext";
-// import useAuth from "~/lib/hooks/useAuth";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ChatBot from "../routes/chatBot/chatBot";
 import LogoIcon from '../../public/icon/logo.svg'
 import { postLogout, setUser } from "../store/reducers/User/user";
+import chatbotImg from '../../public/icon/chat_mate.jpg';
+import styled from "styled-components";
 
 
 const EXPAND_BREAKPOINT = "md";
@@ -16,25 +14,9 @@ const EXPAND_BREAKPOINT = "md";
 const MyNavbar = ({ offCanvasTitle }) => {
   const [showChatBot, setShowChatBot] = useState(false); // ChatBot 표시 상태
   const toggleChatBot = () => setShowChatBot(prev => !prev);
+  const [logoutModal, setLogoutModal] = useState(false);
   const User = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  console.log('User', User)
-
-  const logout = async () => {
-    if (confirm('로그아웃 하시겠습니까?')) {
-      dispatch(postLogout(User.token))
-        .then((res) => {
-          if (res.payload.status === 200) {
-            dispatch(setUser({}))
-          }
-        })
-      navigate('/')
-    } else {
-      return;
-    }
-  };
   
   return (
     <Navbar
@@ -66,9 +48,11 @@ const MyNavbar = ({ offCanvasTitle }) => {
                 <div style={{ display: "flex", gap: "15px" }}>
                 
                   {/* 챗봇 토글 버튼 */}
-                  <Button variant="outline-primary" onClick={toggleChatBot} >
-                    ChatBot
-                  </Button>
+                  <ChatBotBtn onClick={toggleChatBot}>
+                    <img src={chatbotImg} alt="Robot" style={{ width: '40px', height: '40px', borderRadius: '20px' }}/>
+                    <span>ChatBot</span>
+                  </ChatBotBtn>
+
                   <Nav.Link
                     as={Link}
                     className="flex-grow-1 text-center"
@@ -87,9 +71,10 @@ const MyNavbar = ({ offCanvasTitle }) => {
               ) : ( 
                 <>
                   {/* 챗봇 토글 버튼 */}
-                  <Button variant="outline-primary" onClick={toggleChatBot} >
-                    ChatBot
-                  </Button>
+                  <ChatBotBtn onClick={toggleChatBot}>
+                    <img src={chatbotImg} alt="Robot" style={{ width: '40px', height: '40px', borderRadius: '20px' }}/>
+                    <span>ChatBot</span>
+                  </ChatBotBtn>
                   <Nav.Link
                     as="div"
                     className="flex-grow-1 text-center"
@@ -100,7 +85,7 @@ const MyNavbar = ({ offCanvasTitle }) => {
                     as={Link}
                     className="flex-grow-1 text-center"
                     // to="/"
-                    onClick={logout}
+                    onClick={() => setLogoutModal(true)}
                   >
                     로그아웃
                   </Nav.Link>
@@ -120,6 +105,29 @@ const MyNavbar = ({ offCanvasTitle }) => {
                   </Button>
                 </Modal.Footer>
               </Modal>
+
+              {/* Logout 모달 */}
+              <Modal show={logoutModal} onHide={() => setLogoutModal(false)}>
+                <Modal.Body>
+                  <span>로그아웃 하시겠습니까?</span>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button style={{ backgroundColor: '#6e97ff', border: '1px solid #6e97ff' }} onClick={() => {
+                    dispatch(postLogout(User.token))
+                      .then((res) => {
+                        if (res.payload.status === 200) {
+                          dispatch(setUser({}))
+                          setLogoutModal(false)
+                        }
+                      })
+                  }}>
+                    네
+                  </Button>
+                  <Button variant="secondary" onClick={() => setLogoutModal(false)}>
+                    아니오
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
@@ -129,3 +137,21 @@ const MyNavbar = ({ offCanvasTitle }) => {
 };
 
 export default MyNavbar;
+
+const ChatBotBtn = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: rgba(0, 0, 0, 0.5);
+  animation: ct 1s infinite;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @keyframes ct {
+    50% {
+      color: #ff8b5c;
+    }
+  }
+`
