@@ -54,9 +54,9 @@ const PriceBook = () => {
             />
           ))
           .reverse()}
-      </div>
+      </div> */}
 
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      {/* <div style={{ display: "flex", flexDirection: "column" }}>
         {askPrice?.message?.buyPrice.map((price, index) => (
           <PriceItem
             key={uuidv4()}

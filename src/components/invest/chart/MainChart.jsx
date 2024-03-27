@@ -21,6 +21,7 @@ import {
   MACDSeries,
   MovingAverageTooltip,
   SingleValueTooltip,
+  LineSeries,
 } from "react-financial-charts";
 
 import default_Img from "../../../../public/icon/+.svg";
@@ -29,9 +30,8 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import {
   getChartDatas,
-  getMinuteDatas,
-  setChartDatas,
   setClickDate,
+  setLiveData,
 } from "../../../store/reducers/Chart/chart";
 
 // 차트지표
@@ -63,28 +63,29 @@ import STOCHRSIChart from "./Indicators/sub/STOCHRSIChart";
 import ULTOSCChart from "./Indicators/sub/ULTOSCChart";
 import PPOChart from "./Indicators/sub/PPOChart";
 
+import { useWebSocket } from "../../../lib/hooks/useWebSocket";
+import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
+
 export default function MainChart({ toggleCharts, toggleIndicators }) {
   const dataList = useSelector((state) => state.chart.datas);
   const clickDate = useSelector((state) => state.chart.date);
-  const company = useSelector((state) => state.company.data);
+  const company = useSelector((state) => state.company.data[1]);
   const dispatch = useDispatch();
   const [isShow, setIsShow] = useState(false);
 
   // 클릭한 보조지표
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
-  
-  console.log('보조지표', subIndi);
-  console.log('차트지표', chartIndi);
 
-  // const { askPrice, nowPrice } = useWebSocket();
-  // useEffect(() => {
-  //   console.log('nowPrice',nowPrice)
-  // }, [nowPrice])
+  // console.log('보조지표', subIndi);
+  // console.log('차트지표', chartIndi);
+
+  const { askPrice, nowPrice } = useWebSocket();
+  const [upNum, setUpNum] = useState(0);
   
   function getData(format) {
-    const date = new Date();
-    const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
     const data = {
       code: company.code,
       start_date: "19990101",
@@ -92,12 +93,25 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
       time_format: format,
     };
 
-    dispatch(getChartDatas(data)).then(() => setIsShow((prev) => !prev));
+    dispatch(getChartDatas(data))
+      .then((res) => setIsShow((prev) => !prev));
   }
 
   useEffect(() => {
     getData(clickDate);
   }, [company]);
+
+  useEffect(() => {
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
+
+    if (nowPrice) {
+      setUpNum(parseFloat(nowPrice.message.close) - parseFloat(dataList[dataList.length - 2].close))
+      nowPrice.message['date'] = formattedDate;
+      // console.log(nowPrice.message)
+      dispatch(setLiveData(nowPrice.message));
+    }
+  }, [nowPrice])
 
   // 일, 주, 월, 년 버튼 색상 변경
   useEffect(() => {
@@ -118,6 +132,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
       const nDate = `${year}-${month}-${day}`;
       return new Date(nDate);
     });
+
   const margin = { left: 0, right: 78, top: 0, bottom: 24 };
 
   // window 사이즈에 맞춘 넓이/높이
@@ -243,21 +258,35 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     <Container>
       {dataList?.length > 0 ? (
         <>
-          <CompanyContainer>
-            <CompanyLogo
-              src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                company.name,
-                company.code
-              )}.png`}
-              onError={onErrorImg}
-            />
-            <FontContainer>
-              <MainFont>{company.name}</MainFont>
-              <SubFont>
-                {company.code} {company.index}
-              </SubFont>
-            </FontContainer>
-          </CompanyContainer>
+          <MainContainer>
+            <CompanyContainer>
+              <CompanyLogo
+                src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+                  company.name,
+                  company.code
+                )}.png`}
+                onError={onErrorImg}
+              />
+              <FontContainer>
+                <MainFont>{company.name}</MainFont>
+                <SubFont>
+                  {company.code} {company.index}
+                </SubFont>
+              </FontContainer>
+            </CompanyContainer>
+            <StockInfo>
+              <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {upNum > 0 ?
+                  <CaretUpFill color="#c70606" />
+                : upNum < 0 ? 
+                  <CaretDownFill color="#0636c7" />
+                : null
+                }
+                <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
+              </div>
+            </StockInfo>
+          </MainContainer>
           <BtnContainer>
             <Content>
               <IndiBtn onClick={toggleCharts}>차트지표</IndiBtn>
@@ -316,6 +345,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             xExtents={xExtents}
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
           >
+            
             {/* 일반 차트 */}
             <Chart
               id={1}
@@ -371,6 +401,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 lineStroke={openCloseColor}
                 displayFormat={pricesDisplayFormat}
                 yAccessor={yEdgeIndicator}
+                fullWidth={true}
               />
 
               <ZoomButtons />
@@ -790,6 +821,12 @@ const Container = styled.div`
   padding: 0 10px;
 `;
 
+const MainContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
 const CompanyContainer = styled.div`
   display: flex;
   align-items: center;
@@ -802,6 +839,23 @@ const CompanyLogo = styled.img`
   border-radius: 999px;
   margin-right: 10px;
 `;
+
+const StockInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`
+
+const StockFont = styled.span`
+  padding-right: 20px;
+  font-size: 20px;
+
+  color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"}
+`
+
+const StockFont2 = styled.span`
+color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"}
+`
 
 const FontContainer = styled.div`
   display: flex;
