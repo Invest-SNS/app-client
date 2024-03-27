@@ -52,7 +52,7 @@ export default function MainLayout() {
 
 const Container = styled.div`
   display: flex;
-  height: calc(100vh - 57px);
+  height: calc(100vh - 65px);
   overflow: hidden;
 `;
 
@@ -68,8 +68,8 @@ const LeftContainer = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  // flex-grow: 1;
   transition: margin-left 0.3s ease;
+  z-index: 99;
 `;
 
 const Content = styled.div`

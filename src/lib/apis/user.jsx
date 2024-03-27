@@ -1,21 +1,52 @@
-import { baseInstance } from "./api";
+import { baseInstance, baseUserInstance } from "./api";
 import { setCookie } from "~/lib/apis/cookie";
 
-export const postLogin = async (email, password) => {
+export const signup = async (email, password, nickname) => {
+  const baseUrl = "/user/sign-up";
+  try {
+    const response = await baseInstance.post(baseUrl, {
+      email: email,
+      password: password,
+      nickname: nickname,
+    });
+
+    return response;
+  } catch (err) {
+    // console.error(err);
+    return err;
+  }
+};
+
+export const login = async (email, password) => {
   const baseUrl = "/user/login";
   try {
     const response = await baseInstance.post(baseUrl, {
-      email,
-      password,
+      email: email,
+      password: password,
     });
-    setCookie("token", response.data.token, {
-      path: "/",
-      secure: true,
-    });
-    const data = response.data;
-    console.log(data);
-    return data;
+
+    return response;
   } catch (err) {
-    console.error(err);
+    // console.error(err);
+    return err;
+  }
+};
+
+export const logout = async (token) => {
+  const baseUrl = "/user/logout";
+  try {
+    const response = await baseInstance.post(baseUrl,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      }
+    );
+
+    return response;
+  } catch (err) {
+    // console.error(err);
+    return err;
   }
 };

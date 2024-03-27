@@ -215,9 +215,10 @@ const ValueContainer = styled.div`
 const VarInput = styled.input`
   width: 80px;
   margin: 0 5px;
-  padding: 2px 9px;
+  padding: 2px 0;
   font-size: 17px;
   border: 0.5px solid black;
+  text-align: center;
 
   /* 화살표 숨기기 */
   -webkit-appearance: none;
