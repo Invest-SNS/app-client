@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { signup } from "~/lib/apis/user";
 import LogoIcon from '../../../public/icon/logo.svg';
-import NicknameIcon from '../../../public/icon/nickname.svg';
-import EmailIcon from '../../../public/icon/email.svg';
-import PasswordIcon from '../../../public/icon/password.svg';
 import { useDispatch } from "react-redux";
 import { postSignup } from "../../store/reducers/User/user";
 import { Button, Modal } from "react-bootstrap";
@@ -176,6 +172,7 @@ const StyledInput = styled.input`
   width: 400px;
   height: 60px;
   background: #f4f5f7;
+  box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.1);
   border: none;
   font-size: 18px;
   font-weight: 400;
@@ -200,6 +197,7 @@ const StyledButton = styled.button`
   text-align: center;
   font-size: 18px;
   font-weight: 400;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 `;
 
 const NavDiv = styled.div`
@@ -217,7 +215,7 @@ const LogoDiv = styled.div`
   display: flex;
   align-items: center;
   font-size: 32px;
-  font-weight: 100;
+  font-weight: 200;
   gap: 10px;
 `
 

@@ -108,6 +108,7 @@ const StyledInput = styled.input`
   height: 60px;
   background: #f4f5f7;
   border: none;
+  box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.1);
   font-size: 18px;
   font-weight: 400;
   padding: 0 30px;
@@ -131,6 +132,7 @@ const StyledButton = styled.button`
   text-align: center;
   font-size: 18px;
   font-weight: 400;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 `;
 
 const NavDiv = styled.div`
@@ -148,7 +150,7 @@ const LogoDiv = styled.div`
   display: flex;
   align-items: center;
   font-size: 32px;
-  font-weight: 100;
+  font-weight: 200;
   gap: 10px;
 `
 

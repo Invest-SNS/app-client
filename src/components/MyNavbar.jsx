@@ -25,7 +25,7 @@ const MyNavbar = ({ offCanvasTitle }) => {
       style={{ borderBottom: "1px solid black" }}
     >
       <Container fluid>
-        <Navbar.Brand href="#" style={{ display: 'flex', gap: '10px', alignItems: 'center', fontWeight: '100' }}>
+        <Navbar.Brand href="#" style={{ display: 'flex', gap: '10px', alignItems: 'center', fontWeight: '200' }}>
           <img src={LogoIcon} width={37} />
           StockMate
         </Navbar.Brand>
