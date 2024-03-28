@@ -266,7 +266,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 {nowPrice?.message ? (
                   <>
                     <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', gap: '5px' }}>
                       {upNum > 0 ?
                         <CaretUpFill color="#c70606" />
                       : upNum < 0 ? 
@@ -279,7 +279,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 ) : (
                   <>
                     <StockFont num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{data[data.length - 1].close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', gap: '5px' }}>
                       {parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) > 0 ?
                         <CaretUpFill color="#c70606" />
                       : parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) < 0 ? 
