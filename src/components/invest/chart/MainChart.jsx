@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { format, formatLocale } from "d3-format";
+import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import {
   discontinuousTimeScaleProviderBuilder,
@@ -21,13 +21,10 @@ import {
   SingleValueTooltip,
 } from "react-financial-charts";
 
-import default_Img from "../../../../public/icon/+.svg";
-
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import {
   getChartDatas,
-  setClickDate,
   setLiveData,
 } from "../../../store/reducers/Chart/chart";
 
@@ -61,14 +58,11 @@ import ULTOSCChart from "./Indicators/sub/ULTOSCChart";
 import PPOChart from "./Indicators/sub/PPOChart";
 
 import { useWebSocket } from "../../../lib/hooks/useWebSocket";
-import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
-import KospiContent from "./KospiContent";
-import { PuffLoader } from "react-spinners";
 import ButtonContainer from "./ButtonContainer";
+import TitleContainer from "./TitleContainer";
 
 export default function MainChart({ toggleCharts, toggleIndicators, showCharts, showIndicators }) {
   const dataList = useSelector((state) => state.chart.datas);
-  const loading = useSelector((state) => state.chart.loading);
   const clickDate = useSelector((state) => state.chart.date);
   const company = useSelector((state) => state.company.data[1]);
   const dispatch = useDispatch();
@@ -214,86 +208,16 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
     };
   }
 
-  const getLogoFileName = (name, code) => {
-    if (name.includes("스팩")) {
-      return "SPAC_230706";
-    } else if (name.includes("ETN")) {
-      return "ETN_230706";
-    } else if (
-      name.includes("KODEX") ||
-      name.includes("KOSEF") ||
-      name.includes("KoAct") ||
-      name.includes("TIGER") ||
-      name.includes("ACE") ||
-      name.includes("ARIRANG") ||
-      name.includes("합성 H") ||
-      name.includes("HANARO") ||
-      name.includes("SOL")
-    ) {
-      return "ETF_230706";
-    } else {
-      return `kr/${code}`;
-    }
-  };
-
-  const onErrorImg = (e) => {
-    e.target.src = default_Img;
-  };
-
   return (
     <Container>
       {dataList?.length > 0 ? (
         <>
-          <MainContainer>
-            <SubContainer>
-              <CompanyContainer>
-                <CompanyLogo
-                  src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                    company.name,
-                    company.code
-                  )}.png`}
-                  onError={onErrorImg}
-                />
-                <FontContainer>
-                  <MainFont>{company.name}</MainFont>
-                  <SubFont>
-                    {company.code} {company.index}
-                  </SubFont>
-                </FontContainer>
-              </CompanyContainer>
-              <StockInfo>
-                {/* 실시간 데이터가 있을 때 (장이 열려있을 때) */}
-                {nowPrice?.message ? (
-                  <>
-                    <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', gap: '5px' }}>
-                      {upNum > 0 ?
-                        <CaretUpFill color="#c70606" />
-                      : upNum < 0 ? 
-                        <CaretDownFill color="#0636c7" />
-                      : null
-                      }
-                      <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <StockFont num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{data[data.length - 1].close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px', gap: '5px' }}>
-                      {parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) > 0 ?
-                        <CaretUpFill color="#c70606" />
-                      : parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) < 0 ? 
-                        <CaretDownFill color="#0636c7" />
-                      : null
-                      }
-                      <StockFont2 num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{(parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
-                    </div>
-                  </>
-                )}
-              </StockInfo>
-            </SubContainer>
-            <KospiContent />
-          </MainContainer>
+          <TitleContainer
+            nowPrice={nowPrice}
+            company={company}
+            upNum={upNum}
+            dataList={dataList}
+          />
           <ButtonContainer
             showCharts={showCharts}
             showIndicators={showIndicators}
@@ -792,58 +716,3 @@ const Container = styled.div`
   // padding: 0 10px;
 `;
 
-const MainContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  justify-content: space-between;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1)
-`
-
-const SubContainer = styled.div`
-  display: flex;
-  gap: 20px;
-`
-
-const CompanyContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px 5px;
-`;
-
-const CompanyLogo = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  margin-right: 10px;
-`;
-
-const StockInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-`
-
-const StockFont = styled.span`
-  padding-right: 20px;
-  font-size: 20px;
-
-  color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"};
-`
-
-const StockFont2 = styled.span`
-  color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"};
-`
-
-const FontContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const MainFont = styled.span`
-  font-weight: 700;
-`;
-
-const SubFont = styled.span`
-  font-size: 12px;
-`;

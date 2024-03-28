@@ -66,12 +66,13 @@ export default function KospiContent() {
 
 const Container = styled.div`
   display: flex;
-  gap: 25px;
 `
 
 const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0 14px;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
 `
 
 const Content = styled.div`
