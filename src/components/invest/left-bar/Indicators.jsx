@@ -24,7 +24,7 @@ const Indicators = ({ onClose }) => {
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
   const onCheckedElement = (checked, item) => {
-    if (subIndi.length < 4) {
+    if (subIndi.length < 3) {
       if (checked) {
         dispatch(setActiveSub(item))
         dispatch(setSubIndi([...subIndi, item]))
@@ -121,7 +121,7 @@ const ItemContainer = styled.div`
   overflow: auto;
 
   &::-webkit-scrollbar {
-    width: 7px;
+    width: 3px;
   }
 
   &::-webkit-scrollbar-thumb {

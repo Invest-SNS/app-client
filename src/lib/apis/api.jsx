@@ -4,7 +4,7 @@ import { getCookie } from "./cookie";
 export const BASE_URL = "http://127.0.0.1:3000/api";
 
 export const chartInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: BASE_URL + '/stockPrice',
 });
 
 export const subChartInstance = axios.create({

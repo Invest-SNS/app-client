@@ -62,9 +62,13 @@ import PPOChart from "./Indicators/sub/PPOChart";
 
 import { useWebSocket } from "../../../lib/hooks/useWebSocket";
 import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
+import KospiContent from "./KospiContent";
+import { PuffLoader } from "react-spinners";
+import ButtonContainer from "./ButtonContainer";
 
 export default function MainChart({ toggleCharts, toggleIndicators, showCharts, showIndicators }) {
   const dataList = useSelector((state) => state.chart.datas);
+  const loading = useSelector((state) => state.chart.loading);
   const clickDate = useSelector((state) => state.chart.date);
   const company = useSelector((state) => state.company.data[1]);
   const dispatch = useDispatch();
@@ -128,10 +132,10 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
       return new Date(nDate);
     });
 
-  const margin = { left: 0, right: 78, top: 0, bottom: 24 };
+  const margin = { left: 0, right: 78, top: 15, bottom: 24 };
 
   // window 사이즈에 맞춘 넓이/높이
-  const height = window.innerHeight - 170;
+  const height = window.innerHeight - 180;
   const width = window.innerWidth - 660;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(dataList);
@@ -252,98 +256,62 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
       {dataList?.length > 0 ? (
         <>
           <MainContainer>
-            <CompanyContainer>
-              <CompanyLogo
-                src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                  company.name,
-                  company.code
-                )}.png`}
-                onError={onErrorImg}
-              />
-              <FontContainer>
-                <MainFont>{company.name}</MainFont>
-                <SubFont>
-                  {company.code} {company.index}
-                </SubFont>
-              </FontContainer>
-            </CompanyContainer>
-            <StockInfo>
-              {/* 실시간 데이터가 있을 때 (장이 열려있을 때) */}
-              {nowPrice?.message ? (
-                <>
-                  <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {upNum > 0 ?
-                      <CaretUpFill color="#c70606" />
-                    : upNum < 0 ? 
-                      <CaretDownFill color="#0636c7" />
-                    : null
-                    }
-                    <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <StockFont num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{data[data.length - 1].close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) > 0 ?
-                      <CaretUpFill color="#c70606" />
-                    : parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) < 0 ? 
-                      <CaretDownFill color="#0636c7" />
-                    : null
-                    }
-                    <StockFont2 num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}</StockFont2>
-                  </div>
-                </>
-                
-              )}
-            </StockInfo>
+            <SubContainer>
+              <CompanyContainer>
+                <CompanyLogo
+                  src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+                    company.name,
+                    company.code
+                  )}.png`}
+                  onError={onErrorImg}
+                />
+                <FontContainer>
+                  <MainFont>{company.name}</MainFont>
+                  <SubFont>
+                    {company.code} {company.index}
+                  </SubFont>
+                </FontContainer>
+              </CompanyContainer>
+              <StockInfo>
+                {/* 실시간 데이터가 있을 때 (장이 열려있을 때) */}
+                {nowPrice?.message ? (
+                  <>
+                    <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {upNum > 0 ?
+                        <CaretUpFill color="#c70606" />
+                      : upNum < 0 ? 
+                        <CaretDownFill color="#0636c7" />
+                      : null
+                      }
+                      <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <StockFont num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{data[data.length - 1].close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) > 0 ?
+                        <CaretUpFill color="#c70606" />
+                      : parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) < 0 ? 
+                        <CaretDownFill color="#0636c7" />
+                      : null
+                      }
+                      <StockFont2 num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{(parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
+                    </div>
+                  </>
+                )}
+              </StockInfo>
+            </SubContainer>
+            <KospiContent />
           </MainContainer>
-          <BtnContainer>
-            <Content>
-              <IndiBtn check={showCharts.toString()} onClick={toggleCharts}>차트지표</IndiBtn>
-              <IndiBtn check={showIndicators.toString()} onClick={toggleIndicators}>보조지표</IndiBtn>
-            </Content>
-            <Content>
-              {/* <button>분</button> */}
-              <DateBtn
-                id="D"
-                onClick={() => {
-                  getData("D");
-                  dispatch(setClickDate("D"));
-                }}
-              >
-                일
-              </DateBtn>
-              <DateBtn
-                id="W"
-                onClick={() => {
-                  getData("W");
-                  dispatch(setClickDate("W"));
-                }}
-              >
-                주
-              </DateBtn>
-              <DateBtn
-                id="M"
-                onClick={() => {
-                  getData("M");
-                  dispatch(setClickDate("M"));
-                }}
-              >
-                월
-              </DateBtn>
-              <DateBtn
-                id="Y"
-                onClick={() => {
-                  getData("Y");
-                  dispatch(setClickDate("Y"));
-                }}
-              >
-                년
-              </DateBtn>
-            </Content>
-          </BtnContainer>
+          <ButtonContainer
+            showCharts={showCharts}
+            showIndicators={showIndicators}
+            toggleCharts={toggleCharts}
+            toggleIndicators={toggleIndicators}
+            getData={getData}
+          />
           {/* 차트 */}
           <ChartCanvas
             height={height}
@@ -831,13 +799,20 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: calc(100vw - 650px);
-  padding: 0 10px;
+  // padding: 0 10px;
 `;
 
 const MainContainer = styled.div`
   display: flex;
   align-items: center;
+  padding: 0 10px;
   justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1)
+`
+
+const SubContainer = styled.div`
+  display: flex;
+  gap: 20px;
 `
 
 const CompanyContainer = styled.div`
@@ -881,39 +856,4 @@ const MainFont = styled.span`
 
 const SubFont = styled.span`
   font-size: 12px;
-`;
-
-const Content = styled.div`
-  display: flex;
-  gap: 6px;
-`;
-
-const BtnContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 3px;
-`;
-
-const IndiBtn = styled.button`
-  background-color: ${(props) => props.check === "true" ? "#ffe3d7" : "#fff"};
-  border: 1px solid #bdbebf;
-  border-radius: 999px;
-  padding: 5px 15px;
-  font-size: 14px;
-
-  &:hover {
-    background: #ffe3d7;
-  }
-`;
-
-const DateBtn = styled.button`
-  background-color: #fff;
-  border: 1px solid #bdbebf;
-  border-radius: 10px;
-  padding: 5px 15px;
-  font-size: 14px;
-
-  &:hover {
-    background: #ffe3d7;
-  }
 `;

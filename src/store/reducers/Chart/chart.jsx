@@ -5,6 +5,7 @@ const initialState = {
   // default : 삼성전자
   datas: [],
   date: "D",
+  loading: false,
 };
 
 export const getChartDatas = createAsyncThunk(
@@ -290,9 +291,10 @@ const chartSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getChartDatas.fulfilled, (state, action) => {
       state.datas = action.payload.reverse();
+      state.loading = false;
     }),
-    builder.addCase(getMinuteDatas.fulfilled, (state, action) => {
-      state.datas = action.payload.reverse();
+    builder.addCase(getChartDatas.pending, (state, action) => {
+      state.loading = true;
     })
   },
 });

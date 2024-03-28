@@ -26,6 +26,7 @@ import commentReducer from "./reducers/Feed/comment";
 import hotStockReducer from "./reducers/Hot/getStockInfo.jsx";
 import strategyReducer from "./reducers/Strategy/getStrategy.jsx";
 import tradingReducer from "./reducers/Trading/trading.jsx";
+import kospiKosdaqReducer from "./reducers/Chart/kospiKosdaq.jsx";
 
 const rootPersistConfig = {
   key: "root",
@@ -61,6 +62,7 @@ const rootReducer = persistReducer(
     comment: commentReducer,
     hot: hotStockReducer,
     strategy: strategyReducer,
+    kospiKosdaq: kospiKosdaqReducer,
   })
 );
 const myMiddlewares = [logger];
