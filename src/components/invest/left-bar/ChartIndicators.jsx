@@ -24,7 +24,7 @@ const ChartIndicators = ({ onClose }) => {
   const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
   // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
   const onCheckedElement = (checked, item) => {
-    if (chartIndi.length < 4) {
+    if (chartIndi.length < 3) {
       if (checked) {
         dispatch(setActiveSub(item))
         dispatch(setChartIndi([...chartIndi, item]))

@@ -62,6 +62,7 @@ import PPOChart from "./Indicators/sub/PPOChart";
 
 import { useWebSocket } from "../../../lib/hooks/useWebSocket";
 import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
+import KospiContent from "./KospiContent";
 
 export default function MainChart({ toggleCharts, toggleIndicators, showCharts, showIndicators }) {
   const dataList = useSelector((state) => state.chart.datas);
@@ -128,10 +129,10 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
       return new Date(nDate);
     });
 
-  const margin = { left: 0, right: 78, top: 0, bottom: 24 };
+  const margin = { left: 0, right: 78, top: 15, bottom: 24 };
 
   // window 사이즈에 맞춘 넓이/높이
-  const height = window.innerHeight - 170;
+  const height = window.innerHeight - 180;
   const width = window.innerWidth - 660;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(dataList);
@@ -252,52 +253,55 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
       {dataList?.length > 0 ? (
         <>
           <MainContainer>
-            <CompanyContainer>
-              <CompanyLogo
-                src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                  company.name,
-                  company.code
-                )}.png`}
-                onError={onErrorImg}
-              />
-              <FontContainer>
-                <MainFont>{company.name}</MainFont>
-                <SubFont>
-                  {company.code} {company.index}
-                </SubFont>
-              </FontContainer>
-            </CompanyContainer>
-            <StockInfo>
-              {/* 실시간 데이터가 있을 때 (장이 열려있을 때) */}
-              {nowPrice?.message ? (
-                <>
-                  <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {upNum > 0 ?
-                      <CaretUpFill color="#c70606" />
-                    : upNum < 0 ? 
-                      <CaretDownFill color="#0636c7" />
-                    : null
-                    }
-                    <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <StockFont num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{data[data.length - 1].close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) > 0 ?
-                      <CaretUpFill color="#c70606" />
-                    : parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) < 0 ? 
-                      <CaretDownFill color="#0636c7" />
-                    : null
-                    }
-                    <StockFont2 num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}</StockFont2>
-                  </div>
-                </>
-                
-              )}
-            </StockInfo>
+            <SubContainer>
+              <CompanyContainer>
+                <CompanyLogo
+                  src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+                    company.name,
+                    company.code
+                  )}.png`}
+                  onError={onErrorImg}
+                />
+                <FontContainer>
+                  <MainFont>{company.name}</MainFont>
+                  <SubFont>
+                    {company.code} {company.index}
+                  </SubFont>
+                </FontContainer>
+              </CompanyContainer>
+              <StockInfo>
+                {/* 실시간 데이터가 있을 때 (장이 열려있을 때) */}
+                {nowPrice?.message ? (
+                  <>
+                    <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {upNum > 0 ?
+                        <CaretUpFill color="#c70606" />
+                      : upNum < 0 ? 
+                        <CaretDownFill color="#0636c7" />
+                      : null
+                      }
+                      <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <StockFont num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{data[data.length - 1].close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) > 0 ?
+                        <CaretUpFill color="#c70606" />
+                      : parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) < 0 ? 
+                        <CaretDownFill color="#0636c7" />
+                      : null
+                      }
+                      <StockFont2 num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{(parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
+                    </div>
+                  </>
+                  
+                )}
+              </StockInfo>
+            </SubContainer>
+            <KospiContent />
           </MainContainer>
           <BtnContainer>
             <Content>
@@ -831,13 +835,20 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: calc(100vw - 650px);
-  padding: 0 10px;
+  // padding: 0 10px;
 `;
 
 const MainContainer = styled.div`
   display: flex;
   align-items: center;
+  padding: 0 10px;
   justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1)
+`
+
+const SubContainer = styled.div`
+  display: flex;
+  gap: 20px;
 `
 
 const CompanyContainer = styled.div`
@@ -891,7 +902,7 @@ const Content = styled.div`
 const BtnContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 3px;
+  padding: 10px;
 `;
 
 const IndiBtn = styled.button`
