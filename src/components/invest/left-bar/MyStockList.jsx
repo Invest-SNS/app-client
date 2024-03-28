@@ -314,6 +314,11 @@ const SearchInput = styled.input`
   font-size: 15px;
   border: none;
   background-color: #f3f3f3;
+
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid #adb5bd;
+  }
 `;
 
 const SearchClearBtn = styled.button`

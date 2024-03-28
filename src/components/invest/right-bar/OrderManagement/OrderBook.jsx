@@ -5,13 +5,13 @@ import OrderInput from "./OrderInput";
 import OrderTypeButton from "./Button/OrderTypeButton";
 import OrderBuySellButton from "./Button/OrderBuySellButton";
 import { useDispatch, useSelector } from "react-redux";
-import { useWebSocket } from "../../../../lib/hooks/useWebSocket";
+// import { useWebSocket } from "../../../../lib/hooks/useWebSocket";
 import {
-  setSelectedPrice,
-  setDisabledPriceInput,
-  setSelectedQuantity,
-  increaseSelectedQuantity,
-  decreaseSelectedQuantity,
+  // setSelectedPrice,
+  // setDisabledPriceInput,
+  // setSelectedQuantity,
+  // increaseSelectedQuantity,
+  // decreaseSelectedQuantity,
 } from "../../../../store/reducers/Trading/trading";
 
 const OrderBook = () => {
@@ -19,7 +19,7 @@ const OrderBook = () => {
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [balance, setBalance] = useState(2000000);
   const [selectedType, setSelectedType] = useState("지정가"); // 지정가, 시장가
-  const { askPrice, nowPrice } = useWebSocket();
+  // const { askPrice, nowPrice } = useWebSocket();
 
   const dispatch = useDispatch();
   const { selectedPrice, selectedTab, disabledPriceInput, selectedQuantity } =
@@ -36,7 +36,7 @@ const OrderBook = () => {
   // const defaultNowPrice = 100;
 
   useEffect(() => {
-    dispatch(setSelectedPrice(nowPrice?.message?.close));
+    // dispatch(setSelectedPrice(nowPrice?.message?.close));
   }, []);
 
   const openModal = () => setIsModalOpen(true);
@@ -47,37 +47,37 @@ const OrderBook = () => {
   const handleTypeChange = (type) => {
     setSelectedType(type);
     if (type === "시장가") {
-      dispatch(setSelectedQuantity(0));
-      dispatch(setSelectedPrice(0));
-      dispatch(setDisabledPriceInput(true));
+      // dispatch(setSelectedQuantity(0));
+      // dispatch(setSelectedPrice(0));
+      // dispatch(setDisabledPriceInput(true));
     } else {
-      dispatch(setSelectedQuantity(0));
-      dispatch(setSelectedPrice(nowPrice?.message?.close));
-      dispatch(setDisabledPriceInput(false));
+      // dispatch(setSelectedQuantity(0));
+      // dispatch(setSelectedPrice(nowPrice?.message?.close));
+      // dispatch(setDisabledPriceInput(false));
     }
   };
 
   const increasePrice = () => {
-    const priceDiff =
-      parseInt(askPrice?.message?.sellPrice[1]) -
-      parseInt(askPrice?.message?.sellPrice[0]);
-    dispatch(setSelectedPrice(parseInt(selectedPrice) + priceDiff));
+    // const priceDiff =
+    //   parseInt(askPrice?.message?.sellPrice[1]) -
+    //   parseInt(askPrice?.message?.sellPrice[0]);
+    // dispatch(setSelectedPrice(parseInt(selectedPrice) + priceDiff));
   };
 
   const decreasePrice = () => {
-    const priceDiff =
-      parseFloat(askPrice.message.sellPrice[1]) -
-      parseFloat(askPrice.message.sellPrice[0]);
-    const newPrice = selectedPrice - priceDiff;
-    dispatch(setSelectedPrice(newPrice < 0 ? 0 : newPrice));
+    // const priceDiff =
+    //   parseFloat(askPrice.message.sellPrice[1]) -
+    //   parseFloat(askPrice.message.sellPrice[0]);
+    // const newPrice = selectedPrice - priceDiff;
+    // dispatch(setSelectedPrice(newPrice < 0 ? 0 : newPrice));
   };
 
   const increaseQuantity = () => {
-    dispatch(increaseSelectedQuantity());
+    // dispatch(increaseSelectedQuantity());
   };
 
   const decreaseQuantity = () => {
-    dispatch(decreaseSelectedQuantity());
+    // dispatch(decreaseSelectedQuantity());
   };
 
   return (
@@ -131,13 +131,13 @@ const OrderBook = () => {
           <OrderInput
             label={"원"}
             value={selectedPrice}
-            onChange={(e) =>
-              dispatch(
-                setSelectedPrice(
-                  e.target.value === "" ? 0 : parseFloat(e.target.value)
-                )
-              )
-            }
+            // onChange={(e) =>
+            //   dispatch(
+            //     setSelectedPrice(
+            //       e.target.value === "" ? 0 : parseFloat(e.target.value)
+            //     )
+            //   )
+            // }
             increase={increasePrice}
             decrease={decreasePrice}
             disabled={disabledPriceInput}
@@ -161,13 +161,13 @@ const OrderBook = () => {
             >
               <span style={{ fontSize: "0.9rem", color: "#969696" }}>최대</span>
               <span style={{ fontSize: "0.9rem", color: "red" }}>
-                {selectedTab === "매수"
+                {/* {selectedTab === "매수"
                   ? selectedPrice !== 0
                     ? Math.floor(balance / selectedPrice).toLocaleString()
                     : Math.floor(
                         balance / askPrice.message.sellPrice[0]
                       ).toLocaleString()
-                  : (100).toLocaleString()}{" "}
+                  : (100).toLocaleString()}{" "} */}
               </span>
               <span style={{ fontSize: "0.9rem", color: "#969696" }}>주</span>
             </div>
@@ -175,13 +175,13 @@ const OrderBook = () => {
           <OrderInput
             label={"주"}
             value={selectedQuantity}
-            onChange={(e) =>
-              dispatch(
-                setSelectedQuantity(
-                  e.target.value === "" ? 0 : parseFloat(e.target.value)
-                )
-              )
-            }
+            // onChange={(e) =>
+            //   dispatch(
+            //     setSelectedQuantity(
+            //       e.target.value === "" ? 0 : parseFloat(e.target.value)
+            //     )
+            //   )
+            // }
             increase={increaseQuantity}
             decrease={decreaseQuantity}
           />

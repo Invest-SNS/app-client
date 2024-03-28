@@ -18,10 +18,7 @@ import {
   MouseCoordinateY,
   ZoomButtons,
   HoverTooltip,
-  MACDSeries,
-  MovingAverageTooltip,
   SingleValueTooltip,
-  LineSeries,
 } from "react-financial-charts";
 
 import default_Img from "../../../../public/icon/+.svg";
@@ -66,7 +63,7 @@ import PPOChart from "./Indicators/sub/PPOChart";
 import { useWebSocket } from "../../../lib/hooks/useWebSocket";
 import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
 
-export default function MainChart({ toggleCharts, toggleIndicators }) {
+export default function MainChart({ toggleCharts, toggleIndicators, showCharts, showIndicators }) {
   const dataList = useSelector((state) => state.chart.datas);
   const clickDate = useSelector((state) => state.chart.date);
   const company = useSelector((state) => state.company.data[1]);
@@ -77,12 +74,10 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
 
-  // console.log('보조지표', subIndi);
-  // console.log('차트지표', chartIndi);
-
   const { askPrice, nowPrice } = useWebSocket();
   const [upNum, setUpNum] = useState(0);
   
+  // 일, 주, 월, 년 데이터 불러오는 함수
   function getData(format) {
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
@@ -101,6 +96,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     getData(clickDate);
   }, [company]);
 
+  // socket 연결 시, 현재가 불러올때마다 data에 저장
   useEffect(() => {
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
@@ -108,7 +104,6 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     if (nowPrice) {
       setUpNum(parseFloat(nowPrice.message.close) - parseFloat(dataList[dataList.length - 2].close))
       nowPrice.message['date'] = formattedDate;
-      // console.log(nowPrice.message)
       dispatch(setLiveData(nowPrice.message));
     }
   }, [nowPrice])
@@ -126,9 +121,9 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
 
   const ScaleProvider =
     discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => {
-      const year = d?.date.substr(0, 4);
-      const month = d?.date.substr(4, 2);
-      const day = d?.date.substr(6, 2);
+      const year = d?.date?.substr(0, 4);
+      const month = d?.date?.substr(4, 2);
+      const day = d?.date?.substr(6, 2);
       const nDate = `${year}-${month}-${day}`;
       return new Date(nDate);
     });
@@ -162,9 +157,6 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   // * (차트 개수)
   const chartHeight = gridHeight - barChartHeight * (subIndi.length + 1);
 
-  const yExtents = (data) => {
-    return [data?.high, data?.low];
-  };
   const dateTimeFormat = "%Y/%m/%d";
   const timeDisplayFormat = timeFormat(dateTimeFormat);
 
@@ -197,6 +189,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     return data?.close > data?.open ? "#26a69a" : "#ef5350";
   };
 
+  // hover 했을 때 보여줄 데이터
   function tooltipContent() {
     return ({ currentItem, xAccessor }) => {
       return {
@@ -275,22 +268,41 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
               </FontContainer>
             </CompanyContainer>
             <StockInfo>
-              <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                {upNum > 0 ?
-                  <CaretUpFill color="#c70606" />
-                : upNum < 0 ? 
-                  <CaretDownFill color="#0636c7" />
-                : null
-                }
-                <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
-              </div>
+              {/* 실시간 데이터가 있을 때 (장이 열려있을 때) */}
+              {nowPrice?.message ? (
+                <>
+                  <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {upNum > 0 ?
+                      <CaretUpFill color="#c70606" />
+                    : upNum < 0 ? 
+                      <CaretDownFill color="#0636c7" />
+                    : null
+                    }
+                    <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <StockFont num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{data[data.length - 1].close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) > 0 ?
+                      <CaretUpFill color="#c70606" />
+                    : parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close) < 0 ? 
+                      <CaretDownFill color="#0636c7" />
+                    : null
+                    }
+                    <StockFont2 num={parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}>{parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)}</StockFont2>
+                  </div>
+                </>
+                
+              )}
             </StockInfo>
           </MainContainer>
           <BtnContainer>
             <Content>
-              <IndiBtn onClick={toggleCharts}>차트지표</IndiBtn>
-              <IndiBtn onClick={toggleIndicators}>보조지표</IndiBtn>
+              <IndiBtn check={showCharts.toString()} onClick={toggleCharts}>차트지표</IndiBtn>
+              <IndiBtn check={showIndicators.toString()} onClick={toggleIndicators}>보조지표</IndiBtn>
             </Content>
             <Content>
               {/* <button>분</button> */}
@@ -332,6 +344,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
               </DateBtn>
             </Content>
           </BtnContainer>
+          {/* 차트 */}
           <ChartCanvas
             height={height}
             ratio={3}
@@ -346,7 +359,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
           >
             
-            {/* 일반 차트 */}
+            {/* 주식 캔들 차트 및 차트 지표 */}
             <Chart
               id={1}
               height={chartHeight}
@@ -850,11 +863,11 @@ const StockFont = styled.span`
   padding-right: 20px;
   font-size: 20px;
 
-  color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"}
+  color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"};
 `
 
 const StockFont2 = styled.span`
-color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"}
+  color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"};
 `
 
 const FontContainer = styled.div`
@@ -882,7 +895,7 @@ const BtnContainer = styled.div`
 `;
 
 const IndiBtn = styled.button`
-  background-color: #fff;
+  background-color: ${(props) => props.check === "true" ? "#ffe3d7" : "#fff"};
   border: 1px solid #bdbebf;
   border-radius: 999px;
   padding: 5px 15px;

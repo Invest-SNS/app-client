@@ -22,9 +22,7 @@ const SignIn = () => {
     }
     dispatch(postLogin(data))
       .then((res) => {
-        console.log(res.payload)
         if (res.payload.status === 201) {
-          console.log('여기')
           dispatch(setUser(res.payload.data));
           navigate('/');
         } else {
@@ -37,14 +35,13 @@ const SignIn = () => {
   };
 
   return (
-    <SignupContainer>
+    <SigninContainer>
       <LogoDiv>
         <img src={LogoIcon} style={{ width: 60 }} />
         <span>StockMate</span>
       </LogoDiv>
       <Form onSubmit={(e) => onLogin(e)}>
         <Label>
-          {/* <Img src={EmailIcon} alt="이메일" /> */}
           <StyledInput
             type="text"
             placeholder="✉️   이메일"
@@ -53,7 +50,6 @@ const SignIn = () => {
           ></StyledInput>
         </Label>
         <Label>
-          {/* <Img src={PasswordIcon} alt="비밀번호" /> */}
           <StyledInput
             type="password"
             placeholder="🔗   비밀번호"
@@ -70,17 +66,17 @@ const SignIn = () => {
         <NavDiv>|</NavDiv>
         <NavDiv onClick={() => navigate("/signup")}>회원가입</NavDiv>
       </div>
-    </SignupContainer>
+    </SigninContainer>
   );
 };
 export default SignIn;
 
-const SignupContainer = styled.div`
+const SigninContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 42px);
+  height: 100vh;
   gap: 32px;
 
   @media (max-width: 500px) {
@@ -129,7 +125,7 @@ const StyledButton = styled.button`
   border-radius: 16px;
   border: none;
   background: #FFE3D7;
-  width: 409px;
+  width: 404px;
   height: 55px;
   color: #000;
   text-align: center;

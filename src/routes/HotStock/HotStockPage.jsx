@@ -5,12 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getHotDatas, getPopularDatas } from "../../store/reducers/Hot/getStockInfo";
 import default_Img from "../../../public/icon/+.svg";
 import restart_Img from '../../../public/icon/restart.svg';
+import { PuffLoader } from "react-spinners";
 
 export default function HotStockPage() {
   const dispatch = useDispatch();
 
   const popularData = useSelector((state) => state.hot.popularData);
   const hotData = useSelector((state) => state.hot.hotData);
+  const loading = useSelector((state) => state.hot.loading);
   const [selectNum, setSelectNum] = useState(1);
 
   useEffect(() => {
@@ -90,26 +92,32 @@ export default function HotStockPage() {
             <SelectBtn num={selectNum} onClick={() => setSelectNum(3)}>외국인순매수</SelectBtn>
             <SelectBtn num={selectNum} onClick={() => setSelectNum(4)}>기관순매수</SelectBtn>
           </BtnDiv>
-          {hotData.length > 0 ? (
-            hotData.map((item, idx) =>
-              <RankDiv key={idx} num={idx}>
-                <RankFont>{item.rank}.</RankFont>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <CompanyLogo
-                    src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                      item.stbd_nm,
-                      item.stock_code
-                    )}.png`}
-                    onError={onErrorImg}
-                  />
-                  <RankFont>{item.stbd_nm}</RankFont>
-                </div>
-              </RankDiv>
-            )
+          {loading ? (
+            <div style={{ height: '36vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <PuffLoader color="#FF7D75" />
+            </div>
           ) : (
-            <ErrorDiv2>
-              <RankFont>조건에 맞는 데이터가 없습니다.</RankFont>
-            </ErrorDiv2>
+            hotData.length > 0 ? (
+              hotData.map((item, idx) =>
+                <RankDiv key={idx} num={idx}>
+                  <RankFont>{item.rank}.</RankFont>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <CompanyLogo
+                      src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+                        item.stbd_nm,
+                        item.stock_code
+                      )}.png`}
+                      onError={onErrorImg}
+                    />
+                    <RankFont>{item.stbd_nm}</RankFont>
+                  </div>
+                </RankDiv>
+              )
+            ) : (
+              <ErrorDiv2>
+                <RankFont>조건에 맞는 데이터가 없습니다.</RankFont>
+              </ErrorDiv2>
+            )
           )}
         </div>
       </Container>
@@ -120,6 +128,21 @@ export default function HotStockPage() {
 const Container = styled.div`
   background-color: #FFF;
   height: 100vh;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+  }
 `
 
 const TitleDiv = styled.div`

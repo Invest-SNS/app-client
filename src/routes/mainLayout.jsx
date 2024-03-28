@@ -43,6 +43,8 @@ export default function MainLayout() {
         <MainChart
           toggleCharts={toggleCharts}
           toggleIndicators={toggleIndicators}
+          showCharts={showCharts}
+          showIndicators={showIndicators}
         />
         <Outlet />
       </Container>

@@ -148,7 +148,7 @@ const CheckBox = styled.input`
     background-size: 100% 100%;
     background-position: 50%;
     background-repeat: no-repeat;
-    background-color: black;
+    background-color: #fc6d6d;
 
     &::before {
       content: "✓";
@@ -167,12 +167,12 @@ const ItemDiv = styled.div``;
 const DetailBtn = styled.button`
   margin-left: auto;
   background: none;
-  border: 1px solid black;
+  border: 1px solid #474747;
   border-radius: 100px;
 
   &:hover {
-    border: 1px solid black;
-    background-color: black;
+    border: 1px solid #474747;
+    background-color: #474747;
     color: white;
   }
 `;
@@ -181,7 +181,7 @@ const DetailContainer = styled.div`
   width: 250px;
   height: 100%;
   background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
   transform: translateX(${(props) => (props.$showdetail ? "0" : "-100%")});
   transition: transform 0.3s ease;
   position: absolute;
