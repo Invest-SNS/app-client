@@ -21,9 +21,6 @@ const kospiSlice = createSlice({
     builder.addCase(getkospiKosdaqDatas.fulfilled, (state, action) => {
       state.data = action.payload;
     }),
-    // builder.addCase(getkospiKosdaqDatas.pending, (state, action) => {
-    //   state.hotData = action.payload;
-    // }),
     builder.addCase(getkospiKosdaqDatas.rejected, (state, action) => {
       state.data = [];
     })

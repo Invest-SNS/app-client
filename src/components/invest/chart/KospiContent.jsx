@@ -15,14 +15,17 @@ export default function KospiContent() {
 
   useEffect(() => {
     dispatch(getkospiKosdaqDatas())
-    // setInterval(() => {
-    //   dispatch(getkospiKosdaqDatas());
-    // }, 4000)
+    console.log('코스피 코스닥 불러오는 중')
+    const timer = setInterval(() => {
+      dispatch(getkospiKosdaqDatas());
+    }, 3000)
+
+    return () => clearInterval(timer);
   }, [])
 
   return (
     <Container>
-      <diSubContainerv>
+      <SubContainer>
         <Content>
           <span>KOSPI</span>
           <MainFont>{content?.kospi?.price}</MainFont>
@@ -35,11 +38,11 @@ export default function KospiContent() {
               <CaretDownFill color="#0636c7" />
             : null
             }
-            <NumFont num={kospiNum}>{content?.kospi?.upDown}</NumFont>
+            <NumFont num={kospiNum ? kospiNum : 1}>{content?.kospi?.upDown}</NumFont>
           </div>
-          <NumFont num={kospiRate}>({content?.kospi?.rate}%)</NumFont>
+          <NumFont num={kospiRate ? kospiRate : 1}>({content?.kospi?.rate}%)</NumFont>
         </Content>
-      </diSubContainerv>
+      </SubContainer>
       <SubContainer>
         <Content>
           <span>KOSDAQ</span>
@@ -53,9 +56,9 @@ export default function KospiContent() {
               <CaretDownFill color="#0636c7" />
             : null
             }
-            <NumFont num={kosdaqNum}>{content?.kosdaq?.upDown}</NumFont>
+            <NumFont num={kosdaqNum ? kosdaqNum : 1}>{content?.kosdaq?.upDown}</NumFont>
           </div>
-          <NumFont num={kosdaqRate}>({content?.kosdaq?.rate}%)</NumFont>
+          <NumFont num={kosdaqRate ? kosdaqRate : 1}>({content?.kosdaq?.rate}%)</NumFont>
         </Content>
       </SubContainer>
     </Container>
