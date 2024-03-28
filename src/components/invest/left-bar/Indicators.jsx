@@ -162,7 +162,7 @@ const CheckBox = styled.input`
     background-size: 100% 100%;
     background-position: 50%;
     background-repeat: no-repeat;
-    background-color: black;
+    background-color: #fc6d6d;
 
     &::before {
       content: "✓";
@@ -181,12 +181,13 @@ const ItemDiv = styled.div``;
 const DetailBtn = styled.button`
   margin-left: auto;
   background: none;
-  border: 1px solid black;
+  border: 1px solid #474747;
+  color: #474747;
   border-radius: 100px;
 
   &:hover {
-    border: 1px solid black;
-    background-color: black;
+    border: 1px solid #474747;
+    background-color: #474747;
     color: white;
   }
 `;

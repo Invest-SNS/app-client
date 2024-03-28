@@ -22,9 +22,7 @@ const SignIn = () => {
     }
     dispatch(postLogin(data))
       .then((res) => {
-        console.log(res.payload)
         if (res.payload.status === 201) {
-          console.log('여기')
           dispatch(setUser(res.payload.data));
           navigate('/');
         } else {
@@ -44,7 +42,6 @@ const SignIn = () => {
       </LogoDiv>
       <Form onSubmit={(e) => onLogin(e)}>
         <Label>
-          {/* <Img src={EmailIcon} alt="이메일" /> */}
           <StyledInput
             type="text"
             placeholder="✉️   이메일"
@@ -53,7 +50,6 @@ const SignIn = () => {
           ></StyledInput>
         </Label>
         <Label>
-          {/* <Img src={PasswordIcon} alt="비밀번호" /> */}
           <StyledInput
             type="password"
             placeholder="🔗   비밀번호"

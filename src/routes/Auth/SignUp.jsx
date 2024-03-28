@@ -38,7 +38,6 @@ const SignUp = () => {
       }
       dispatch(postSignup(data))
         .then((res) => {
-          console.log(res.payload)
           if (res.payload.status === 201) {
             setIsAlert(true);
             setAlertModal('회원가입이 완료되었습니다.');
@@ -75,7 +74,6 @@ const SignUp = () => {
       </LogoDiv>
       <Form onSubmit={onSignup}>
         <Label>
-          {/* <Img src={NicknameIcon} alt="닉네임" /> */}
           <StyledInput
             placeholder="🤍   닉네임"
             value={nickname}
@@ -83,7 +81,6 @@ const SignUp = () => {
           ></StyledInput>
         </Label>
         <Label>
-          {/* <Img src={EmailIcon} alt="이메일" /> */}
           <StyledInput
             placeholder="✉️   이메일"
             value={email}
@@ -92,7 +89,6 @@ const SignUp = () => {
         </Label>
         {error1 && <Error>{error1}</Error>}
         <Label>
-          {/* <Img src={PasswordIcon} alt="비밀번호" /> */}
           <StyledInput
             placeholder="🔗   비밀번호"
             value={password}
@@ -102,7 +98,6 @@ const SignUp = () => {
           ></StyledInput>
         </Label>
         <Label>
-          {/* <Img src={PasswordIcon} alt="비밀번호 확인" /> */}
           <StyledInput
             placeholder="🔗   비밀번호 확인"
             value={passwordCheck}

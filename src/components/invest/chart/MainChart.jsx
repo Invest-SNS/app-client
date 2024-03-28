@@ -74,12 +74,10 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
 
-  // console.log('보조지표', subIndi);
-  // console.log('차트지표', chartIndi);
-
   const { askPrice, nowPrice } = useWebSocket();
   const [upNum, setUpNum] = useState(0);
   
+  // 일, 주, 월, 년 데이터 불러오는 함수
   function getData(format) {
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
@@ -98,6 +96,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
     getData(clickDate);
   }, [company]);
 
+  // socket 연결 시, 현재가 불러올때마다 data에 저장
   useEffect(() => {
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
@@ -105,7 +104,6 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
     if (nowPrice) {
       setUpNum(parseFloat(nowPrice.message.close) - parseFloat(dataList[dataList.length - 2].close))
       nowPrice.message['date'] = formattedDate;
-      // console.log(nowPrice.message)
       dispatch(setLiveData(nowPrice.message));
     }
   }, [nowPrice])
@@ -159,9 +157,6 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
   // * (차트 개수)
   const chartHeight = gridHeight - barChartHeight * (subIndi.length + 1);
 
-  const yExtents = (data) => {
-    return [data?.high, data?.low];
-  };
   const dateTimeFormat = "%Y/%m/%d";
   const timeDisplayFormat = timeFormat(dateTimeFormat);
 
@@ -194,6 +189,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
     return data?.close > data?.open ? "#26a69a" : "#ef5350";
   };
 
+  // hover 했을 때 보여줄 데이터
   function tooltipContent() {
     return ({ currentItem, xAccessor }) => {
       return {
@@ -272,6 +268,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
               </FontContainer>
             </CompanyContainer>
             <StockInfo>
+              {/* 실시간 데이터가 있을 때 (장이 열려있을 때) */}
               {nowPrice?.message ? (
                 <>
                   <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
@@ -347,6 +344,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
               </DateBtn>
             </Content>
           </BtnContainer>
+          {/* 차트 */}
           <ChartCanvas
             height={height}
             ratio={3}
@@ -361,7 +359,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
           >
             
-            {/* 일반 차트 */}
+            {/* 주식 캔들 차트 및 차트 지표 */}
             <Chart
               id={1}
               height={chartHeight}
