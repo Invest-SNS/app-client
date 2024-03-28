@@ -112,17 +112,6 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
     }
   }, [nowPrice])
 
-  // 일, 주, 월, 년 버튼 색상 변경
-  useEffect(() => {
-    const allBtnArr = ["D", "W", "M", "Y"];
-    document.getElementById(clickDate).style.backgroundColor = "#FFE3D7";
-    const nonTargetedBtnArr = allBtnArr.filter((item) => item != clickDate);
-    nonTargetedBtnArr.map((item) => {
-      document.getElementById(item).style.backgroundColor = "#fff";
-      return null;
-    });
-  }, [clickDate]);
-
   const ScaleProvider =
     discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => {
       const year = d?.date?.substr(0, 4);
@@ -132,7 +121,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
       return new Date(nDate);
     });
 
-  const margin = { left: 0, right: 78, top: 15, bottom: 24 };
+  const margin = { left: 5, right: 75, top: 10, bottom: 24 };
 
   // window 사이즈에 맞춘 넓이/높이
   const height = window.innerHeight - 180;
@@ -311,6 +300,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
             toggleCharts={toggleCharts}
             toggleIndicators={toggleIndicators}
             getData={getData}
+            clickDate={clickDate}
           />
           {/* 차트 */}
           <ChartCanvas

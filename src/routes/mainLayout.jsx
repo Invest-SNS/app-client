@@ -65,6 +65,7 @@ const LeftContainer = styled.div`
   height: 100%;
   position: relative;
   overflow: hidden;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 `;
 
 const ContentContainer = styled.div`

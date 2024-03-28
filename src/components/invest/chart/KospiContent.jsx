@@ -15,7 +15,6 @@ export default function KospiContent() {
 
   useEffect(() => {
     dispatch(getkospiKosdaqDatas())
-    console.log('코스피 코스닥 불러오는 중')
     const timer = setInterval(() => {
       dispatch(getkospiKosdaqDatas());
     }, 3000)

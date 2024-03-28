@@ -50,7 +50,7 @@ const MyNavbar = ({ offCanvasTitle }) => {
                   {/* 챗봇 토글 버튼 */}
                   <ChatBotBtn onClick={toggleChatBot}>
                     <img src={chatbotImg} alt="Robot" style={{ width: '40px', height: '40px', borderRadius: '20px' }}/>
-                    <span>ChatMate</span>
+                    <span style={{ fontWeight: 500 }}>ChatMate</span>
                   </ChatBotBtn>
 
                   <Nav.Link

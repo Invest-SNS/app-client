@@ -114,7 +114,7 @@ const StyledInput = styled.input`
   padding: 0 30px;
 
   &::placeholder {
-    color: rgba(186, 186, 186, 0.9);
+    color: rgba(160, 160, 160, 0.8);
   }
 
   &:focus {
@@ -133,6 +133,10 @@ const StyledButton = styled.button`
   font-size: 18px;
   font-weight: 400;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    background-color: #ffcfba;
+  }
 `;
 
 const NavDiv = styled.div`
@@ -143,6 +147,7 @@ const NavDiv = styled.div`
 
   &:hover {
     cursor: pointer;
+    color: #FF7D75;
   }
 `;
 

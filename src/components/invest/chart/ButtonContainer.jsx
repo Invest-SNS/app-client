@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { setClickDate } from '../../../store/reducers/Chart/chart';
 
-export default function ButtonContainer({ toggleCharts, toggleIndicators, showCharts, showIndicators, getData }) {
+export default function ButtonContainer({ toggleCharts, toggleIndicators, showCharts, showIndicators, getData, clickDate }) {
   const dispatch = useDispatch();
   
   return (
@@ -14,42 +14,42 @@ export default function ButtonContainer({ toggleCharts, toggleIndicators, showCh
       </Content>
       <Content>
         {/* <button>분</button> */}
-        <DateBtn
-          id="D"
+        <IndiBtn
+          check={clickDate === "D" ? "true" : "false"}
           onClick={() => {
             getData("D");
             dispatch(setClickDate("D"));
           }}
         >
           일
-        </DateBtn>
-        <DateBtn
-          id="W"
+        </IndiBtn>
+        <IndiBtn
+          check={clickDate === "W" ? "true" : "false"}
           onClick={() => {
             getData("W");
             dispatch(setClickDate("W"));
           }}
         >
           주
-        </DateBtn>
-        <DateBtn
-          id="M"
+        </IndiBtn>
+        <IndiBtn
+          check={clickDate === "M" ? "true" : "false"}
           onClick={() => {
             getData("M");
             dispatch(setClickDate("M"));
           }}
         >
           월
-        </DateBtn>
-        <DateBtn
-          id="Y"
+        </IndiBtn>
+        <IndiBtn
+          check={clickDate === "Y" ? "true" : "false"}
           onClick={() => {
             getData("Y");
             dispatch(setClickDate("Y"));
           }}
         >
           년
-        </DateBtn>
+        </IndiBtn>
       </Content>
     </BtnContainer>
   )
@@ -57,35 +57,27 @@ export default function ButtonContainer({ toggleCharts, toggleIndicators, showCh
 
 const Content = styled.div`
   display: flex;
-  gap: 6px;
+  gap: 10px;
 `;
 
 const BtnContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 15px 20px 0 20px;
 `;
 
 const IndiBtn = styled.button`
-  background-color: ${(props) => props.check === "true" ? "#ffe3d7" : "#fff"};
-  border: 1px solid #bdbebf;
+  background-color: ${(props) => props.check === "true" ? "rgba(255, 125, 117, 0.4)" : "#fff"};
+  color: ${(props) => props.check === "true" ? "" : ""};
+  border: ${(props) => props.check === "true" ? "1px solid rgba(255, 125, 117, 0.4)" : "1px solid rgba(0, 0, 0, 0.6)"};
   border-radius: 999px;
   padding: 5px 15px;
   font-size: 14px;
+  font-weight: 600;
 
   &:hover {
-    background: #ffe3d7;
+    background: rgba(255, 125, 117, 0.4);
+    border: 1px solid rgba(255, 125, 117, 0.4);
   }
 `;
 
-const DateBtn = styled.button`
-  background-color: #fff;
-  border: 1px solid #bdbebf;
-  border-radius: 10px;
-  padding: 5px 15px;
-  font-size: 14px;
-
-  &:hover {
-    background: #ffe3d7;
-  }
-`;
