@@ -82,7 +82,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
 
   const { askPrice, nowPrice } = useWebSocket();
   const [upNum, setUpNum] = useState(0);
-  
+
   function getData(format) {
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
@@ -93,8 +93,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
       time_format: format,
     };
 
-    dispatch(getChartDatas(data))
-      .then((res) => setIsShow((prev) => !prev));
+    dispatch(getChartDatas(data)).then((res) => setIsShow((prev) => !prev));
   }
 
   useEffect(() => {
@@ -106,12 +105,15 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
 
     if (nowPrice) {
-      setUpNum(parseFloat(nowPrice.message.close) - parseFloat(dataList[dataList.length - 2].close))
-      nowPrice.message['date'] = formattedDate;
+      setUpNum(
+        parseFloat(nowPrice.message.close) -
+          parseFloat(dataList[dataList.length - 2].close)
+      );
+      nowPrice.message["date"] = formattedDate;
       // console.log(nowPrice.message)
       dispatch(setLiveData(nowPrice.message));
     }
-  }, [nowPrice])
+  }, [nowPrice]);
 
   // 일, 주, 월, 년 버튼 색상 변경
   useEffect(() => {
@@ -208,7 +210,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
           },
           {
             label: "종가",
-            value: currentItem?.close && pricesDisplayFormat(currentItem?.close),
+            value:
+              currentItem?.close && pricesDisplayFormat(currentItem?.close),
           },
           {
             label: "고가",
@@ -275,15 +278,22 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
               </FontContainer>
             </CompanyContainer>
             <StockInfo>
-              <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                {upNum > 0 ?
+              <StockFont num={upNum}>
+                {nowPrice?.message.close
+                  .toString()
+                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
+              </StockFont>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {upNum > 0 ? (
                   <CaretUpFill color="#c70606" />
-                : upNum < 0 ? 
+                ) : upNum < 0 ? (
                   <CaretDownFill color="#0636c7" />
-                : null
-                }
-                <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
+                ) : null}
+                <StockFont2 num={upNum}>
+                  {upNum
+                    .toString()
+                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
+                </StockFont2>
               </div>
             </StockInfo>
           </MainContainer>
@@ -345,7 +355,6 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             xExtents={xExtents}
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
           >
-            
             {/* 일반 차트 */}
             <Chart
               id={1}
@@ -370,13 +379,25 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
 
               {/* 차트지표 */}
               {chartIndi.includes("SMA") && (
-                <SMAChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
+                <SMAChart
+                  datas={dataList}
+                  chartIndi={chartIndi}
+                  isShow={isShow}
+                />
               )}
               {chartIndi.includes("WMA") && (
-                <WMAChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
+                <WMAChart
+                  datas={dataList}
+                  chartIndi={chartIndi}
+                  isShow={isShow}
+                />
               )}
               {chartIndi.includes("EMA") && (
-                <EMAChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
+                <EMAChart
+                  datas={dataList}
+                  chartIndi={chartIndi}
+                  isShow={isShow}
+                />
               )}
               {chartIndi.includes("BBANDS") && (
                 <BBANDSChart
@@ -386,7 +407,11 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 />
               )}
               {chartIndi.includes("SAR") && (
-                <SARChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
+                <SARChart
+                  datas={dataList}
+                  chartIndi={chartIndi}
+                  isShow={isShow}
+                />
               )}
 
               <MouseCoordinateX displayFormat={timeDisplayFormat} />
@@ -459,7 +484,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("STOCHF")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("STOCHF")) *
+                      barChartHeight,
                 ]}
               >
                 <STOCHFChart datas={dataList} isShow={isShow} />
@@ -476,7 +502,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("STOCH")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("STOCH")) *
+                      barChartHeight,
                 ]}
               >
                 <STOCHChart datas={dataList} isShow={isShow} />
@@ -629,7 +656,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("ADOSC")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("ADOSC")) *
+                      barChartHeight,
                 ]}
               >
                 <ADOSCChart datas={dataList} isShow={isShow} />
@@ -663,7 +691,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("WILLR")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("WILLR")) *
+                      barChartHeight,
                 ]}
               >
                 <WILLRChart datas={dataList} isShow={isShow} />
@@ -732,7 +761,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("AROON")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("AROON")) *
+                      barChartHeight,
                 ]}
               >
                 <AROONChart datas={dataList} isShow={isShow} />
@@ -749,7 +779,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("AROONOSC")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("AROONOSC")) *
+                      barChartHeight,
                 ]}
               >
                 <AROONOSCChart datas={dataList} isShow={isShow} />
@@ -766,7 +797,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("STOCHRSI")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("STOCHRSI")) *
+                      barChartHeight,
                 ]}
               >
                 <STOCHRSIChart datas={dataList} isShow={isShow} />
@@ -783,7 +815,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("ULTOSC")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("ULTOSC")) *
+                      barChartHeight,
                 ]}
               >
                 <ULTOSCChart datas={dataList} isShow={isShow} />
@@ -825,7 +858,7 @@ const MainContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-`
+`;
 
 const CompanyContainer = styled.div`
   display: flex;
@@ -844,18 +877,20 @@ const StockInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
-`
+`;
 
 const StockFont = styled.span`
   padding-right: 20px;
   font-size: 20px;
 
-  color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"}
-`
+  color: ${(props) =>
+    props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"};
+`;
 
 const StockFont2 = styled.span`
-color: ${(props) => props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"}
-`
+  color: ${(props) =>
+    props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"};
+`;
 
 const FontContainer = styled.div`
   display: flex;

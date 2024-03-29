@@ -1,8 +1,8 @@
-import { orderInstance } from "./api";
+import { baseUserInstance } from "./api";
 
 export async function postOrderStock(code, buyOrSell, price, quantity) {
   try {
-    const response = await orderInstance.post("/", {
+    const response = await baseUserInstance.post("/order/buyOrSell", {
       ownedShare: code,
       buyOrSell,
       price,

@@ -14,34 +14,35 @@ import {
   decreaseSelectedQuantity,
 } from "../../../../store/reducers/Trading/trading";
 
-const OrderBook = () => {
+const OrderBook = ({ initprice }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [balance, setBalance] = useState(2000000);
   const [selectedType, setSelectedType] = useState("지정가"); // 지정가, 시장가
-  const { askPrice, nowPrice } = useWebSocket();
+  const { askPrice, nowPrice, ready } = useWebSocket();
+  const [content, setContent] = useState("");
+  const [initialPrice, setInitialPrice] = useState(initprice);
 
   const dispatch = useDispatch();
   const { selectedPrice, selectedTab, disabledPriceInput, selectedQuantity } =
     useSelector((state) => state.trading);
 
-  // const defaultAskPrice = {
+  // const askPrice = {
   //   message: {
-  //     sellPrice: [100, 101, 102, 103, 104, 104, 104, 104, 104, 104],
+  //     sellPrice: [90, 101, 102, 103, 104, 104, 104, 104, 104, 104],
   //     sellAmount: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
   //     buyPrice: [100, 101, 102, 103, 104, 104, 104, 104, 104, 104],
   //     buyAmount: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
   //   },
   // };
-  // const defaultNowPrice = 100;
-
-  useEffect(() => {
-    dispatch(setSelectedPrice(nowPrice?.message?.close));
-  }, []);
+  // const nowPrice = { message: { close: 100 } };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  const openErrorModal = () => setIsErrorModalOpen(true);
+  const openErrorModal = (content) => {
+    setContent(content);
+    setIsErrorModalOpen(true);
+  };
   const closeErrorModal = () => setIsErrorModalOpen(false);
 
   const handleTypeChange = (type) => {
@@ -80,18 +81,44 @@ const OrderBook = () => {
     dispatch(decreaseSelectedQuantity());
   };
 
+  const calculateMaxQuantity = () => {
+    if (selectedTab === "매수") {
+      if (selectedType === "지정가") {
+        // 지정가
+        return Math.floor(balance / selectedPrice).toLocaleString();
+      } else {
+        // 시장가
+        return Math.floor(
+          balance / askPrice?.message?.sellPrice[0]
+        ).toLocaleString();
+      }
+    } else {
+      return (100).toLocaleString();
+    }
+  };
+
+  useEffect(() => {
+    dispatch(setSelectedPrice(nowPrice?.message?.close));
+  }, [ready]);
+
   return (
     <>
       <ErrorOrderModal
         isOpen={isErrorModalOpen}
         onClose={closeErrorModal}
-        content={"주문 수량이 없습니다."}
+        content={content}
       />
       <OrderModal
         isOpen={isModalOpen}
         onClose={closeModal}
         userOrderType={selectedTab}
-        price={selectedPrice}
+        price={
+          selectedType === "지정가"
+            ? selectedPrice
+            : selectedTab === "매수"
+            ? askPrice?.message?.sellPrice[0]
+            : askPrice?.message?.buyPrice[0]
+        }
         quantity={selectedQuantity}
       />
 
@@ -161,13 +188,7 @@ const OrderBook = () => {
             >
               <span style={{ fontSize: "0.9rem", color: "#969696" }}>최대</span>
               <span style={{ fontSize: "0.9rem", color: "red" }}>
-                {selectedTab === "매수"
-                  ? selectedPrice !== 0
-                    ? Math.floor(balance / selectedPrice).toLocaleString()
-                    : Math.floor(
-                        balance / askPrice.message.sellPrice[0]
-                      ).toLocaleString()
-                  : (100).toLocaleString()}{" "}
+                {calculateMaxQuantity()}
               </span>
               <span style={{ fontSize: "0.9rem", color: "#969696" }}>주</span>
             </div>
@@ -246,6 +267,8 @@ const OrderBook = () => {
             quantity={selectedQuantity}
             openModal={openModal}
             openErrorModal={openErrorModal}
+            selectedType={selectedType}
+            maxQuantity={calculateMaxQuantity()}
           />
         </div>
       </div>

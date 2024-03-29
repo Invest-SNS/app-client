@@ -1,11 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { postOrderStock } from "../../../../../lib/apis/order.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { joinRoom } from "../../../../../store/webSocket/nowPrice.js";
+import {
+  getLogoFileName,
+  onErrorImg,
+} from "../../../../../../util/LogoFileName.js";
+import { setIsNew } from "../../../../../store/reducers/Trading/trading.jsx";
 
 const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
   const [modalStyle, setModalStyle] = useState({
     opacity: 0,
     pointerEvents: "none",
   });
+  const company = useSelector((state) => state.company.data[1]);
+  const dispatch = useDispatch();
+
+  const handleOrderConfirmation = () => {
+    postOrderStock(
+      company.code,
+      userOrderType === "매수" ? "buy" : "sell",
+      price,
+      quantity
+    );
+    dispatch(setIsNew(true));
+    joinRoom(company.code);
+    onClose();
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -58,7 +79,11 @@ const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <img
-          src={`https://file.alphasquare.co.kr/media/images/stock_logo/kr/005930.png`}
+          src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+            company.name,
+            company.code
+          )}.png`}
+          onError={onErrorImg}
           style={{
             width: "40px",
             borderRadius: 100,
@@ -74,7 +99,7 @@ const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
             gap: "0.3rem",
           }}
         >
-          <div>삼성전자</div>
+          <div>{company.name}</div>
           <div style={{ color: userOrderType === "매수" ? "red" : "#015FFF" }}>
             {userOrderType}
           </div>
@@ -99,7 +124,9 @@ const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
           >
             <div style={{ color: "#666" }}>주문단가</div>
             <div style={{ display: "flex", flexDirection: "row" }}>
-              <div>{price !== null ? price.toLocaleString() : ""}</div>
+              <div>
+                {price !== null ? parseInt(price).toLocaleString() : ""}
+              </div>
               <div style={{ marginLeft: "0.2rem" }}>원</div>
             </div>
           </div>
@@ -193,7 +220,7 @@ const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
               e.target.style.backgroundColor =
                 userOrderType === "매수" ? "red" : "#015FFF";
             }}
-            onClick={() => {}}
+            onClick={handleOrderConfirmation}
           >
             확인
           </button>
