@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import * as S from "../../../style/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteFeed,
   fetchAllFeed,
   fetchMyFeed,
   postVote,
 } from "../../../store/reducers/Feed/feed";
+import FeedLayout from "./FeedLayout";
 
 const FeedVote = ({ page, path, item, toggleUser }) => {
   const dispatch = useDispatch();
@@ -38,99 +37,41 @@ const FeedVote = ({ page, path, item, toggleUser }) => {
   };
 
   return (
-    <>
+    <FeedLayout item={item} toggleUser={toggleUser}>
       {!isMyVote ? (
-        <S.FeedWrapper>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
+        <ButtonWrapper>
+          <VoteBtn
+            color="#bee4ff"
+            $hover="#74c5ff"
+            onClick={() => onVote("yes")}
           >
-            <S.UserDiv>
-              <S.UserNickname onClick={() => toggleUser(item.user)}>
-                {item.user.nickname}
-              </S.UserNickname>
-              <S.DateDiv>{item.createdAt}</S.DateDiv>
-            </S.UserDiv>
-            {item.user._id === userId && (
-              <div
-                onClick={() => dispatch(deleteFeed(item._id))}
-                style={{ width: "20%", color: "gray" }}
-              >
-                삭제
-              </div>
-            )}
-          </div>
-          <S.BodyWrapper>
-            <S.BodyCenter>
-              <S.BodyDiv $weight="550">{item.body}</S.BodyDiv>
-              <ButtonWrapper>
-                <VoteBtn
-                  color="#bee4ff"
-                  $hover="#74c5ff"
-                  onClick={() => onVote("yes")}
-                >
-                  O
-                </VoteBtn>
-                <VoteBtn
-                  color="#FFE3D7"
-                  $hover="#ff9a6f"
-                  onClick={() => onVote("no")}
-                >
-                  X
-                </VoteBtn>
-              </ButtonWrapper>
-            </S.BodyCenter>
-          </S.BodyWrapper>
-        </S.FeedWrapper>
+            O
+          </VoteBtn>
+          <VoteBtn
+            color="#FFE3D7"
+            $hover="#ff9a6f"
+            onClick={() => onVote("no")}
+          >
+            X
+          </VoteBtn>
+        </ButtonWrapper>
       ) : (
-        <S.FeedWrapper>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <S.UserDiv>
-              <S.UserNickname onClick={() => toggleUser(item.user)}>
-                {item.user.nickname}
-              </S.UserNickname>
-              <S.DateDiv>{item.createdAt}</S.DateDiv>
-            </S.UserDiv>
-            {item.user._id === userId && (
-              <div
-                onClick={() => dispatch(deleteFeed(item._id))}
-                style={{ width: "20%", color: "gray" }}
-              >
-                삭제
-              </div>
-            )}
-          </div>
-          <S.BodyWrapper>
-            <S.BodyCenter>
-              <S.BodyDiv $weight="550">{item.body}</S.BodyDiv>
-              <OXWrapper>
-                <OXDiv>
-                  O<br />
-                  {calc(O)}%
-                </OXDiv>
-                <BarDiv>
-                  <ODiv $width={calc(O)}></ODiv>
-                  <XDiv $width={calc(X)}></XDiv>
-                </BarDiv>
-                <OXDiv>
-                  X<br />
-                  {calc(X)}%
-                </OXDiv>
-              </OXWrapper>
-            </S.BodyCenter>
-          </S.BodyWrapper>
-        </S.FeedWrapper>
+        <OXWrapper>
+          <OXDiv>
+            O<br />
+            {calc(O)}%
+          </OXDiv>
+          <BarDiv>
+            <ODiv $width={calc(O)}></ODiv>
+            <XDiv $width={calc(X)}></XDiv>
+          </BarDiv>
+          <OXDiv>
+            X<br />
+            {calc(X)}%
+          </OXDiv>
+        </OXWrapper>
       )}
-    </>
+    </FeedLayout>
   );
 };
 
@@ -138,7 +79,8 @@ const ButtonWrapper = styled.div`
   display: flex;
   gap: 30px;
   margin-bottom: 25px;
-  margin-top: 6px;
+  margin-top: 45px;
+  justify-content: center;
 `;
 
 const VoteBtn = styled.button`
@@ -192,7 +134,8 @@ const OXWrapper = styled.div`
   display: flex;
   gap: 10px;
   margin-bottom: 25px;
-  margin-top: 5px;
+  margin-top: 45px;
+  justify-content: center;
 `;
 
 const OXDiv = styled.div`

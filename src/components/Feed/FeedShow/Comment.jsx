@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import * as S from "../../../style/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -74,7 +75,12 @@ const Comment = ({ feedId }) => {
               </CommentDiv>
               {item.user._id === userId && (
                 <DeleteDiv>
-                  <div onClick={() => onDeleteComment(item._id)}>삭제</div>
+                  <S.DeleteDiv
+                    onClick={() => onDeleteComment(item._id)}
+                    style={{ width: "100%" }}
+                  >
+                    삭제
+                  </S.DeleteDiv>
                 </DeleteDiv>
               )}
             </Div>
@@ -121,7 +127,9 @@ const Comment = ({ feedId }) => {
 const CommentWrapper = styled.div``;
 
 const LengthDiv = styled.div`
-  padding: 16px 0px 8px 30px;
+  border-top: 1px solid #dadada;
+  margin: 0px 25px;
+  padding: 16px 0px 8px 5px;
 `;
 
 const Div = styled.div`
@@ -159,9 +167,9 @@ const WriteDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2%;
-  margin: 10px;
-  border-top: 1px solid #c9c9c9;
+  gap: 5%;
+  margin: 0px 25px 10px 25px;
+  border-top: 1px solid #dadada;
   padding-top: 10px;
 
   .textarea {
@@ -175,7 +183,7 @@ const WriteDiv = styled.div`
 `;
 
 const InputBtn = styled.button`
-  width: 10%;
+  width: 13%;
   height: 35px;
   background-color: #ff8b8b;
   border: none;

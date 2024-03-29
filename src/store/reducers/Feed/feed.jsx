@@ -182,6 +182,10 @@ const feedSlice = createSlice({
         state.allFeed = state.allFeed.filter(
           (feed) => feed._id !== deletedFeedId
         );
+
+        state.myFeed = state.myFeed.filter(
+          (feed) => feed._id !== deletedFeedId
+        );
       })
       .addCase(deleteFeed.pending, (state) => {
         state.loading = "pending";

@@ -99,7 +99,6 @@ const FeedWriting = ({ setIsWrite }) => {
           onChange={(e) => setBody(e.target.value)}
         />
       )}
-
       {previewImage && (
         <PreviewImageContainer>
           <img

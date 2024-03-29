@@ -41,7 +41,7 @@ const UserPage = ({ item, onClose }) => {
   return (
     <S.Container>
       <RowDiv>
-        <img src="/icon/arrow.svg" onClick={onClose} />
+        <img src="/icon/X.svg" onClick={onClose} />
         <div style={{ fontSize: 20 }}></div>
         <img style={{ width: 20 }} />
       </RowDiv>
