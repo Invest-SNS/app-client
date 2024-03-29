@@ -19,7 +19,6 @@ const Feed = ({ path, friendId }) => {
   const [page, setPage] = useState(1);
   const [fetching, setFetching] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
-
   const userId = useSelector((state) => state.user.user.id);
 
   useEffect(() => {

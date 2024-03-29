@@ -24,6 +24,15 @@ export const UserDiv = styled.div`
   width: 80%;
 `;
 
+export const DeleteDiv = styled.div`
+  color: gray;
+  width: 20%;
+  cursor: pointer;
+  &:hover {
+    color: black;
+  }
+`;
+
 export const UserNickname = styled.div`
   font-size: 16px;
   font-weight: 600;
@@ -62,7 +71,6 @@ export const BottomWrapper = styled.div`
   margin: 20px 25px 0px 25px;
   padding: 15px 0px;
   border-top: 1px solid #dadada;
-  border-bottom: 1px solid #dadada;
   gap: 20px;
 `;
 
