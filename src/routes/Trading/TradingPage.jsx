@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import default_Img from "../../../public/icon/+.svg";
 import PriceBook from "../../components/invest/right-bar/OrderManagement/PriceBook";
 import OrderBook from "../../components/invest/right-bar/OrderManagement/OrderBook";
 import OrderList from "../../components/invest/right-bar/OrderHistory/OrderHistoryList";
@@ -10,49 +8,27 @@ import {
   setSelectedTab,
   setSelectedPrice,
   setSelectedQuantity,
+  setIsNew,
 } from "../../store/reducers/Trading/trading";
 import { useWebSocket } from "../../lib/hooks/useWebSocket";
+import { getLogoFileName, onErrorImg } from "../../../util/LogoFileName";
 
 export default function TradingPage() {
   const dispatch = useDispatch();
-  const { selectedTab, disabledPriceInput } = useSelector(
+  const { selectedTab, disabledPriceInput, isNew } = useSelector(
     (state) => state.trading
   );
   const { nowPrice } = useWebSocket();
+  const company = useSelector((state) => state.company.data[1]);
 
   const handleTabClick = (tab) => {
     dispatch(setSelectedTab(tab));
     dispatch(setSelectedQuantity(0));
+    dispatch(setSelectedPrice(nowPrice?.message?.close));
 
     if (!disabledPriceInput) {
       dispatch(setSelectedPrice(nowPrice?.message?.close));
     }
-  };
-
-  const getLogoFileName = (name, code) => {
-    if (name.includes("스팩")) {
-      return "SPAC_230706";
-    } else if (name.includes("ETN")) {
-      return "ETN_230706";
-    } else if (
-      name.includes("KODEX") ||
-      name.includes("KOSEF") ||
-      name.includes("KoAct") ||
-      name.includes("TIGER") ||
-      name.includes("ACE") ||
-      name.includes("ARIRANG") ||
-      name.includes("합성 H") ||
-      name.includes("HANARO") ||
-      name.includes("SOL")
-    ) {
-      return "ETF_230706";
-    } else {
-      return `kr/${code}`;
-    }
-  };
-
-  const onErrorImg = (e) => {
-    e.target.src = default_Img;
   };
 
   return (
@@ -77,21 +53,23 @@ export default function TradingPage() {
         <div>
           <img
             src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-              "삼성전자",
-              "005930"
+              company.name,
+              company.code
             )}.png`}
+            onError={onErrorImg}
             style={{
               width: "30px",
               borderRadius: 100,
               margin: "0px 10px",
             }}
-            onError={onErrorImg}
           />
         </div>
         <div>
-          <div>삼성전자</div>
+          <div>{company.name}</div>
           <div style={{ display: "flex", flexDirection: "row", gap: "0.8rem" }}>
-            <span style={{ color: "#999999", fontSize: "0.9rem" }}>005930</span>
+            <span style={{ color: "#999999", fontSize: "0.9rem" }}>
+              {company.code}
+            </span>
             <span style={{ color: "#999999", fontSize: "0.9rem" }}>코스피</span>
           </div>
         </div>
@@ -152,11 +130,15 @@ export default function TradingPage() {
                 : "1.5px solid #D9D9D9",
             fontSize: "0.85rem",
             cursor: "pointer",
+            position: "relative",
           }}
-          onClick={() => handleTabClick("주문내역")}
+          onClick={() => {
+            handleTabClick("주문내역");
+            dispatch(setIsNew(false));
+          }}
         >
           주문내역
-          <NewIcon />
+          {isNew && <NewIcon />}
         </div>
       </div>
       {selectedTab === "매수" || selectedTab === "매도" ? (
@@ -170,7 +152,7 @@ export default function TradingPage() {
             }}
           >
             <PriceBook />
-            <OrderBook />
+            <OrderBook initPrice={nowPrice?.message?.close} />
           </div>
         </>
       ) : (

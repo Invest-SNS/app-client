@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useWebSocket } from "../../../../lib/hooks/useWebSocket";
 import PriceItem from "./PriceItem";
@@ -7,21 +7,22 @@ import {
   setSelectedPrice,
 } from "../../../../store/reducers/Trading/trading";
 import { useDispatch, useSelector } from "react-redux";
+import { getMarketClosePrice } from "../../../../lib/apis/marketClose";
 
 const PriceBook = () => {
   const containerRef = useRef(null);
   const dispatch = useDispatch();
-  const { askPrice, nowPrice } = useWebSocket();
+  const [marketClosePrice, setMarketClosePrice] = useState(null);
   const { scrollPosition, disabledPriceInput, selectedPrice } = useSelector(
     (state) => state.trading
   );
+  const { askPrice, nowPrice } = useWebSocket();
 
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = scrollPosition;
     }
   }, [scrollPosition, askPrice]);
-  //scrollPosition, askPrice
 
   const handleScroll = (e) => {
     dispatch(setScrollPosition(e.target.scrollTop));

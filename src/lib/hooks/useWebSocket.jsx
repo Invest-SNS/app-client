@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   joinRoom,
   leaveRoom,
@@ -12,12 +18,12 @@ const useWebSocketConnection = () => {
   const [nowPrice, setNowPrice] = useState(null);
   const before = useSelector((state) => state.company.data[0]?.code);
   const now = useSelector((state) => state.company.data[1]?.code);
-  // const [stockCode, setStockCode] = useState("005930");
 
   useEffect(() => {
     leaveRoom(before);
     joinRoom(now);
-  }, [before]);
+    setNowPrice(null);
+  }, [before, now]);
 
   useEffect(() => {
     const settingAskPrice = subscribeAskPrice((askPriceMessage) => {
@@ -34,7 +40,7 @@ const useWebSocketConnection = () => {
     };
   }, []);
 
-  return { askPrice, nowPrice };
+  return { askPrice, nowPrice, ready: !!nowPrice };
 };
 
 const WebSocketContext = createContext();

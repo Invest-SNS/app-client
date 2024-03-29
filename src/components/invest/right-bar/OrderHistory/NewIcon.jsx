@@ -12,8 +12,9 @@ const NewIcon = () => {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        marginLeft: "0.3rem",
+        marginLeft: "4rem",
         marginBottom: "0.1rem",
+        position: "absolute",
       }}
     >
       N

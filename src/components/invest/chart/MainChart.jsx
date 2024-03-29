@@ -86,8 +86,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
       time_format: format,
     };
 
-    dispatch(getChartDatas(data))
-      .then((res) => setIsShow((prev) => !prev));
+    dispatch(getChartDatas(data)).then((res) => setIsShow((prev) => !prev));
   }
 
   useEffect(() => {
@@ -104,7 +103,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
       nowPrice.message['date'] = formattedDate;
       dispatch(setLiveData(nowPrice.message));
     }
-  }, [nowPrice])
+  }, [nowPrice]);
 
   const ScaleProvider =
     discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => {
@@ -188,7 +187,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
           },
           {
             label: "종가",
-            value: currentItem?.close && pricesDisplayFormat(currentItem?.close),
+            value:
+              currentItem?.close && pricesDisplayFormat(currentItem?.close),
           },
           {
             label: "고가",
@@ -239,8 +239,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
             xAccessor={xAccessor}
             xExtents={xExtents}
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
-          >
-            
+          > 
             {/* 주식 캔들 차트 및 차트 지표 */}
             <Chart
               id={1}
@@ -265,13 +264,25 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
 
               {/* 차트지표 */}
               {chartIndi.includes("SMA") && (
-                <SMAChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
+                <SMAChart
+                  datas={dataList}
+                  chartIndi={chartIndi}
+                  isShow={isShow}
+                />
               )}
               {chartIndi.includes("WMA") && (
-                <WMAChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
+                <WMAChart
+                  datas={dataList}
+                  chartIndi={chartIndi}
+                  isShow={isShow}
+                />
               )}
               {chartIndi.includes("EMA") && (
-                <EMAChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
+                <EMAChart
+                  datas={dataList}
+                  chartIndi={chartIndi}
+                  isShow={isShow}
+                />
               )}
               {chartIndi.includes("BBANDS") && (
                 <BBANDSChart
@@ -281,7 +292,11 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 />
               )}
               {chartIndi.includes("SAR") && (
-                <SARChart datas={dataList} chartIndi={chartIndi} isShow={isShow} />
+                <SARChart
+                  datas={dataList}
+                  chartIndi={chartIndi}
+                  isShow={isShow}
+                />
               )}
 
               <MouseCoordinateX displayFormat={timeDisplayFormat} />
@@ -354,7 +369,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("STOCHF")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("STOCHF")) *
+                      barChartHeight,
                 ]}
               >
                 <STOCHFChart datas={dataList} isShow={isShow} />
@@ -371,7 +387,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("STOCH")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("STOCH")) *
+                      barChartHeight,
                 ]}
               >
                 <STOCHChart datas={dataList} isShow={isShow} />
@@ -524,7 +541,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("ADOSC")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("ADOSC")) *
+                      barChartHeight,
                 ]}
               >
                 <ADOSCChart datas={dataList} isShow={isShow} />
@@ -558,7 +576,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("WILLR")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("WILLR")) *
+                      barChartHeight,
                 ]}
               >
                 <WILLRChart datas={dataList} isShow={isShow} />
@@ -627,7 +646,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("AROON")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("AROON")) *
+                      barChartHeight,
                 ]}
               >
                 <AROONChart datas={dataList} isShow={isShow} />
@@ -644,7 +664,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("AROONOSC")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("AROONOSC")) *
+                      barChartHeight,
                 ]}
               >
                 <AROONOSCChart datas={dataList} isShow={isShow} />
@@ -661,7 +682,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("STOCHRSI")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("STOCHRSI")) *
+                      barChartHeight,
                 ]}
               >
                 <STOCHRSIChart datas={dataList} isShow={isShow} />
@@ -678,7 +700,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
                 origin={(_, h) => [
                   0,
                   gridHeight -
-                    (subIndi.length - subIndi.indexOf("ULTOSC")) * barChartHeight,
+                    (subIndi.length - subIndi.indexOf("ULTOSC")) *
+                      barChartHeight,
                 ]}
               >
                 <ULTOSCChart datas={dataList} isShow={isShow} />

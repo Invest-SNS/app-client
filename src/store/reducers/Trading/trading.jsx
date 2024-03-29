@@ -6,6 +6,7 @@ const initialState = {
   selectedQuantity: 0,
   scrollPosition: 100,
   disabledPriceInput: false, // 시장가, 지정가 가격 input
+  isNew: false,
 };
 
 const tradingSlice = createSlice({
@@ -30,6 +31,9 @@ const tradingSlice = createSlice({
     increaseSelectedQuantity(state) {
       state.selectedQuantity += 1;
     },
+    setIsNew(state, action) {
+      state.isNew = action.payload;
+    },
     decreaseSelectedQuantity(state) {
       if (state.selectedQuantity > 0) {
         state.selectedQuantity -= 1;
@@ -47,5 +51,6 @@ export const {
   setSelectedQuantity,
   increaseSelectedQuantity,
   decreaseSelectedQuantity,
+  setIsNew,
 } = tradingSlice.actions;
 export default tradingSlice.reducer;
