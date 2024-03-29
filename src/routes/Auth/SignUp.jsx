@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import LogoIcon from '../../../public/icon/logo.svg';
+import LogoIcon from "../../../public/icon/logo.svg";
 import { useDispatch } from "react-redux";
 import { postSignup } from "../../store/reducers/User/user";
 import { Button, Modal } from "react-bootstrap";
@@ -20,7 +20,6 @@ const SignUp = () => {
   const [isAlert, setIsAlert] = useState(false);
   const [alertModal, setAlertModal] = useState("");
 
-
   const onSignup = (e) => {
     e.preventDefault();
     if (emailCheck(email)) {
@@ -30,18 +29,17 @@ const SignUp = () => {
       const data = {
         email,
         password,
-        nickname
-      }
-      dispatch(postSignup(data))
-        .then((res) => {
-          if (res.payload.status === 201) {
-            setIsAlert(true);
-            setAlertModal('회원가입이 완료되었습니다.');
-          } else {
-            setIsAlert(true);
-            setAlertModal("해당 이메일은 이미 사용 중 입니다.");
-          }
-        })
+        nickname,
+      };
+      dispatch(postSignup(data)).then((res) => {
+        if (res.payload.status === 201) {
+          setIsAlert(true);
+          setAlertModal("회원가입이 완료되었습니다.");
+        } else {
+          setIsAlert(true);
+          setAlertModal("해당 이메일은 이미 사용 중 입니다.");
+        }
+      });
 
       setEmail("");
       setPassword("");
@@ -105,7 +103,7 @@ const SignUp = () => {
         {error2 && <Error>{error2}</Error>}
         <StyledButton type="submit">회원가입</StyledButton>
       </Form>
-      <div style={{ display: 'flex', gap: '20px' }}>
+      <div style={{ display: "flex", gap: "20px" }}>
         <NavDiv onClick={() => navigate("/")}>홈으로</NavDiv>
         <NavDiv>|</NavDiv>
         <NavDiv onClick={() => navigate("/signin")}>로그인</NavDiv>
@@ -117,13 +115,18 @@ const SignUp = () => {
           <span>{alertModal}</span>
         </Modal.Body>
         <Modal.Footer>
-          <Button style={{ backgroundColor: '#FFE3D7', border: '1px solid #FFE3D7', color: '#000' }} 
+          <Button
+            style={{
+              backgroundColor: "#FFE3D7",
+              border: "1px solid #FFE3D7",
+              color: "#000",
+            }}
             onClick={() => {
               if (alertModal === "해당 이메일은 이미 사용 중 입니다.") {
                 setIsAlert(false);
               } else {
                 setIsAlert(false);
-                navigate('/signin');
+                navigate("/signin");
               }
             }}
           >
@@ -161,11 +164,6 @@ const Label = styled.label`
   display: flex;
   align-items: center;
   background: #f4f5f7;
-`;
-
-const Img = styled.img`
-  margin: 0 30px;
-  width: 20px;
 `;
 
 const StyledInput = styled.input`
@@ -222,9 +220,9 @@ const LogoDiv = styled.div`
   font-size: 32px;
   font-weight: 200;
   gap: 10px;
-`
+`;
 
 const Error = styled.span`
   color: #ff3333;
   font-size: 13px;
-`
+`;

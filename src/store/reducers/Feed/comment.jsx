@@ -8,6 +8,7 @@ import {
 
 const initialState = {
   comments: {},
+  selectedFriend: null,
   loading: "idle",
 };
 
@@ -15,7 +16,6 @@ const fetchComments = createAsyncThunk(
   "comment/fetchComments",
   async (feedId, thunkAPI) => {
     const response = await reqFetchComments(feedId);
-    console.log("response", response);
     return response;
   }
 );
@@ -24,7 +24,6 @@ const postComment = createAsyncThunk(
   "comment/postComment",
   async ({ feedId, content }, thunkAPI) => {
     const response = await reqPostComment(feedId, content);
-    console.log("response", response);
     return response;
   }
 );
@@ -33,7 +32,6 @@ const putComment = createAsyncThunk(
   "comment/putComment",
   async ({ commentId, content }, thunkAPI) => {
     const response = await reqPutComment(commentId, content);
-    console.log("response", response);
     return response;
   }
 );
@@ -49,13 +47,16 @@ const deleteComment = createAsyncThunk(
 const commentSlice = createSlice({
   name: "comment",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    setSelectedFriend: (state, action) => {
+      state.selectedFriend = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchComments.fulfilled, (state, action) => {
         state.loading = "fulfilled";
 
-        console.log(action.payload, "payloads");
         action.payload.forEach((comment) => {
           const { feed, _id, ...rest } = comment;
 
@@ -105,7 +106,6 @@ const commentSlice = createSlice({
       .addCase(deleteComment.fulfilled, (state, action) => {
         state.loading = "fulfilled";
         const deletedCommentId = action.meta.arg;
-        console.log("payloadddd", action.meta.arg);
 
         Object.keys(state.comments).forEach((feedId) => {
           state.comments[feedId] = state.comments[feedId].filter(
@@ -122,5 +122,6 @@ const commentSlice = createSlice({
   },
 });
 
+export const { setSelectedFriend } = commentSlice.actions;
 export { fetchComments, postComment, putComment, deleteComment };
 export default commentSlice.reducer;

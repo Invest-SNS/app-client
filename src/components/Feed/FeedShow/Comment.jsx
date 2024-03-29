@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import TextareaAutosize from "react-textarea-autosize";
 import { useDispatch, useSelector } from "react-redux";
+import TextareaAutosize from "react-textarea-autosize";
 import {
   fetchComments,
   postComment,
   deleteComment,
 } from "../../../store/reducers/Feed/comment";
+import UserPage from "../../MyPage/UserPage";
 
 const Comment = ({ feedId }) => {
   const dispatch = useDispatch();
+
   const [input, setInput] = useState("");
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedFriend, setSelectedFriend] = useState(null);
 
   useEffect(() => {
     dispatch(fetchComments(feedId));
@@ -50,24 +53,39 @@ const Comment = ({ feedId }) => {
     setCurrentPage(Math.ceil(totalComments / commentsPerPage));
   };
 
+  const toggleUser = (item) => {
+    setSelectedFriend(item);
+  };
+
   return (
     <CommentWrapper>
       <LengthDiv>댓글 &nbsp; {totalComments}</LengthDiv>
       {comments
         .slice(0, showAll ? totalComments : currentPage * commentsPerPage)
         .map((item, idx) => (
-          <Div key={item._id}>
-            <CommentDiv>
-              <NicknameDiv>{item.user.nickname}</NicknameDiv>
-              <DateDiv>{item.createdAt}</DateDiv>
-              <ContentDiv>{item.content}</ContentDiv>
-            </CommentDiv>
-            {item.user._id === userId && (
-              <DeleteDiv>
-                <div onClick={() => onDeleteComment(item._id)}>삭제</div>
-              </DeleteDiv>
-            )}
-          </Div>
+          <div key={item._id}>
+            <Div key={item._id}>
+              <CommentDiv>
+                <NicknameDiv onClick={() => toggleUser(item.user)}>
+                  {item.user.nickname}
+                </NicknameDiv>
+                <DateDiv>{item.createdAt}</DateDiv>
+                <ContentDiv>{item.content}</ContentDiv>
+              </CommentDiv>
+              {item.user._id === userId && (
+                <DeleteDiv>
+                  <div onClick={() => onDeleteComment(item._id)}>삭제</div>
+                </DeleteDiv>
+              )}
+            </Div>
+            <DetailContainers $showuser={selectedFriend == item.user}>
+              {selectedFriend === item.user && (
+                <>
+                  <UserPage item={item.user} onClose={() => toggleUser(null)} />
+                </>
+              )}
+            </DetailContainers>
+          </div>
         ))}
       {!showAll && totalComments > currentPage * commentsPerPage ? (
         <div
@@ -118,7 +136,9 @@ const CommentDiv = styled.div`
   font-size: 16px;
 `;
 
-const NicknameDiv = styled.div``;
+const NicknameDiv = styled.div`
+  cursor: pointer;
+`;
 
 const DateDiv = styled.div`
   color: #c1c1c1;
@@ -176,6 +196,20 @@ const ShowMoreButton = styled.button`
   background: none;
   color: #a5a4a4;
   padding-left: 0px;
+`;
+
+const DetailContainers = styled.div`
+  width: 400px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(${(props) => (props.$showuser ? "0" : "100%")});
+  transition: transform 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 999;
 `;
 
 export default Comment;

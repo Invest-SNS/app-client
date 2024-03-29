@@ -29,6 +29,7 @@ export const UserNickname = styled.div`
   font-weight: 600;
   line-height: normal;
   margin-bottom: 5px;
+  cursor: pointer;
 `;
 
 export const DateDiv = styled.div`
@@ -96,4 +97,15 @@ export const StockDiv = styled.div`
 
 export const CommentDiv = styled.div`
   display: ${(props) => (props.$check == true ? "none" : "flex")};
+`;
+
+//common
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 100vh;
+  gap: 10px;
 `;

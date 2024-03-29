@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import LogoIcon from '../../../public/icon/logo.svg';
-import EmailIcon from '../../../public/icon/email.svg';
-import PasswordIcon from '../../../public/icon/password.svg';
-import { useDispatch } from "react-redux";
+import LogoIcon from "../../../public/icon/logo.svg";
+import { useDispatch, useSelector } from "react-redux";
 import { postLogin, setUser } from "../../store/reducers/User/user";
+import { getCookie } from "../../lib/apis/cookie";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -18,18 +17,16 @@ const SignIn = () => {
     e.preventDefault();
     const data = {
       email,
-      password
-    }
-    dispatch(postLogin(data))
-      .then((res) => {
-        if (res.payload.status === 201) {
-          dispatch(setUser(res.payload.data));
-          navigate('/');
-        } else {
-          setError("이메일 혹은 비밀번호가 옳지 않습니다.");
-        }
-      })
-
+      password,
+    };
+    dispatch(postLogin(data)).then((res) => {
+      if (res.payload.status === 201) {
+        dispatch(setUser(res.payload.data));
+        navigate("/");
+      } else {
+        setError("이메일 혹은 비밀번호가 옳지 않습니다.");
+      }
+    });
     setEmail("");
     setPassword("");
   };
@@ -61,7 +58,7 @@ const SignIn = () => {
         <StyledButton type="submit">로그인</StyledButton>
       </Form>
       {error && <ErrorFont>이메일 혹은 비밀번호가 옳지 않습니다.</ErrorFont>}
-      <div style={{ display: 'flex', gap: '20px' }}>
+      <div style={{ display: "flex", gap: "20px" }}>
         <NavDiv onClick={() => navigate("/")}>홈으로</NavDiv>
         <NavDiv>|</NavDiv>
         <NavDiv onClick={() => navigate("/signup")}>회원가입</NavDiv>
@@ -96,11 +93,6 @@ const Label = styled.label`
   display: flex;
   align-items: center;
   background: #f4f5f7;
-`;
-
-const Img = styled.img`
-  margin: 0 30px;
-  width: 20px;
 `;
 
 const StyledInput = styled.input`
@@ -157,8 +149,8 @@ const LogoDiv = styled.div`
   font-size: 32px;
   font-weight: 200;
   gap: 10px;
-`
+`;
 
 const ErrorFont = styled.span`
   color: #ff3333;
-`
+`;

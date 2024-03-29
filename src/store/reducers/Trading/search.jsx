@@ -4,6 +4,7 @@ import {
   postSearchUser as reqPostSearchUser,
   postLikeStock as reqPostLikeStock,
   fetchLikeStock as reqFetchLikeStock,
+  fetchLikeStockArr as reqFetchLikeStockArr,
 } from "~/lib/apis/search";
 
 const initialState = {
@@ -23,24 +24,32 @@ const postSearch = createAsyncThunk(
 
 const postSearchUser = createAsyncThunk(
   "search/postSearchUser",
-  async ({ searchQuery }, thunkAPI) => {
-    const response = await reqPostSearchUser(searchQuery);
+  async ({ searchQuery, userId }, thunkAPI) => {
+    const response = await reqPostSearchUser(searchQuery, userId);
     return response;
   }
 );
 
 const postLikeStock = createAsyncThunk(
   "search/postLikeStock",
-  async ({ likeStock }, thunkAPI) => {
-    const response = await reqPostLikeStock(likeStock);
+  async ({ likeStock, userId }, thunkAPI) => {
+    const response = await reqPostLikeStock(likeStock, userId);
     return response;
   }
 );
 
 const fetchLikeStock = createAsyncThunk(
   "search/fetchLikeStock",
-  async (data, thunkAPI) => {
-    const response = await reqFetchLikeStock();
+  async (userId, thunkAPI) => {
+    const response = await reqFetchLikeStock(userId);
+    return response;
+  }
+);
+
+const fetchLikeStockArr = createAsyncThunk(
+  "search/fetchLikeStockArr",
+  async (userId, thunkAPI) => {
+    const response = await reqFetchLikeStockArr(userId);
     return response;
   }
 );
@@ -76,7 +85,6 @@ const searchSlice = createSlice({
         state.loading = "rejected";
       })
       .addCase(postLikeStock.fulfilled, (state, action) => {
-        console.log("payload", action.payload);
         state.favoriteArr = action.payload;
         state.loading = "idle";
       })
@@ -95,10 +103,26 @@ const searchSlice = createSlice({
       })
       .addCase(fetchLikeStock.rejected, (state) => {
         state.loading = "rejected";
+      })
+      .addCase(fetchLikeStockArr.fulfilled, (state, action) => {
+        state.favoriteArr = action.payload;
+        state.loading = "idle";
+      })
+      .addCase(fetchLikeStockArr.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(fetchLikeStockArr.rejected, (state) => {
+        state.loading = "rejected";
       });
   },
 });
 
 export const { setFavoriteArr } = searchSlice.actions;
-export { postSearch, postSearchUser, postLikeStock, fetchLikeStock };
+export {
+  postSearch,
+  postSearchUser,
+  postLikeStock,
+  fetchLikeStock,
+  fetchLikeStockArr,
+};
 export default searchSlice.reducer;
