@@ -3,9 +3,9 @@ import styled from "styled-components";
 import * as S from "../../style/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { getHotDatas, getPopularDatas } from "../../store/reducers/Hot/getStockInfo";
-import default_Img from "../../../public/icon/+.svg";
 import restart_Img from '../../../public/icon/restart.svg';
 import { PuffLoader } from "react-spinners";
+import PopularStock from "../../components/side-bar/PopularStock";
 
 export default function HotStockPage() {
   const dispatch = useDispatch();
@@ -20,37 +20,11 @@ export default function HotStockPage() {
     dispatch(getHotDatas(selectNum));
   }, [selectNum])
 
-  const getLogoFileName = (name, code) => {
-    if (name.includes("스팩")) {
-      return "SPAC_230706";
-    } else if (name.includes("ETN")) {
-      return "ETN_230706";
-    } else if (
-      name.includes("KODEX") ||
-      name.includes("KOSEF") ||
-      name.includes("KoAct") ||
-      name.includes("TIGER") ||
-      name.includes("ACE") ||
-      name.includes("ARIRANG") ||
-      name.includes("합성 H") ||
-      name.includes("HANARO") ||
-      name.includes("SOL")
-    ) {
-      return "ETF_230706";
-    } else {
-      return `kr/${code}`;
-    }
-  };
-
-  const onErrorImg = (e) => {
-    e.target.src = default_Img;
-  };
-
   return (
     <S.Container>
       <Container>
         {/* 인기 주식 */}
-        <div style={{ padding: '5px 10px 0 10px' }}>
+        <div style={{ padding: '0 10px' }}>
           <TitleDiv>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/sparkles_2728.png" />
             <MainFont>실시간 인기 주식</MainFont>
@@ -58,19 +32,11 @@ export default function HotStockPage() {
           </TitleDiv>
           {popularData.length > 0 ? (
             popularData.map((item, idx) =>
-              <RankDiv key={idx} num={idx}>
-                <RankFont>{item.now_rank}위</RankFont>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <CompanyLogo
-                    src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                      item.stbd_nm,
-                      item.stock_code
-                    )}.png`}
-                    onError={onErrorImg}
-                  />
-                  <RankFont>{item.stbd_nm}</RankFont>
-                </div>
-              </RankDiv>
+              <PopularStock 
+                key={idx}
+                idx={idx}
+                item={item}
+              />
             )
           ) : (
             <ErrorDiv1>
@@ -80,7 +46,7 @@ export default function HotStockPage() {
         </div>
       
         {/* 핫이슈 종목 */}
-        <div style={{ padding: '20px 10px 0 10px' }}>
+        <div style={{ padding: '15px 10px 0 10px' }}>
           <TitleDiv>
             <IconImg alt="" src="https://em-content.zobj.net/source/microsoft/379/fire_1f525.png" />
             <MainFont>핫이슈 종목</MainFont>
@@ -99,19 +65,11 @@ export default function HotStockPage() {
           ) : (
             hotData.length > 0 ? (
               hotData.map((item, idx) =>
-                <RankDiv key={idx} num={idx}>
-                  <RankFont>{item.rank}.</RankFont>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <CompanyLogo
-                      src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                        item.stbd_nm,
-                        item.stock_code
-                      )}.png`}
-                      onError={onErrorImg}
-                    />
-                    <RankFont>{item.stbd_nm}</RankFont>
-                  </div>
-                </RankDiv>
+                <PopularStock
+                  key={idx}
+                  idx={idx}
+                  item={item}
+                />
               )
             ) : (
               <ErrorDiv2>
@@ -162,17 +120,6 @@ const IconImg = styled.img`
   height: 35px;
 `
 
-const RankDiv = styled.div`
-  // background-color: ${(props) => props.num % 2 ? "rgba(255, 227, 215, 0.4)" : "rgba(0, 0, 0, 0.03)"};
-  display: flex;
-  align-items: center;
-  padding: 13px 0 13px 20px;
-  gap: 10px;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-  margin-bottom: 8px;
-`
-
 const RankFont = styled.span`
   font-size: 16px;
   font-weight: 700;
@@ -199,13 +146,6 @@ const SelectBtn = styled.div`
     background-color: #ffd4c2;
   }
 `
-
-const CompanyLogo = styled.img`
-  width: 35px;
-  height: 35px;
-  border-radius: 999px;
-  margin-right: 10px;
-`;
 
 const ErrorDiv1 = styled.div`
   display: flex;
