@@ -2,41 +2,16 @@ import React from 'react'
 import styled from 'styled-components';
 import KospiContent from './KospiContent';
 import { CaretDownFill, CaretUpFill } from 'react-bootstrap-icons';
-import default_Img from "../../../../public/icon/+.svg";
+import {getLogoFileName, onErrorImg} from "~/util/getLogoFileName";
 
 export default function TitleContainer({ nowPrice, company, upNum, dataList }) {
-  const getLogoFileName = (name, code) => {
-    if (name.includes("스팩")) {
-      return "SPAC_230706";
-    } else if (name.includes("ETN")) {
-      return "ETN_230706";
-    } else if (
-      name.includes("KODEX") ||
-      name.includes("KOSEF") ||
-      name.includes("KoAct") ||
-      name.includes("TIGER") ||
-      name.includes("ACE") ||
-      name.includes("ARIRANG") ||
-      name.includes("합성 H") ||
-      name.includes("HANARO") ||
-      name.includes("SOL")
-    ) {
-      return "ETF_230706";
-    } else {
-      return `kr/${code}`;
-    }
-  };
-
-  const onErrorImg = (e) => {
-    e.target.src = default_Img;
-  };
 
   // 장이 열려있을 때, 현재가 대비 종가 등락
   const nowRate = upNum / parseFloat(dataList[dataList.length - 2].close) * 100;
 
   // 장이 마감됐을 때, 전일 대비 종가 등락
   const upDown = parseFloat(dataList[dataList.length - 1].close) - parseFloat(dataList[dataList.length - 2].close)
-  const close = dataList[dataList.length - 1].close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  const close = dataList[dataList.length - 1].close.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   const stockRate = upDown / parseFloat(dataList[dataList.length - 2].close) * 100;
 
   return (
@@ -61,7 +36,7 @@ export default function TitleContainer({ nowPrice, company, upNum, dataList }) {
           {/* 실시간 데이터가 있을 때 (장이 열려있을 때) */}
           {nowPrice?.message ? (
             <>
-              <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
+              <StockFont num={upNum}>{nowPrice?.message.close.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</StockFont>
               <StockDiv>
                 {upNum > 0 ?
                   <CaretUpFill color="#c70606" />
@@ -69,7 +44,7 @@ export default function TitleContainer({ nowPrice, company, upNum, dataList }) {
                   <CaretDownFill color="#0636c7" />
                 : null
                 }
-                <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
+                <StockFont2 num={upNum}>{upNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
                 <StockFont2 num={nowRate}>(</StockFont2>
                 {nowRate > 0 && (
                   <StockFont2 num={nowRate}>+</StockFont2>
@@ -87,7 +62,7 @@ export default function TitleContainer({ nowPrice, company, upNum, dataList }) {
                   <CaretDownFill color="#0636c7" />
                 : null
                 }
-                <StockFont2 num={upDown}>{upDown.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
+                <StockFont2 num={upDown}>{upDown.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</StockFont2>
                 <StockFont2 num={stockRate}>(</StockFont2>
                 {stockRate > 0 && (
                   <StockFont2 num={stockRate}>+</StockFont2>

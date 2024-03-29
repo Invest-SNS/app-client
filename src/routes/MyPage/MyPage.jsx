@@ -11,7 +11,7 @@ import {
 import Feed from "../../components/Feed/FeedShow/Feed";
 import FriendList from "../../components/MyPage/FriendList";
 import FriendSearch from "../../components/MyPage/FriendSearch";
-import MyAccount from "../../components/MyAccount/MyAccount";
+// import MyAccount from "../../components/MyAccount/MyAccount";
 import LogoIcon from "../../../public/icon/logo.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getCookie } from "../../lib/apis/cookie";
@@ -148,7 +148,7 @@ export default function MyPage() {
             ) : (
               <></>
             )}
-            {selectedTab === "내 계좌" ? <MyAccount /> : <></>}
+            {/* {selectedTab === "내 계좌" ? <MyAccount /> : <></>} */}
           </ContentContainer>
         </>
       ) : (
