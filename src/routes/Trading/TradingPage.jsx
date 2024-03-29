@@ -11,7 +11,7 @@ import {
   setIsNew,
 } from "../../store/reducers/Trading/trading";
 import { useWebSocket } from "../../lib/hooks/useWebSocket";
-import { getLogoFileName, onErrorImg } from "../../../util/LogoFileName";
+import { getLogoFileName, onErrorImg } from "../../util/getLogoFileName";
 
 export default function TradingPage() {
   const dispatch = useDispatch();

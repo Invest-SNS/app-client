@@ -5,7 +5,7 @@ import { joinRoom } from "../../../../../store/webSocket/nowPrice.js";
 import {
   getLogoFileName,
   onErrorImg,
-} from "../../../../../../util/LogoFileName.js";
+} from "../../../../../util/getLogoFileName.jsx";
 import { setIsNew } from "../../../../../store/reducers/Trading/trading.jsx";
 
 const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
