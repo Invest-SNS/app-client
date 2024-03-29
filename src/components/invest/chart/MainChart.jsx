@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { format, formatLocale } from "d3-format";
+import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import {
   discontinuousTimeScaleProviderBuilder,
@@ -18,19 +18,13 @@ import {
   MouseCoordinateY,
   ZoomButtons,
   HoverTooltip,
-  MACDSeries,
-  MovingAverageTooltip,
   SingleValueTooltip,
-  LineSeries,
 } from "react-financial-charts";
-
-import default_Img from "../../../../public/icon/+.svg";
 
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import {
   getChartDatas,
-  setClickDate,
   setLiveData,
 } from "../../../store/reducers/Chart/chart";
 
@@ -64,9 +58,10 @@ import ULTOSCChart from "./Indicators/sub/ULTOSCChart";
 import PPOChart from "./Indicators/sub/PPOChart";
 
 import { useWebSocket } from "../../../lib/hooks/useWebSocket";
-import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
+import ButtonContainer from "./ButtonContainer";
+import TitleContainer from "./TitleContainer";
 
-export default function MainChart({ toggleCharts, toggleIndicators }) {
+export default function MainChart({ toggleCharts, toggleIndicators, showCharts, showIndicators }) {
   const dataList = useSelector((state) => state.chart.datas);
   const clickDate = useSelector((state) => state.chart.date);
   const company = useSelector((state) => state.company.data[1]);
@@ -77,12 +72,10 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
   const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
 
-  // console.log('보조지표', subIndi);
-  // console.log('차트지표', chartIndi);
-
   const { askPrice, nowPrice } = useWebSocket();
   const [upNum, setUpNum] = useState(0);
-
+  
+  // 일, 주, 월, 년 데이터 불러오는 함수
   function getData(format) {
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
@@ -100,45 +93,31 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     getData(clickDate);
   }, [company]);
 
+  // socket 연결 시, 현재가 불러올때마다 data에 저장
   useEffect(() => {
     const today = new Date();
     const formattedDate = today.toISOString().slice(0, 10).replace(/-/g, "");
 
     if (nowPrice) {
-      setUpNum(
-        parseFloat(nowPrice.message.close) -
-          parseFloat(dataList[dataList.length - 2].close)
-      );
-      nowPrice.message["date"] = formattedDate;
-      // console.log(nowPrice.message)
+      setUpNum(parseFloat(nowPrice.message.close) - parseFloat(dataList[dataList.length - 2].close))
+      nowPrice.message['date'] = formattedDate;
       dispatch(setLiveData(nowPrice.message));
     }
   }, [nowPrice]);
 
-  // 일, 주, 월, 년 버튼 색상 변경
-  useEffect(() => {
-    const allBtnArr = ["D", "W", "M", "Y"];
-    document.getElementById(clickDate).style.backgroundColor = "#FFE3D7";
-    const nonTargetedBtnArr = allBtnArr.filter((item) => item != clickDate);
-    nonTargetedBtnArr.map((item) => {
-      document.getElementById(item).style.backgroundColor = "#fff";
-      return null;
-    });
-  }, [clickDate]);
-
   const ScaleProvider =
     discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => {
-      const year = d?.date.substr(0, 4);
-      const month = d?.date.substr(4, 2);
-      const day = d?.date.substr(6, 2);
+      const year = d?.date?.substr(0, 4);
+      const month = d?.date?.substr(4, 2);
+      const day = d?.date?.substr(6, 2);
       const nDate = `${year}-${month}-${day}`;
       return new Date(nDate);
     });
 
-  const margin = { left: 0, right: 78, top: 0, bottom: 24 };
+  const margin = { left: 5, right: 75, top: 10, bottom: 24 };
 
   // window 사이즈에 맞춘 넓이/높이
-  const height = window.innerHeight - 170;
+  const height = window.innerHeight - 180;
   const width = window.innerWidth - 660;
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(dataList);
@@ -164,9 +143,6 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
   // * (차트 개수)
   const chartHeight = gridHeight - barChartHeight * (subIndi.length + 1);
 
-  const yExtents = (data) => {
-    return [data?.high, data?.low];
-  };
   const dateTimeFormat = "%Y/%m/%d";
   const timeDisplayFormat = timeFormat(dateTimeFormat);
 
@@ -199,6 +175,7 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     return data?.close > data?.open ? "#26a69a" : "#ef5350";
   };
 
+  // hover 했을 때 보여줄 데이터
   function tooltipContent() {
     return ({ currentItem, xAccessor }) => {
       return {
@@ -231,117 +208,25 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
     };
   }
 
-  const getLogoFileName = (name, code) => {
-    if (name.includes("스팩")) {
-      return "SPAC_230706";
-    } else if (name.includes("ETN")) {
-      return "ETN_230706";
-    } else if (
-      name.includes("KODEX") ||
-      name.includes("KOSEF") ||
-      name.includes("KoAct") ||
-      name.includes("TIGER") ||
-      name.includes("ACE") ||
-      name.includes("ARIRANG") ||
-      name.includes("합성 H") ||
-      name.includes("HANARO") ||
-      name.includes("SOL")
-    ) {
-      return "ETF_230706";
-    } else {
-      return `kr/${code}`;
-    }
-  };
-
-  const onErrorImg = (e) => {
-    e.target.src = default_Img;
-  };
-
   return (
     <Container>
       {dataList?.length > 0 ? (
         <>
-          <MainContainer>
-            <CompanyContainer>
-              <CompanyLogo
-                src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                  company.name,
-                  company.code
-                )}.png`}
-                onError={onErrorImg}
-              />
-              <FontContainer>
-                <MainFont>{company.name}</MainFont>
-                <SubFont>
-                  {company.code} {company.index}
-                </SubFont>
-              </FontContainer>
-            </CompanyContainer>
-            <StockInfo>
-              <StockFont num={upNum}>
-                {nowPrice?.message.close
-                  .toString()
-                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
-              </StockFont>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                {upNum > 0 ? (
-                  <CaretUpFill color="#c70606" />
-                ) : upNum < 0 ? (
-                  <CaretDownFill color="#0636c7" />
-                ) : null}
-                <StockFont2 num={upNum}>
-                  {upNum
-                    .toString()
-                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
-                </StockFont2>
-              </div>
-            </StockInfo>
-          </MainContainer>
-          <BtnContainer>
-            <Content>
-              <IndiBtn onClick={toggleCharts}>차트지표</IndiBtn>
-              <IndiBtn onClick={toggleIndicators}>보조지표</IndiBtn>
-            </Content>
-            <Content>
-              {/* <button>분</button> */}
-              <DateBtn
-                id="D"
-                onClick={() => {
-                  getData("D");
-                  dispatch(setClickDate("D"));
-                }}
-              >
-                일
-              </DateBtn>
-              <DateBtn
-                id="W"
-                onClick={() => {
-                  getData("W");
-                  dispatch(setClickDate("W"));
-                }}
-              >
-                주
-              </DateBtn>
-              <DateBtn
-                id="M"
-                onClick={() => {
-                  getData("M");
-                  dispatch(setClickDate("M"));
-                }}
-              >
-                월
-              </DateBtn>
-              <DateBtn
-                id="Y"
-                onClick={() => {
-                  getData("Y");
-                  dispatch(setClickDate("Y"));
-                }}
-              >
-                년
-              </DateBtn>
-            </Content>
-          </BtnContainer>
+          <TitleContainer
+            nowPrice={nowPrice}
+            company={company}
+            upNum={upNum}
+            dataList={dataList}
+          />
+          <ButtonContainer
+            showCharts={showCharts}
+            showIndicators={showIndicators}
+            toggleCharts={toggleCharts}
+            toggleIndicators={toggleIndicators}
+            getData={getData}
+            clickDate={clickDate}
+          />
+          {/* 차트 */}
           <ChartCanvas
             height={height}
             ratio={3}
@@ -354,8 +239,8 @@ export default function MainChart({ toggleCharts, toggleIndicators }) {
             xAccessor={xAccessor}
             xExtents={xExtents}
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
-          >
-            {/* 일반 차트 */}
+          > 
+            {/* 주식 캔들 차트 및 차트 지표 */}
             <Chart
               id={1}
               height={chartHeight}
@@ -851,91 +736,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: calc(100vw - 650px);
-  padding: 0 10px;
+  // padding: 0 10px;
 `;
 
-const MainContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const CompanyContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px 5px;
-`;
-
-const CompanyLogo = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  margin-right: 10px;
-`;
-
-const StockInfo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-`;
-
-const StockFont = styled.span`
-  padding-right: 20px;
-  font-size: 20px;
-
-  color: ${(props) =>
-    props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"};
-`;
-
-const StockFont2 = styled.span`
-  color: ${(props) =>
-    props.num > 0 ? "#c70606" : props.num < 0 ? "#0636c7" : "#000"};
-`;
-
-const FontContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const MainFont = styled.span`
-  font-weight: 700;
-`;
-
-const SubFont = styled.span`
-  font-size: 12px;
-`;
-
-const Content = styled.div`
-  display: flex;
-  gap: 6px;
-`;
-
-const BtnContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 3px;
-`;
-
-const IndiBtn = styled.button`
-  background-color: #fff;
-  border: 1px solid #bdbebf;
-  border-radius: 999px;
-  padding: 5px 15px;
-  font-size: 14px;
-
-  &:hover {
-    background: #ffe3d7;
-  }
-`;
-
-const DateBtn = styled.button`
-  background-color: #fff;
-  border: 1px solid #bdbebf;
-  border-radius: 10px;
-  padding: 5px 15px;
-  font-size: 14px;
-
-  &:hover {
-    background: #ffe3d7;
-  }
-`;

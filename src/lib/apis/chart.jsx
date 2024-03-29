@@ -1,11 +1,15 @@
 import { chartInstance, subChartInstance } from './api';
 
 export async function getChartData(data) {
-  return await chartInstance.post('/stockPrice', data)
+  return await chartInstance.post('/', data)
 }
 
 export async function getMinuteData(data) {
-  return await chartInstance.post('/stockPrice/minute', data)
+  return await chartInstance.post('/minute', data)
+}
+
+export async function getkospiKosdaq(data) {
+  return await chartInstance.get('/kospiKosdaq')
 }
 
 export async function getSMA(data) {

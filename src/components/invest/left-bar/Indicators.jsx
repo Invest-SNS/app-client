@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import IndicatorDetail from "./IndicatorDetail";
-// import indiData from "../../../../public/Json/indiData.json";
-import indiData from '../../../Json/indiData.json'
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveSub, setDisactiveSub, setSubIndi } from "../../../store/reducers/Chart/Indicators/clickIndicators";
+import {
+  setActiveSub,
+  setDisactiveSub,
+  setSubIndi,
+} from "../../../store/reducers/Chart/Indicators/clickIndicators";
+import IndicatorDetail from "./IndicatorDetail";
+import indiData from "../../../Json/indiData.json";
 
 const Indicators = ({ onClose }) => {
+  const dispatch = useDispatch();
   const [showDetail, setShowDetail] = useState(
     Array(indiData.length).fill(false)
   );
@@ -19,27 +23,27 @@ const Indicators = ({ onClose }) => {
     });
   };
 
-  const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator);
   const subIndi = useSelector((state) => state.clickIndicator.subIndi);
+
   // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
   const onCheckedElement = (checked, item) => {
-    if (subIndi.length < 4) {
+    if (subIndi.length < 3) {
       if (checked) {
-        dispatch(setActiveSub(item))
-        dispatch(setSubIndi([...subIndi, item]))
+        dispatch(setActiveSub(item));
+        dispatch(setSubIndi([...subIndi, item]));
       }
     } else {
       if (checked) {
-        dispatch(setActiveSub(item))
-        dispatch(setSubIndi([...subIndi.filter((el, idx) => idx !== 0), item]))
-        dispatch(setDisactiveSub(subIndi[0]))
+        dispatch(setActiveSub(item));
+        dispatch(setSubIndi([...subIndi.filter((el, idx) => idx !== 0), item]));
+        dispatch(setDisactiveSub(subIndi[0]));
       }
     }
 
     if (!checked) {
-      dispatch(setDisactiveSub(item))
-      dispatch(setSubIndi(subIndi.filter(el => el !== item)))
+      dispatch(setDisactiveSub(item));
+      dispatch(setSubIndi(subIndi.filter((el) => el !== item)));
     }
   };
 
@@ -52,11 +56,11 @@ const Indicators = ({ onClose }) => {
       <ItemContainer>
         {indiData.map((item, idx) => (
           <ItemWrapper key={item.id}>
-            <CheckBox 
+            <CheckBox
               type="checkbox"
               value={item.name}
               checked={isActive[item.name]}
-              onChange={e => {
+              onChange={(e) => {
                 onCheckedElement(e.target.checked, e.target.value);
               }}
             ></CheckBox>
@@ -93,7 +97,7 @@ const CloseButton = styled.img`
   position: absolute;
   right: 10px;
   top: 8px;
-  width: 25px;s
+  width: 25px;
   cursor: pointer;
 `;
 
@@ -109,7 +113,6 @@ const IndicatorDiv = styled.div`
   color: #000;
   text-align: center;
   font-size: 18px;
-  font-style: normal;
   font-weight: 400;
   line-height: normal;
   padding-top: 10px;
@@ -118,18 +121,18 @@ const IndicatorDiv = styled.div`
 
 const ItemContainer = styled.div`
   width: 100%;
-  height: calc(100vh - 101px);
+  height: calc(100vh - 106px);
   overflow: auto;
 
   &::-webkit-scrollbar {
-    width: 7px;
+    width: 3px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.05);
     border-radius: 20px;
@@ -163,7 +166,7 @@ const CheckBox = styled.input`
     background-size: 100% 100%;
     background-position: 50%;
     background-repeat: no-repeat;
-    background-color: black;
+    background-color: #fc6d6d;
 
     &::before {
       content: "✓";
@@ -182,12 +185,13 @@ const ItemDiv = styled.div``;
 const DetailBtn = styled.button`
   margin-left: auto;
   background: none;
-  border: 1px solid black;
+  border: 1px solid #474747;
+  color: #474747;
   border-radius: 100px;
 
   &:hover {
-    border: 1px solid black;
-    background-color: black;
+    border: 1px solid #474747;
+    background-color: #474747;
     color: white;
   }
 `;
@@ -196,7 +200,7 @@ const DetailContainer = styled.div`
   width: 250px;
   height: 100%;
   background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
   transform: translateX(${(props) => (props.$showdetail ? "0" : "-100%")});
   transition: transform 0.3s ease;
   position: absolute;

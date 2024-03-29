@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   fetchAFeed as reqFetchAFeed,
   fetchMyFeed as reqFetchMyFeed,
+  fetchOtherFeed as reqFetchOtherFeed,
   fetchAllFeed as reqFetchcAllFeed,
   postBoardFeed as reqPostBoardFeed,
   deleteFeed as reqDeleteFeed,
@@ -9,12 +10,16 @@ import {
   postVote as reqPostVote,
   postLike as reqPostLike,
   postUnlike as reqPostUnlike,
+  fetchMyFeedCount as reqFetchMyFeedCount,
 } from "~/lib/apis/feed";
 
 const initialState = {
   myFeed: [],
   allFeed: [],
+  otherFeed: [],
   aFeed: null,
+  myFeedCount: null,
+  mypageFeedCount: null,
   loading: "idle",
 };
 
@@ -22,7 +27,6 @@ const fetchAFeed = createAsyncThunk(
   "feed/fetchAFeed",
   async (feedId, thunkAPI) => {
     const response = await reqFetchAFeed(feedId);
-    console.log("response", response);
     return response;
   }
 );
@@ -31,7 +35,13 @@ const fetchMyFeed = createAsyncThunk(
   "feed/fetchMyFeed",
   async ({ userId, page }, thunkAPI) => {
     const response = await reqFetchMyFeed(userId, page);
-    console.log("response", response);
+    return response;
+  }
+);
+const fetchOtherFeed = createAsyncThunk(
+  "feed/fetchOtherFeed",
+  async ({ userId, page }, thunkAPI) => {
+    const response = await reqFetchOtherFeed(userId, page);
     return response;
   }
 );
@@ -40,7 +50,6 @@ const fetchAllFeed = createAsyncThunk(
   "feed/fetchAllFeed",
   async (page, thunkAPI) => {
     const response = await reqFetchcAllFeed(page);
-    console.log("response", response);
     return response;
   }
 );
@@ -90,6 +99,22 @@ const postUnlike = createAsyncThunk(
   }
 );
 
+const fetchMyFeedCount = createAsyncThunk(
+  "feed/fetchMyFeedCount",
+  async (userId, thunkAPI) => {
+    const response = await reqFetchMyFeedCount(userId);
+    return response;
+  }
+);
+
+const fetchMyPageFeedCount = createAsyncThunk(
+  "feed/fetchMyPageFeedCount",
+  async (userId, thunkAPI) => {
+    const response = await reqFetchMyFeedCount(userId);
+    return response;
+  }
+);
+
 const feedSlice = createSlice({
   name: "feed",
   initialState: initialState,
@@ -108,8 +133,8 @@ const feedSlice = createSlice({
       })
       .addCase(fetchMyFeed.fulfilled, (state, action) => {
         state.loading = "fulfilled";
+
         state.myFeed = [...state.myFeed, ...action.payload];
-        // state.myFeed = action.payload;
       })
       .addCase(fetchMyFeed.pending, (state) => {
         state.loading = "pending";
@@ -117,10 +142,22 @@ const feedSlice = createSlice({
       .addCase(fetchMyFeed.rejected, (state) => {
         state.loading = "rejected";
       })
+      .addCase(fetchOtherFeed.fulfilled, (state, action) => {
+        state.loading = "fulfilled";
+        if (action.payload === "") {
+          state.otherFeed = [];
+        }
+        state.otherFeed = [...state.otherFeed, ...action.payload];
+      })
+      .addCase(fetchOtherFeed.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(fetchOtherFeed.rejected, (state) => {
+        state.loading = "rejected";
+      })
       .addCase(fetchAllFeed.fulfilled, (state, action) => {
         state.loading = "fulfilled";
         state.allFeed = [...state.allFeed, ...action.payload];
-        // state.allFeed = action.payload;
       })
       .addCase(fetchAllFeed.pending, (state) => {
         state.loading = "pending";
@@ -146,7 +183,6 @@ const feedSlice = createSlice({
           (feed) => feed._id !== deletedFeedId
         );
       })
-
       .addCase(deleteFeed.pending, (state) => {
         state.loading = "pending";
       })
@@ -188,6 +224,26 @@ const feedSlice = createSlice({
       })
       .addCase(postUnlike.rejected, (state) => {
         state.loading = "rejected";
+      })
+      .addCase(fetchMyFeedCount.fulfilled, (state, action) => {
+        state.loading = "fulfilled";
+        state.myFeedCount = action.payload.postCount;
+      })
+      .addCase(fetchMyFeedCount.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(fetchMyFeedCount.rejected, (state) => {
+        state.loading = "rejected";
+      })
+      .addCase(fetchMyPageFeedCount.fulfilled, (state, action) => {
+        state.loading = "fulfilled";
+        state.mypageFeedCount = action.payload.postCount;
+      })
+      .addCase(fetchMyPageFeedCount.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(fetchMyPageFeedCount.rejected, (state) => {
+        state.loading = "rejected";
       });
   },
 });
@@ -195,6 +251,7 @@ const feedSlice = createSlice({
 export {
   fetchAFeed,
   fetchMyFeed,
+  fetchOtherFeed,
   fetchAllFeed,
   postBoardFeed,
   postVoteFeed,
@@ -202,5 +259,7 @@ export {
   postLike,
   postUnlike,
   deleteFeed,
+  fetchMyFeedCount,
+  fetchMyPageFeedCount,
 };
 export default feedSlice.reducer;

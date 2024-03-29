@@ -4,13 +4,11 @@ import MainLayout from "../routes/mainLayout";
 
 // pages
 import TradingPage from "../routes/Trading/TradingPage";
-import MarketInfoPage from "../routes/MarketInfo/MarketInfoPage";
 import InvestStrategyPage from "../routes/InvestStrategy/InvestStrategyPage";
 import HotStockPage from "../routes/HotStock/HotStockPage";
 import FeedPage from "../routes/Feed/FeedPage";
 import MyPage from "../routes/MyPage/MyPage";
 import SideLayout from "../routes/SideLayout";
-import ChatBot from "../routes/chatBot/chatBot";
 import SignIn from "../routes/Auth/SignIn";
 import SignUp from "../routes/Auth/SignUp";
 

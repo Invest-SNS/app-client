@@ -1,4 +1,3 @@
-import React from "react";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import {
@@ -26,6 +25,8 @@ import commentReducer from "./reducers/Feed/comment";
 import hotStockReducer from "./reducers/Hot/getStockInfo.jsx";
 import strategyReducer from "./reducers/Strategy/getStrategy.jsx";
 import tradingReducer from "./reducers/Trading/trading.jsx";
+import kospiKosdaqReducer from "./reducers/Chart/kospiKosdaq.jsx";
+import friendReducer from "./reducers/User/friend";
 
 const rootPersistConfig = {
   key: "root",
@@ -61,6 +62,8 @@ const rootReducer = persistReducer(
     comment: commentReducer,
     hot: hotStockReducer,
     strategy: strategyReducer,
+    kospiKosdaq: kospiKosdaqReducer,
+    friend: friendReducer,
   })
 );
 const myMiddlewares = [logger];

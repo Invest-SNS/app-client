@@ -1,11 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const SideNavbar = () => {
   const location = useLocation();
-  console.log(location.pathname);
 
   return (
     <Nav>
@@ -100,7 +98,6 @@ const Nav = styled.nav`
   /* z-index: 1000; */
   height: 62px;
   border-top: 1px solid #e2e2e2;
-  /* border-bottom: 1px solid #e2e2e2; */
   img {
     width: 22px;
   }

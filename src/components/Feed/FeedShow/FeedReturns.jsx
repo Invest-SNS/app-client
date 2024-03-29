@@ -1,23 +1,26 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import * as S from "../../../style/GlobalStyle";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deleteFeed,
   postLike,
   postUnlike,
 } from "../../../store/reducers/Feed/feed";
-import { useDispatch, useSelector } from "react-redux";
 import Comment from "./Comment";
 
-const FeedReturns = ({ item }) => {
-  console.log("profit", item);
+//TODO : 전체 수익률 공유 후 수정하기
+const FeedReturns = ({ item, toggleUser }) => {
+  console.log("returns", item);
   const dispatch = useDispatch();
 
   const [like, setLike] = useState(item.like);
   const [isMyLike, setIsMyLike] = useState(item.isLike);
   const [check, setCheck] = useState(false);
+
   const comments = useSelector((state) => state.comment.comments[item._id]);
   const userId = useSelector((state) => state.user.user.id);
+
   const onLike = () => {
     if (!isMyLike) {
       dispatch(postLike(item._id));
@@ -29,6 +32,7 @@ const FeedReturns = ({ item }) => {
       setIsMyLike(false);
     }
   };
+
   return (
     <>
       <S.FeedWrapper>
@@ -40,7 +44,9 @@ const FeedReturns = ({ item }) => {
           }}
         >
           <S.UserDiv>
-            <S.UserNickname>{item.user.nickname}</S.UserNickname>
+            <S.UserNickname onClick={() => toggleUser(item.user)}>
+              {item.user.nickname}
+            </S.UserNickname>
             <S.DateDiv>{item.createdAt}</S.DateDiv>
           </S.UserDiv>
           {item.user._id === userId && (

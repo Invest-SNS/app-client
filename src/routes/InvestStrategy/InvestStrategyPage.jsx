@@ -15,6 +15,12 @@ export default function InvestStrategyPage() {
     dispatch(getStrategyDatas())
   }, [])
 
+  const ecsummary = strategy.economicAnalysis?.content?.split('\n\n\n')[0];
+  const eccontent = strategy.economicAnalysis?.content?.split('\n\n\n').splice(1);
+
+  const corsummary = strategy.corporateAnalysis?.content?.split('\n\n\n')[0];
+  const corcontent = strategy.corporateAnalysis?.content?.split('\n\n\n').splice(1);
+
   return (
     <S.Container>
       <Container>
@@ -25,43 +31,69 @@ export default function InvestStrategyPage() {
         ) : (
           strategy && (
             <>
-              <MainDiv>
-                <IconImg src="https://em-content.zobj.net/source/microsoft/379/clipboard_1f4cb.png" />
-                <MainFont>{strategy.shinhanDaily?.bbs_name}</MainFont>
-              </MainDiv>
-              <FileDiv href={`${strategy.shinhanDaily?.attachment_url}`} target="_blank">
-                <FileFont>{strategy.shinhanDaily?.title}.pdf</FileFont>
-              </FileDiv>
-              <MainDiv>
-                <IconImg src="https://em-content.zobj.net/source/microsoft/379/flashlight_1f526.png" />
-                <MainFont>{strategy.marketIssue?.bbs_name}</MainFont>
-              </MainDiv>
-              <FileDiv href={`${strategy.marketIssue?.attachment_url}`} target="_blank">
-                <FileFont>{strategy.marketIssue?.title}.pdf</FileFont>
-              </FileDiv>
-              {/* <ContentFont>{decode(strategy.marketIssue?.content)}</ContentFont> */}
-              {strategy.marketIssue?.content.split('\n\n')[0].split('\n').map((item, idx) => 
-                <SubDiv key={idx}>
-                  <span>•</span>
-                  <SubFont key={idx}>{decode(item)}</SubFont>
-                </SubDiv>
-              )}
-              <MainDiv>
-                <IconImg src="https://em-content.zobj.net/source/microsoft/379/chart-increasing_1f4c8.png" />
-                <MainFont>{strategy.economicAnalysis?.bbs_name}</MainFont>
-              </MainDiv>
-              <FileDiv href={`${strategy.economicAnalysis?.attachment_url}`} target="_blank">
-                <FileFont>{strategy.economicAnalysis?.title}.pdf</FileFont>
-              </FileDiv>
-              <ContentFont>{decode(strategy.economicAnalysis?.content)}</ContentFont>
-              <MainDiv>
-                <IconImg src="https://em-content.zobj.net/source/microsoft/379/memo_1f4dd.png" />
-                <MainFont>{strategy.corporateAnalysis?.bbs_name}</MainFont>
-              </MainDiv>
-              <FileDiv href={`${strategy.corporateAnalysis?.attachment_url}`} target="_blank">
-                <FileFont>{strategy.corporateAnalysis?.title}.pdf</FileFont>
-              </FileDiv>
-              <ContentFont>{decode(strategy.corporateAnalysis?.content)}</ContentFont>
+              <Content>
+                <MainDiv>
+                  <IconImg src="https://em-content.zobj.net/source/microsoft/379/clipboard_1f4cb.png" />
+                  <MainFont>{strategy.shinhanDaily?.bbs_name}</MainFont>
+                </MainDiv>
+                <FileDiv href={`${strategy.shinhanDaily?.attachment_url}`} target="_blank">
+                  <FileFont>{strategy.shinhanDaily?.title}.pdf</FileFont>
+                </FileDiv>
+              </Content>
+              <Content>
+                <MainDiv>
+                  <IconImg src="https://em-content.zobj.net/source/microsoft/379/flashlight_1f526.png" />
+                  <MainFont>{strategy.marketIssue?.bbs_name}</MainFont>
+                </MainDiv>
+                <FileDiv href={`${strategy.marketIssue?.attachment_url}`} target="_blank">
+                  <FileFont>{strategy.marketIssue?.title}.pdf</FileFont>
+                </FileDiv>
+                {/* <ContentFont>{decode(strategy.marketIssue?.content)}</ContentFont> */}
+                {strategy.marketIssue?.content.split('\n\n')[0]?.split('\n').map((item, idx) => 
+                  <SubDiv key={idx}>
+                    <span>•</span>
+                    <SubFont key={idx}>{decode(item)}</SubFont>
+                  </SubDiv>
+                )}
+              </Content>
+              <Content>
+                <MainDiv>
+                  <IconImg src="https://em-content.zobj.net/source/microsoft/379/chart-increasing_1f4c8.png" />
+                  <MainFont>{strategy.economicAnalysis?.bbs_name}</MainFont>
+                </MainDiv>
+                <FileDiv href={`${strategy.economicAnalysis?.attachment_url}`} target="_blank">
+                  <FileFont>{strategy.economicAnalysis?.title}.pdf</FileFont>
+                </FileDiv>
+                {ecsummary?.split('\n').map((item, idx) =>
+                  <SubDiv key={idx}>
+                    <span>•</span>
+                    <SubFont key={idx}>{decode(item)}</SubFont>
+                  </SubDiv>
+                )}
+                <br/>
+                {eccontent?.map((item, idx) =>
+                  <ContentFont key={idx}>{decode(item)}</ContentFont>
+                )}
+              </Content>
+              <Content>
+                <MainDiv>
+                  <IconImg src="https://em-content.zobj.net/source/microsoft/379/memo_1f4dd.png" />
+                  <MainFont>{strategy.corporateAnalysis?.bbs_name}</MainFont>
+                </MainDiv>
+                <FileDiv href={`${strategy.corporateAnalysis?.attachment_url}`} target="_blank">
+                  <FileFont>{strategy.corporateAnalysis?.title}.pdf</FileFont>
+                </FileDiv>
+                {corsummary?.split('\n').map((item, idx) =>
+                  <SubDiv key={idx}>
+                    <span>•</span>
+                    <SubFont key={idx}>{decode(item)}</SubFont>
+                  </SubDiv>
+                )}
+                <br/>
+                {corcontent?.map((item, idx) =>
+                  <ContentFont key={idx}>{decode(item)}</ContentFont>
+                )}
+              </Content>
             </>
           )
         )}
@@ -88,6 +120,10 @@ const Container = styled.div`
     background: rgba(0, 0, 0, 0.05);
     border-radius: 20px;
   }
+`
+
+const Content = styled.div`
+  padding: 0 0 20px 0;
 `
 
 const MainDiv = styled.div`
@@ -126,7 +162,7 @@ const SubDiv = styled.div`
 `
 
 const SubFont = styled.div`
-  word-break: keep-all;
+  // word-break: keep-all;
   font-weight: 600;
   font-size: 15px;
 `
@@ -134,7 +170,7 @@ const SubFont = styled.div`
 const ContentFont = styled.div`
   // box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
   white-space: pre-line;
-  padding: 10px 20px;
+  padding: 10px 25px;
   font-size: 15px;
   font-weight: 600;
   color: rgba(0, 0, 0, 0.8)

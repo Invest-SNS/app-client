@@ -7,45 +7,55 @@ export const postSearch = async (searchQuery) => {
       searchQuery,
     });
     const data = response.data;
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
   }
 };
 
-export const postSearchUser = async (searchQuery) => {
+export const postSearchUser = async (searchQuery, userId) => {
   const baseUrl = "/stockCode/userSearch";
   try {
-    const response = await baseUserInstance.post(baseUrl, {
+    const response = await baseInstance.post(baseUrl, {
       searchQuery,
+      userId,
     });
     const data = response.data;
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
   }
 };
 
-export const postLikeStock = async (likeStock) => {
+export const postLikeStock = async (likeStock, userId) => {
   const baseUrl = "/stockCode/likeStock";
   try {
-    const response = await baseUserInstance.post(baseUrl, {
+    const response = await baseInstance.post(baseUrl, {
       likeStock,
+      userId,
     });
     const data = response.data.likeStock;
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
   }
 };
 
-export const fetchLikeStock = async () => {
-  const baseUrl = `/stockCode/likeStock`;
+export const fetchLikeStock = async (userId) => {
+  const baseUrl = `/stockCode/likeStock/${userId}`;
   try {
-    const response = await baseUserInstance.get(baseUrl);
+    const response = await baseInstance.get(baseUrl);
+    const data = response.data;
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const fetchLikeStockArr = async (userId) => {
+  const baseUrl = `/stockCode/likeStockArr/${userId}`;
+  try {
+    const response = await baseInstance.get(baseUrl);
     const data = response.data;
     return data;
   } catch (err) {

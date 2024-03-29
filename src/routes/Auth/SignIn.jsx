@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import LogoIcon from '../../../public/icon/logo.svg';
-import EmailIcon from '../../../public/icon/email.svg';
-import PasswordIcon from '../../../public/icon/password.svg';
-import { useDispatch } from "react-redux";
+import LogoIcon from "../../../public/icon/logo.svg";
+import { useDispatch, useSelector } from "react-redux";
 import { postLogin, setUser } from "../../store/reducers/User/user";
+import { getCookie } from "../../lib/apis/cookie";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -18,33 +17,28 @@ const SignIn = () => {
     e.preventDefault();
     const data = {
       email,
-      password
-    }
-    dispatch(postLogin(data))
-      .then((res) => {
-        console.log(res.payload)
-        if (res.payload.status === 201) {
-          console.log('여기')
-          dispatch(setUser(res.payload.data));
-          navigate('/');
-        } else {
-          setError("이메일 혹은 비밀번호가 옳지 않습니다.");
-        }
-      })
-
+      password,
+    };
+    dispatch(postLogin(data)).then((res) => {
+      if (res.payload.status === 201) {
+        dispatch(setUser(res.payload.data));
+        navigate("/");
+      } else {
+        setError("이메일 혹은 비밀번호가 옳지 않습니다.");
+      }
+    });
     setEmail("");
     setPassword("");
   };
 
   return (
-    <SignupContainer>
+    <SigninContainer>
       <LogoDiv>
         <img src={LogoIcon} style={{ width: 60 }} />
         <span>StockMate</span>
       </LogoDiv>
       <Form onSubmit={(e) => onLogin(e)}>
         <Label>
-          {/* <Img src={EmailIcon} alt="이메일" /> */}
           <StyledInput
             type="text"
             placeholder="✉️   이메일"
@@ -53,7 +47,6 @@ const SignIn = () => {
           ></StyledInput>
         </Label>
         <Label>
-          {/* <Img src={PasswordIcon} alt="비밀번호" /> */}
           <StyledInput
             type="password"
             placeholder="🔗   비밀번호"
@@ -65,22 +58,22 @@ const SignIn = () => {
         <StyledButton type="submit">로그인</StyledButton>
       </Form>
       {error && <ErrorFont>이메일 혹은 비밀번호가 옳지 않습니다.</ErrorFont>}
-      <div style={{ display: 'flex', gap: '20px' }}>
+      <div style={{ display: "flex", gap: "20px" }}>
         <NavDiv onClick={() => navigate("/")}>홈으로</NavDiv>
         <NavDiv>|</NavDiv>
         <NavDiv onClick={() => navigate("/signup")}>회원가입</NavDiv>
       </div>
-    </SignupContainer>
+    </SigninContainer>
   );
 };
 export default SignIn;
 
-const SignupContainer = styled.div`
+const SigninContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 42px);
+  height: 100vh;
   gap: 32px;
 
   @media (max-width: 500px) {
@@ -102,22 +95,18 @@ const Label = styled.label`
   background: #f4f5f7;
 `;
 
-const Img = styled.img`
-  margin: 0 30px;
-  width: 20px;
-`;
-
 const StyledInput = styled.input`
   width: 400px;
   height: 60px;
   background: #f4f5f7;
   border: none;
+  box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.1);
   font-size: 18px;
   font-weight: 400;
   padding: 0 30px;
 
   &::placeholder {
-    color: rgba(186, 186, 186, 0.9);
+    color: rgba(160, 160, 160, 0.8);
   }
 
   &:focus {
@@ -129,12 +118,17 @@ const StyledButton = styled.button`
   border-radius: 16px;
   border: none;
   background: #FFE3D7;
-  width: 409px;
+  width: 404px;
   height: 55px;
   color: #000;
   text-align: center;
   font-size: 18px;
   font-weight: 400;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    background-color: #ffcfba;
+  }
 `;
 
 const NavDiv = styled.div`
@@ -145,6 +139,7 @@ const NavDiv = styled.div`
 
   &:hover {
     cursor: pointer;
+    color: #FF7D75;
   }
 `;
 
@@ -152,10 +147,10 @@ const LogoDiv = styled.div`
   display: flex;
   align-items: center;
   font-size: 32px;
-  font-weight: 100;
+  font-weight: 200;
   gap: 10px;
-`
+`;
 
 const ErrorFont = styled.span`
   color: #ff3333;
-`
+`;

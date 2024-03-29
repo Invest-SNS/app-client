@@ -1,58 +1,48 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import * as S from "../../style/GlobalStyle";
-
 import FeedWriting from "~/components/Feed/FeedWriting";
 import Feed from "../../components/Feed/FeedShow/Feed";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getCookie } from "../../lib/apis/cookie";
+import LogoIcon from "../../../public/icon/logo.svg";
 
 const FeedPage = () => {
   const [isWrite, setIsWrite] = useState(false);
   const location = useLocation();
   const path = location.pathname;
+  const isLogin = !!getCookie("token");
+  const navigate = useNavigate();
   const write = () => {
     setIsWrite(true);
   };
 
-  const getLogoFileName = (name, code) => {
-    if (name.includes("스팩")) {
-      return "SPAC_230706";
-    } else if (name.includes("ETN")) {
-      return "ETN_230706";
-    } else if (
-      name.includes("KODEX") ||
-      name.includes("KOSEF") ||
-      name.includes("KoAct") ||
-      name.includes("TIGER") ||
-      name.includes("ACE") ||
-      name.includes("ARIRANG") ||
-      name.includes("합성 H") ||
-      name.includes("HANARO") ||
-      name.includes("SOL")
-    ) {
-      return "ETF_230706";
-    } else {
-      return `kr/${code}`;
-    }
-  };
-/*
-  const onErrorImg = (e) => {
-    e.target.src = default_Img;
-    };
-*/
   return (
     <S.Container>
-      {isWrite ? (
-        <FeedWriting setIsWrite={setIsWrite} />
+      {isLogin ? (
+        <>
+          {isWrite ? (
+            <FeedWriting setIsWrite={setIsWrite} />
+          ) : (
+            <WritingContainer onClick={write}>
+              <img
+                src="/icon/user.svg"
+                alt="프로필"
+                style={{ width: "45px" }}
+              />
+              <InputDiv>무슨 생각을 하고 계신가요?</InputDiv>
+            </WritingContainer>
+          )}
+          <FeedContainer>
+            <Feed path={path} friendId="" />
+          </FeedContainer>
+        </>
       ) : (
-        <WritingContainer onClick={write}>
-          <img src="/icon/user.svg" alt="프로필" style={{ width: "45px" }} />
-          <InputDiv>무슨 생각을 하고 계신가요?</InputDiv>
-        </WritingContainer>
+        <S.Wrapper>
+          <img src={LogoIcon} width={50} onClick={() => navigate("/signin")} />
+          로그인을 해주세요.
+        </S.Wrapper>
       )}
-      <FeedContainer>
-        <Feed path={path} />
-      </FeedContainer>
     </S.Container>
   );
 };
@@ -89,8 +79,7 @@ const InputDiv = styled.div`
 const FeedContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* height: 100%; */
-  overflow: scroll;
+  overflow: auto;
   &::-webkit-scrollbar {
     display: none;
   }

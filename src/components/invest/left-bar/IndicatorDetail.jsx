@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import * as chartValuesModule from "../../../store/reducers/Trading/chartValues";
 import * as indicatorValuesModule from "../../../store/reducers/Trading/indicatorValues";
-import { setChartDatas } from "../../../store/reducers/Chart/chart";
 
 const IndicatorDetail = ({
   indiType,
@@ -220,7 +219,6 @@ const VarInput = styled.input`
   border: 0.5px solid black;
   text-align: center;
 
-  /* 화살표 숨기기 */
   -webkit-appearance: none;
   -moz-appearance: textfield;
   appearance: none;
