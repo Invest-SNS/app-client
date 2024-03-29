@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import IndicatorDetail from "./IndicatorDetail";
-// import chartData from "../../../../public/Json/chartData.json";
-import chartData from '../../../Json/chartData.json'
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveSub, setChartIndi, setDisactiveSub } from "../../../store/reducers/Chart/Indicators/clickIndicators";
+import {
+  setActiveSub,
+  setChartIndi,
+  setDisactiveSub,
+} from "../../../store/reducers/Chart/Indicators/clickIndicators";
+import IndicatorDetail from "./IndicatorDetail";
+import chartData from "../../../Json/chartData.json";
 
 const ChartIndicators = ({ onClose }) => {
+  const dispatch = useDispatch();
+
   const [showDetail, setShowDetail] = useState(
     Array(chartData.length).fill(false)
   );
@@ -19,32 +24,33 @@ const ChartIndicators = ({ onClose }) => {
     });
   };
 
-  const dispatch = useDispatch();
   const isActive = useSelector((state) => state.clickIndicator);
   const chartIndi = useSelector((state) => state.clickIndicator.chartIndi);
+
   // 1️⃣ onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
   const onCheckedElement = (checked, item) => {
     if (chartIndi.length < 3) {
       if (checked) {
-        dispatch(setActiveSub(item))
-        dispatch(setChartIndi([...chartIndi, item]))
+        dispatch(setActiveSub(item));
+        dispatch(setChartIndi([...chartIndi, item]));
       }
     } else {
       if (checked) {
-        dispatch(setActiveSub(item))
-        dispatch(setChartIndi([...chartIndi.filter((el, idx) => idx !== 0), item]))
-        dispatch(setDisactiveSub(chartIndi[0]))
+        dispatch(setActiveSub(item));
+        dispatch(
+          setChartIndi([...chartIndi.filter((el, idx) => idx !== 0), item])
+        );
+        dispatch(setDisactiveSub(chartIndi[0]));
       }
     }
 
     if (!checked) {
-      dispatch(setDisactiveSub(item))
-      dispatch(setChartIndi(chartIndi.filter(el => el !== item)))
+      dispatch(setDisactiveSub(item));
+      dispatch(setChartIndi(chartIndi.filter((el) => el !== item)));
     }
   };
 
   return (
-    
     <Container>
       <IndicatorsWrapper>
         <IndicatorDiv>차트지표</IndicatorDiv>
@@ -53,11 +59,11 @@ const ChartIndicators = ({ onClose }) => {
       <ItemContainer>
         {chartData.map((item, idx) => (
           <ItemWrapper key={item.id}>
-            <CheckBox 
+            <CheckBox
               type="checkbox"
               value={item.name}
               checked={isActive[item.name]}
-              onChange={e => {
+              onChange={(e) => {
                 onCheckedElement(e.target.checked, e.target.value);
               }}
             ></CheckBox>
