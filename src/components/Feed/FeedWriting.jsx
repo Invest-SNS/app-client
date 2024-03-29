@@ -1,17 +1,18 @@
 import React, { useState, useRef, useCallback } from "react";
 import styled from "styled-components";
-import { postBoardFeed, postVoteFeed } from "../../store/reducers/Feed/feed";
 import { useDispatch, useSelector } from "react-redux";
+import { postBoardFeed, postVoteFeed } from "../../store/reducers/Feed/feed";
 
+//TODO : S3 연결 후 사진 확인
 const FeedWriting = ({ setIsWrite }) => {
+  const dispatch = useDispatch();
+
   const inputRef = useRef();
   const [previewImage, setPreviewImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [body, setBody] = useState("");
-
   const [isVote, setIsVote] = useState(false);
 
-  const dispatch = useDispatch();
   const userNickname = useSelector((state) => state.user.user.nickname);
 
   const onUploadImage = useCallback((e) => {
@@ -55,13 +56,12 @@ const FeedWriting = ({ setIsWrite }) => {
         dispatch(postBoardFeed(formData));
         window.location.reload();
       }
-      for (let key of formData.keys()) {
-        console.log(key);
-      }
-
-      for (let value of formData.values()) {
-        console.log(value);
-      }
+      // for (let key of formData.keys()) {
+      //   console.log(key);
+      // }
+      // for (let value of formData.values()) {
+      //   console.log(value);
+      // }
     } catch (err) {
       console.error(err);
     }

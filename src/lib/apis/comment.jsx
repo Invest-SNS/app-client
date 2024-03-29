@@ -5,7 +5,6 @@ export const fetchComments = async (feedId) => {
   try {
     const response = await baseUserInstance.get(baseUrl);
     const data = response.data;
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -17,7 +16,6 @@ export const postComment = async (feedId, content) => {
   try {
     const response = await baseUserInstance.post(baseUrl, { content });
     const data = response.data;
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -29,7 +27,6 @@ export const putComment = async (commentId, content) => {
   try {
     const response = await baseUserInstance.put(baseUrl, { content });
     const data = response.data;
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -41,7 +38,6 @@ export const deleteComment = async (commentId) => {
   try {
     const response = await baseUserInstance.delete(baseUrl);
     const data = response.data;
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);

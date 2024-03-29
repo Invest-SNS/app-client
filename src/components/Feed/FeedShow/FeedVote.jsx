@@ -9,24 +9,23 @@ import {
   postVote,
 } from "../../../store/reducers/Feed/feed";
 
-const FeedVote = ({ page, path, item }) => {
-  console.log("vote", item);
+const FeedVote = ({ page, path, item, toggleUser }) => {
+  const dispatch = useDispatch();
+
   const [isMyVote, setIsMyVote] = useState(item.myVote);
   const [O, setO] = useState(item.vote.yes);
   const [X, setX] = useState(item.vote.no);
-  const dispatch = useDispatch();
+
   const userId = useSelector((state) => state.user.user.id);
 
   const onVote = (vote) => {
     dispatch(postVote({ feedId: item._id, voteResult: vote }));
-    console.log("path", path);
     setIsMyVote(true);
     if (vote === "yes") {
       setO((prev) => prev + 1);
     } else {
       setX((prev) => prev + 1);
     }
-
     if (path == "/feed") {
       dispatch(fetchAllFeed(page));
     } else if (path == "/mypage" && userId) {
@@ -50,7 +49,9 @@ const FeedVote = ({ page, path, item }) => {
             }}
           >
             <S.UserDiv>
-              <S.UserNickname>{item.user.nickname}</S.UserNickname>
+              <S.UserNickname onClick={() => toggleUser(item.user)}>
+                {item.user.nickname}
+              </S.UserNickname>
               <S.DateDiv>{item.createdAt}</S.DateDiv>
             </S.UserDiv>
             {item.user._id === userId && (
@@ -94,7 +95,9 @@ const FeedVote = ({ page, path, item }) => {
             }}
           >
             <S.UserDiv>
-              <S.UserNickname>{item.user.nickname}</S.UserNickname>
+              <S.UserNickname onClick={() => toggleUser(item.user)}>
+                {item.user.nickname}
+              </S.UserNickname>
               <S.DateDiv>{item.createdAt}</S.DateDiv>
             </S.UserDiv>
             {item.user._id === userId && (
@@ -127,11 +130,6 @@ const FeedVote = ({ page, path, item }) => {
           </S.BodyWrapper>
         </S.FeedWrapper>
       )}
-      {/* {isMyVote ? (
-        
-      ) : (
-        
-      )} */}
     </>
   );
 };
@@ -144,6 +142,9 @@ const ButtonWrapper = styled.div`
 `;
 
 const VoteBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 150px;
   height: 44px;
   border: none;

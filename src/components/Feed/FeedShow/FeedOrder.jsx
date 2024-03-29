@@ -1,51 +1,27 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import * as S from "../../../style/GlobalStyle";
-import Comment from "./Comment";
-
-//TODO : 로고 사진 변경
-import default_Img from "/icon/+.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteFeed,
   postLike,
   postUnlike,
 } from "../../../store/reducers/Feed/feed";
+import { getLogoFileName, onErrorImg } from "~/util/getLogoFileName";
+import Comment from "./Comment";
 
-const FeedOrder = ({ item }) => {
+//TODO : 매수 매도 후 수정하기
+const FeedOrder = ({ item, toggleUser }) => {
   console.log("order", item);
-  const [check, setCheck] = useState(false);
-  const comments = useSelector((state) => state.comment.comments[item._id]);
-  const userId = useSelector((state) => state.user.user.id);
-  const getLogoFileName = (name, code) => {
-    if (name.includes("스팩")) {
-      return "SPAC_230706";
-    } else if (name.includes("ETN")) {
-      return "ETN_230706";
-    } else if (
-      name.includes("KODEX") ||
-      name.includes("KOSEF") ||
-      name.includes("KoAct") ||
-      name.includes("TIGER") ||
-      name.includes("ACE") ||
-      name.includes("ARIRANG") ||
-      name.includes("합성 H") ||
-      name.includes("HANARO") ||
-      name.includes("SOL")
-    ) {
-      return "ETF_230706";
-    } else {
-      return `kr/${code}`;
-    }
-  };
-
-  const onErrorImg = (e) => {
-    e.target.src = default_Img;
-  };
-
   const dispatch = useDispatch();
+
+  const [check, setCheck] = useState(false);
   const [like, setLike] = useState(item.like);
   const [isMyLike, setIsMyLike] = useState(item.isLike);
+
+  const comments = useSelector((state) => state.comment.comments[item._id]);
+  const userId = useSelector((state) => state.user.user.id);
+
   const onLike = () => {
     if (!isMyLike) {
       dispatch(postLike(item._id));
@@ -57,6 +33,7 @@ const FeedOrder = ({ item }) => {
       setIsMyLike(false);
     }
   };
+
   return (
     <>
       <S.FeedWrapper>
@@ -68,7 +45,9 @@ const FeedOrder = ({ item }) => {
           }}
         >
           <S.UserDiv>
-            <S.UserNickname>{item.user.nickname}</S.UserNickname>
+            <S.UserNickname onClick={() => toggleUser(item.user)}>
+              {item.user.nickname}
+            </S.UserNickname>
             <S.DateDiv>{item.createdAt}</S.DateDiv>
           </S.UserDiv>
           {item.user._id === userId && (
