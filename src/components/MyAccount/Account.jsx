@@ -88,21 +88,21 @@ const EvaluatedAssetsWrapper = styled.div`
   padding: 0px 5px 15px 5px;
 `;
 const EADiv = styled.div`
-  font-size: 16px;
+  font-size: 17px;
 `;
 const EAValue = styled.div``;
 const RowDiv = styled.div`
   display: flex;
   flex-direction: row;
   gap: 20px;
-  padding: 10px 5px 0px 5px;
+  padding: 10px 0px 0px 0px;
 `;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 50%;
-  font-size: 16px;
+  font-size: 14.5px;
 `;
 const Div = styled.div``;
 const ValueDiv = styled.div`
