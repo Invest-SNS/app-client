@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { styled } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { postSearchFriend } from "../../store/reducers/User/friend";
-import UserPage from "./UserPage";
+import UserDetail from "./UserDetail";
 
 const FriendSearch = ({ onClose }) => {
   const searchRef = useRef(null);
@@ -63,14 +63,11 @@ const FriendSearch = ({ onClose }) => {
                   <SearchResult key={item._id} onClick={() => toggleUser(item)}>
                     {item.nickname}
                   </SearchResult>
-                  <DetailContainers $showuser={selectedFriend === item}>
-                    {selectedFriend === item && (
-                      <UserPage
-                        item={selectedFriend}
-                        onClose={() => setSelectedFriend(null)}
-                      />
-                    )}
-                  </DetailContainers>
+                  <UserDetail
+                    item={item}
+                    selectedFriend={selectedFriend}
+                    func={setSelectedFriend}
+                  />
                 </div>
               ))}
             </SearchResults>
@@ -152,17 +149,4 @@ const SearchResult = styled.li`
   }
 `;
 
-const DetailContainers = styled.div`
-  width: 400px;
-  height: 100%;
-  background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(${(props) => (props.$showuser ? "0" : "100%")});
-  transition: transform 0.3s ease;
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  z-index: 999;
-`;
 export default FriendSearch;

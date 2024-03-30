@@ -8,7 +8,7 @@ import {
   postComment,
   deleteComment,
 } from "../../../store/reducers/Feed/comment";
-import UserPage from "../../MyPage/UserPage";
+import UserDetail from "../../MyPage/UserDetail";
 
 const Comment = ({ feedId }) => {
   const dispatch = useDispatch();
@@ -84,13 +84,11 @@ const Comment = ({ feedId }) => {
                 </DeleteDiv>
               )}
             </Div>
-            <DetailContainers $showuser={selectedFriend == item.user}>
-              {selectedFriend === item.user && (
-                <>
-                  <UserPage item={item.user} onClose={() => toggleUser(null)} />
-                </>
-              )}
-            </DetailContainers>
+            <UserDetail
+              item={item.user}
+              selectedFriend={selectedFriend}
+              func={toggleUser}
+            />
           </div>
         ))}
       {!showAll && totalComments > currentPage * commentsPerPage ? (
@@ -111,7 +109,7 @@ const Comment = ({ feedId }) => {
           <ShowMoreButton onClick={handleFirstPage}>접기</ShowMoreButton>
         </>
       )}
-      <WriteDiv>
+      <WriteDiv $totalComments={totalComments}>
         <TextareaAutosize
           placeholder="댓글 입력하기"
           className="textarea"
@@ -169,7 +167,8 @@ const WriteDiv = styled.div`
   justify-content: center;
   gap: 5%;
   margin: 0px 25px 10px 25px;
-  border-top: 1px solid #dadada;
+  border-top: ${(props) =>
+    props.$totalComments != 0 ? "1px solid #dadada" : null};
   padding-top: 10px;
 
   .textarea {
@@ -204,20 +203,6 @@ const ShowMoreButton = styled.button`
   background: none;
   color: #a5a4a4;
   padding-left: 0px;
-`;
-
-const DetailContainers = styled.div`
-  width: 400px;
-  height: 100%;
-  background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(${(props) => (props.$showuser ? "0" : "100%")});
-  transition: transform 0.3s ease;
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  z-index: 999;
 `;
 
 export default Comment;
