@@ -125,3 +125,16 @@ export const fetchMyFeedCount = async (userId) => {
     console.error(err);
   }
 };
+
+export const postMyProfit = async (profit) => {
+  const baseUrl = "/feed/profit";
+  try {
+    const response = await baseUserInstance.post(baseUrl, {
+      profit,
+    });
+    const data = response.data;
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};

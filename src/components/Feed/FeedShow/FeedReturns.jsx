@@ -10,7 +10,7 @@ const FeedReturns = ({ item, toggleUser }) => {
         <S.BodyCenter>
           <S.StockWrapper $buy="returns">
             <S.StockDiv $margin="0px">나의 전체 수익률은?</S.StockDiv>
-            <ReturnDiv $returns={item.profit}>{item.profit}</ReturnDiv>
+            <ReturnDiv $returns={item.profit}>{item.profit}%</ReturnDiv>
           </S.StockWrapper>
         </S.BodyCenter>
       </S.BodyWrapper>

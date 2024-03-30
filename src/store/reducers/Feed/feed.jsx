@@ -11,6 +11,7 @@ import {
   postLike as reqPostLike,
   postUnlike as reqPostUnlike,
   fetchMyFeedCount as reqFetchMyFeedCount,
+  postMyProfit as reqPostMyProfit,
 } from "~/lib/apis/feed";
 
 const initialState = {
@@ -111,6 +112,14 @@ const fetchMyPageFeedCount = createAsyncThunk(
   "feed/fetchMyPageFeedCount",
   async (userId, thunkAPI) => {
     const response = await reqFetchMyFeedCount(userId);
+    return response;
+  }
+);
+
+const postMyProfit = createAsyncThunk(
+  "feed/postMyProfit",
+  async (profit, thunkAPI) => {
+    const response = await reqPostMyProfit(profit);
     return response;
   }
 );
@@ -265,5 +274,6 @@ export {
   deleteFeed,
   fetchMyFeedCount,
   fetchMyPageFeedCount,
+  postMyProfit,
 };
 export default feedSlice.reducer;

@@ -7,6 +7,7 @@ import { onErrorImg } from "~/util/getLogoFileName";
 
 // TODO : 공유 후 수정
 const FeedOrder = ({ item, toggleUser }) => {
+  console.log("order", item);
   return (
     <FeedLayout item={item} toggleUser={toggleUser}>
       <S.BodyWrapper>
