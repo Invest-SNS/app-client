@@ -3,6 +3,7 @@ import FeedLayout from "./FeedLayout";
 import styled from "styled-components";
 import * as S from "../../../style/GlobalStyle";
 
+//TODO: S3
 const FeedBoard = ({ item, toggleUser }) => {
   return (
     <FeedLayout item={item} toggleUser={toggleUser}>

@@ -63,7 +63,7 @@ const ShareContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(100vh - 525px);
+  height: calc(100vh - 550px);
   overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;
@@ -77,7 +77,6 @@ const ShareItem = styled.div`
   align-items: center;
   padding: 10px;
   margin: 7px 15px;
-  border: 1px solid #c4c4c4;
 `;
 
 const ColumnDiv = styled.div`

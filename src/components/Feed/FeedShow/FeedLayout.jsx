@@ -31,54 +31,52 @@ const FeedLayout = ({ item, toggleUser, children }) => {
   };
 
   return (
-    <>
-      <S.FeedWrapper>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <S.UserDiv>
-            <S.UserNickname onClick={() => toggleUser(item.user)}>
-              {item.user.nickname}
-            </S.UserNickname>
-            <S.DateDiv>{item.createdAt}</S.DateDiv>
-          </S.UserDiv>
-          {item.user._id === userId && (
-            <S.DeleteDiv onClick={() => dispatch(deleteFeed(item._id))}>
-              삭제
-            </S.DeleteDiv>
-          )}
-        </div>
-        {children}
-        <S.BottomWrapper>
-          <S.IconDiv>
+    <S.FeedWrapper>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <S.UserDiv>
+          <S.UserNickname onClick={() => toggleUser(item.user)}>
+            {item.user.nickname}
+          </S.UserNickname>
+          <S.DateDiv>{item.createdAt}</S.DateDiv>
+        </S.UserDiv>
+        {item.user._id === userId && (
+          <S.DeleteDiv onClick={() => dispatch(deleteFeed(item._id))}>
+            삭제
+          </S.DeleteDiv>
+        )}
+      </div>
+      {children}
+      <S.BottomWrapper>
+        <S.IconDiv>
+          <img
+            src={isMyLike ? "/icon/FilledHeart.svg" : "/icon/Heart.svg"}
+            alt="좋아요"
+            style={{ width: "25px", marginRight: "8px" }}
+            onClick={onLike}
+          />
+          <div>{like}</div>
+        </S.IconDiv>
+        <div>
+          <S.IconDiv onClick={() => setCheck((prev) => !prev)}>
             <img
-              src={isMyLike ? "/icon/FilledHeart.svg" : "/icon/Heart.svg"}
-              alt="좋아요"
-              style={{ width: "25px", marginRight: "8px" }}
-              onClick={onLike}
+              src="/icon/Comment.svg"
+              alt="댓글"
+              style={{ width: "30px", marginRight: "5px" }}
             />
-            <div>{like}</div>
+            <S.CommentDiv $check={check}>
+              {comments ? comments?.length : item.commentsCount}
+            </S.CommentDiv>
           </S.IconDiv>
-          <div>
-            <S.IconDiv onClick={() => setCheck((prev) => !prev)}>
-              <img
-                src="/icon/Comment.svg"
-                alt="댓글"
-                style={{ width: "30px", marginRight: "5px" }}
-              />
-              <S.CommentDiv $check={check}>
-                {comments ? comments?.length : item.commentsCount}
-              </S.CommentDiv>
-            </S.IconDiv>
-          </div>
-        </S.BottomWrapper>
-        {check ? <Comment feedId={item._id} /> : <></>}
-      </S.FeedWrapper>
-    </>
+        </div>
+      </S.BottomWrapper>
+      {check ? <Comment feedId={item._id} /> : <></>}
+    </S.FeedWrapper>
   );
 };
 

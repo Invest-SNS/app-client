@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import * as S from "../../../style/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllFeed,
@@ -15,8 +16,6 @@ const FeedVote = ({ page, path, item, toggleUser }) => {
   const [O, setO] = useState(item.vote.yes);
   const [X, setX] = useState(item.vote.no);
 
-  const userId = useSelector((state) => state.user.user.id);
-
   const onVote = (vote) => {
     dispatch(postVote({ feedId: item._id, voteResult: vote }));
     setIsMyVote(true);
@@ -24,11 +23,6 @@ const FeedVote = ({ page, path, item, toggleUser }) => {
       setO((prev) => prev + 1);
     } else {
       setX((prev) => prev + 1);
-    }
-    if (path == "/feed") {
-      dispatch(fetchAllFeed(page));
-    } else if (path == "/mypage" && userId) {
-      dispatch(fetchMyFeed(userId, page));
     }
   };
 
@@ -38,39 +32,44 @@ const FeedVote = ({ page, path, item, toggleUser }) => {
 
   return (
     <FeedLayout item={item} toggleUser={toggleUser}>
-      {!isMyVote ? (
-        <ButtonWrapper>
-          <VoteBtn
-            color="#bee4ff"
-            $hover="#74c5ff"
-            onClick={() => onVote("yes")}
-          >
-            O
-          </VoteBtn>
-          <VoteBtn
-            color="#FFE3D7"
-            $hover="#ff9a6f"
-            onClick={() => onVote("no")}
-          >
-            X
-          </VoteBtn>
-        </ButtonWrapper>
-      ) : (
-        <OXWrapper>
-          <OXDiv>
-            O<br />
-            {calc(O)}%
-          </OXDiv>
-          <BarDiv>
-            <ODiv $width={calc(O)}></ODiv>
-            <XDiv $width={calc(X)}></XDiv>
-          </BarDiv>
-          <OXDiv>
-            X<br />
-            {calc(X)}%
-          </OXDiv>
-        </OXWrapper>
-      )}
+      <S.BodyWrapper>
+        <S.BodyCenter>
+          <S.BodyDiv $weight="550">{item.body}</S.BodyDiv>
+          {!isMyVote ? (
+            <ButtonWrapper>
+              <VoteBtn
+                color="#bee4ff"
+                $hover="#74c5ff"
+                onClick={() => onVote("yes")}
+              >
+                O
+              </VoteBtn>
+              <VoteBtn
+                color="#FFE3D7"
+                $hover="#ff9a6f"
+                onClick={() => onVote("no")}
+              >
+                X
+              </VoteBtn>
+            </ButtonWrapper>
+          ) : (
+            <OXWrapper>
+              <OXDiv>
+                O<br />
+                {calc(O)}%
+              </OXDiv>
+              <BarDiv>
+                <ODiv $width={calc(O)}></ODiv>
+                <XDiv $width={calc(X)}></XDiv>
+              </BarDiv>
+              <OXDiv>
+                X<br />
+                {calc(X)}%
+              </OXDiv>
+            </OXWrapper>
+          )}
+        </S.BodyCenter>
+      </S.BodyWrapper>
     </FeedLayout>
   );
 };
@@ -79,7 +78,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   gap: 30px;
   margin-bottom: 25px;
-  margin-top: 45px;
+  margin-top: 5px;
   justify-content: center;
 `;
 
@@ -134,7 +133,7 @@ const OXWrapper = styled.div`
   display: flex;
   gap: 10px;
   margin-bottom: 25px;
-  margin-top: 45px;
+  margin-top: 5px;
   justify-content: center;
 `;
 

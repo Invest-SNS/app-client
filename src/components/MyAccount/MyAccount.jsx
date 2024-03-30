@@ -24,5 +24,6 @@ const Container = styled.div`
   align-items: center;
   background-color: white;
   width: 100%;
+  overflow: hidden;
 `;
 export default MyAccount;
