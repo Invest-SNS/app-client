@@ -5,9 +5,9 @@ import * as S from "../../../style/GlobalStyle";
 import { getLogoFileName } from "~/util/getLogoFileName";
 import { onErrorImg } from "~/util/getLogoFileName";
 
-// TODO : 공유 후 수정
 const FeedOrder = ({ item, toggleUser }) => {
   console.log("order", item);
+  const order = item.order.buyOrSell == "buy" ? "매수" : "매도";
   return (
     <FeedLayout item={item} toggleUser={toggleUser}>
       <S.BodyWrapper>
@@ -15,8 +15,8 @@ const FeedOrder = ({ item, toggleUser }) => {
           <S.StockWrapper $buy="sell">
             <img
               src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                "삼성생명",
-                "032830"
+                item.order.name,
+                item.order.code
               )}.png`}
               style={{
                 width: "30px",
@@ -24,9 +24,9 @@ const FeedOrder = ({ item, toggleUser }) => {
               }}
               onError={onErrorImg}
             />
-            <S.StockDiv>삼성생명</S.StockDiv>
-            <QuantityDiv>10주</QuantityDiv>
-            <OrderDiv>매수</OrderDiv>
+            <S.StockDiv>{item.order.name}</S.StockDiv>
+            <QuantityDiv>{item.order.quantity}</QuantityDiv>
+            <OrderDiv>{order}</OrderDiv>
           </S.StockWrapper>
         </S.BodyCenter>
       </S.BodyWrapper>
