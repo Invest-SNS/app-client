@@ -117,8 +117,36 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
   const margin = { left: 5, right: 75, top: 10, bottom: 24 };
 
   // window 사이즈에 맞춘 넓이/높이
-  const height = window.innerHeight - 180;
-  const width = window.innerWidth - 660;
+  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    // 브라우저 높이에서 178px을 빼서 height 상태 업데이트
+    const updateHeight = () => {
+      const calculatedHeight = window.innerHeight - 178;
+      setHeight(calculatedHeight);
+    };
+
+    // 브라우저 넓이에서 650px을 빼서 width 상태 업데이트
+    const updateWidth = () => {
+      const calculatedWidth = window.innerWidth - 650;
+      setWidth(calculatedWidth);
+    };
+
+    // 컴포넌트 마운트 시 높이, 넓이 계산
+    updateHeight();
+    updateWidth();
+
+    // 브라우저 창 크기가 변경될 때마다 높이 재계산
+    window.addEventListener('resize', updateHeight);
+    window.addEventListener('resize', updateWidth);
+
+    // cleanup 함수
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('resize', updateWidth);
+    };
+  }, []);
 
   const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(dataList);
 
