@@ -152,12 +152,12 @@ export default function TradingPage() {
             }}
           >
             <PriceBook />
-            <OrderBook initPrice={nowPrice?.message?.close} />
+            <OrderBook />
           </div>
         </>
       ) : (
         <div style={{ height: "80%" }}>
-          <OrderList pedingOrderList={[]} filledOrderList={[]} />
+          <OrderList />
         </div>
       )}
     </div>

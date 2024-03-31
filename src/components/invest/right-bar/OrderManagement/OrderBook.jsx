@@ -13,29 +13,33 @@ import {
   increaseSelectedQuantity,
   decreaseSelectedQuantity,
 } from "../../../../store/reducers/Trading/trading";
+import { getBalance, getHoldingQuantity } from "../../../../lib/apis/holding";
 
-const OrderBook = ({ initprice }) => {
+const OrderBook = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-  const [balance, setBalance] = useState(2000000);
+  const [balance, setBalance] = useState(0); // 잔고
+  const [maxQuantity, setMaxQuantity] = useState(0);
   const [selectedType, setSelectedType] = useState("지정가"); // 지정가, 시장가
   const { askPrice, nowPrice, ready } = useWebSocket();
   const [content, setContent] = useState("");
-  const [initialPrice, setInitialPrice] = useState(initprice);
 
   const dispatch = useDispatch();
   const { selectedPrice, selectedTab, disabledPriceInput, selectedQuantity } =
     useSelector((state) => state.trading);
+  const user = useSelector((state) => state.user.user);
+  const company = useSelector((state) => state.company.data[1]);
 
   // const askPrice = {
   //   message: {
-  //     sellPrice: [90, 101, 102, 103, 104, 104, 104, 104, 104, 104],
+  //     sellPrice: [90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
   //     sellAmount: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-  //     buyPrice: [100, 101, 102, 103, 104, 104, 104, 104, 104, 104],
+  //     buyPrice: [100, 101, 102, 103, 104, 105, 106, 107, 108, 109],
   //     buyAmount: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
   //   },
   // };
   // const nowPrice = { message: { close: 100 } };
+  // const ready = true;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -81,25 +85,57 @@ const OrderBook = ({ initprice }) => {
     dispatch(decreaseSelectedQuantity());
   };
 
-  const calculateMaxQuantity = () => {
-    if (selectedTab === "매수") {
-      if (selectedType === "지정가") {
-        // 지정가
-        return Math.floor(balance / selectedPrice).toLocaleString();
+  useEffect(() => {
+    const calculateMaxQuantity = async () => {
+      if (selectedTab === "매수") {
+        if (selectedType === "지정가") {
+          // 지정가
+          return Math.floor(balance / selectedPrice).toLocaleString();
+        } else {
+          // 시장가
+          return Math.floor(
+            balance / askPrice?.message?.sellPrice[0]
+          ).toLocaleString();
+        }
       } else {
-        // 시장가
-        return Math.floor(
-          balance / askPrice?.message?.sellPrice[0]
-        ).toLocaleString();
+        if (!user || Object.keys(user).length === 0) {
+          return "0";
+        } else {
+          const quantity = await getHoldingQuantity(user.id, company.code);
+          return parseInt(quantity).toLocaleString();
+        }
       }
-    } else {
-      return (100).toLocaleString();
-    }
-  };
+    };
+
+    calculateMaxQuantity()
+      .then((result) => {
+        setMaxQuantity(result);
+      })
+      .catch((error) => {
+        console.error("Error calculating max quantity:", error);
+      });
+  }, [selectedTab, selectedType, balance, askPrice, user, company]);
+
+  useEffect(() => {
+    setSelectedType("지정가");
+  }, [user]);
 
   useEffect(() => {
     dispatch(setSelectedPrice(nowPrice?.message?.close));
   }, [ready]);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (user && Object.keys(user).length !== 0) {
+        const balance = await getBalance(user.id);
+        setBalance(parseInt(balance));
+      } else {
+        setBalance(0);
+      }
+    };
+
+    fetchBalance();
+  }, [isModalOpen, user]);
 
   return (
     <>
@@ -188,7 +224,7 @@ const OrderBook = ({ initprice }) => {
             >
               <span style={{ fontSize: "0.9rem", color: "#969696" }}>최대</span>
               <span style={{ fontSize: "0.9rem", color: "red" }}>
-                {calculateMaxQuantity()}
+                {maxQuantity}
               </span>
               <span style={{ fontSize: "0.9rem", color: "#969696" }}>주</span>
             </div>
@@ -264,11 +300,12 @@ const OrderBook = ({ initprice }) => {
           </div>
 
           <OrderBuySellButton
+            user={user}
             quantity={selectedQuantity}
             openModal={openModal}
             openErrorModal={openErrorModal}
             selectedType={selectedType}
-            maxQuantity={calculateMaxQuantity()}
+            maxQuantity={maxQuantity}
           />
         </div>
       </div>

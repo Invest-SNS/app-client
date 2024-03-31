@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import CancleIcon from "./CancleIcon";
 
-const OrderPendingItem = ({ order }) => {
+const OrderPendingItem = ({ order, name }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -18,7 +17,7 @@ const OrderPendingItem = ({ order }) => {
     >
       <div>
         <img
-          src={`https://file.alphasquare.co.kr/media/images/stock_logo/kr/${order.code}.png`}
+          src={`https://file.alphasquare.co.kr/media/images/stock_logo/kr/${order.ownedShare}.png`}
           style={{
             width: "30px",
             borderRadius: 100,
@@ -27,7 +26,7 @@ const OrderPendingItem = ({ order }) => {
       </div>
 
       <div style={{ marginLeft: "1rem" }}>
-        <div>{order.name}</div>
+        <div>{name}</div>
 
         <div
           style={{
@@ -39,11 +38,11 @@ const OrderPendingItem = ({ order }) => {
         >
           <div
             style={{
-              color: order.orderType === "매수" ? "red" : "#015FFF",
+              color: order.buyOrSell === "buy" ? "red" : "#015FFF",
               marginRight: "0.5rem",
             }}
           >
-            {order.orderType}
+            {order.buyOrSell === "buy" ? "매수" : "매도"}
           </div>
           <div>{order.price.toLocaleString()}원</div>
           <div style={{ margin: "0 0.2rem" }}>·</div>
@@ -56,14 +55,14 @@ const OrderPendingItem = ({ order }) => {
           display: "flex",
           flexDirection: "column",
           marginLeft: "auto",
+          marginRight: "0.3rem",
         }}
       >
-        <div>{order.remaining}주</div>
+        <div>{order.quantity}주</div>
         <div style={{ marginLeft: "auto" }}>
           <div style={{ fontSize: "0.9rem", color: "#999999" }}>남음</div>
         </div>
       </div>
-      <CancleIcon />
     </div>
   );
 };

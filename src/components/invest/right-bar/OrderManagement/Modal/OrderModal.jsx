@@ -7,13 +7,11 @@ import {
   onErrorImg,
 } from "../../../../../util/getLogoFileName.jsx";
 import { setIsNew } from "../../../../../store/reducers/Trading/trading.jsx";
+import { Modal, Button } from "react-bootstrap";
 
 const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
-  const [modalStyle, setModalStyle] = useState({
-    opacity: 0,
-    pointerEvents: "none",
-  });
   const company = useSelector((state) => state.company.data[1]);
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
   const handleOrderConfirmation = () => {
@@ -21,87 +19,63 @@ const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
       company.code,
       userOrderType === "매수" ? "buy" : "sell",
       price,
-      quantity
+      quantity,
+      user.id
     );
     dispatch(setIsNew(true));
     joinRoom(company.code);
     onClose();
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        setModalStyle({
-          opacity: 1,
-          pointerEvents: "auto",
-        });
-      }, 100);
-    } else {
-      setModalStyle({
-        opacity: 0,
-        pointerEvents: "none",
-      });
-    }
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
   return (
-    <div
+    <Modal
+      show={isOpen}
+      onHide={onClose}
       style={{
-        position: "fixed",
-        top: "0",
-        left: "0",
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: "2",
-        transition: "opacity 0.3s ease",
-        ...modalStyle,
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -25%)",
+        width: "21rem",
       }}
-      onClick={onClose}
     >
-      <div
-        style={{
-          backgroundColor: "white",
-          width: "20rem",
-          padding: "1rem 1.2rem",
-          borderRadius: "0.5rem",
-          boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "1rem",
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <img
-          src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-            company.name,
-            company.code
-          )}.png`}
-          onError={onErrorImg}
-          style={{
-            width: "40px",
-            borderRadius: 100,
-            margin: "0px 10px",
-          }}
-        />
+      <Modal.Body>
         <div
           style={{
             display: "flex",
-            flexDirection: "row",
-            fontSize: "1.15rem",
-            fontWeight: "480",
-            gap: "0.3rem",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "1rem",
+            padding: "1rem 1.2rem",
           }}
         >
-          <div>{company.name}</div>
-          <div style={{ color: userOrderType === "매수" ? "red" : "#015FFF" }}>
-            {userOrderType}
+          <img
+            src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
+              company.name,
+              company.code
+            )}.png`}
+            onError={onErrorImg}
+            style={{
+              width: "40px",
+              borderRadius: 100,
+              margin: "0px 10px",
+            }}
+          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              fontSize: "1.15rem",
+              fontWeight: "480",
+              gap: "0.3rem",
+            }}
+          >
+            <div>{company.name}</div>
+            <div
+              style={{ color: userOrderType === "매수" ? "red" : "#015FFF" }}
+            >
+              {userOrderType}
+            </div>
           </div>
         </div>
 
@@ -225,8 +199,8 @@ const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
             확인
           </button>
         </div>
-      </div>
-    </div>
+      </Modal.Body>
+    </Modal>
   );
 };
 

@@ -126,6 +126,17 @@ export const fetchMyFeedCount = async (userId) => {
   }
 };
 
+export const postOrder = async (userId, code, name, buyOrSell, quantity) => {
+  const baseUrl = `/feed/order/${userId}`;
+  try {
+    const response = await baseUserInstance.post(baseUrl, {
+      code,
+      name,
+      buyOrSell,
+      quantity,
+    });
+    return response.data;
+    
 export const postMyProfit = async (profit) => {
   const baseUrl = "/feed/profit";
   try {
