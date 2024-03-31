@@ -34,7 +34,7 @@ const SignUp = () => {
       dispatch(postSignup(data)).then((res) => {
         if (res.payload.status === 201) {
           setIsAlert(true);
-          setAlertModal("회원가입이 완료되었습니다.");
+          setAlertModal("회원가입이 완료되었습니다. \n 🎉 해당 계정의 계좌로 1억원이 지급되었습니다 🎉 \n 로그인을 해보세요!");
         } else {
           setIsAlert(true);
           setAlertModal("해당 이메일은 이미 사용 중 입니다.");
@@ -111,8 +111,8 @@ const SignUp = () => {
 
       {/* Signup 모달 */}
       <Modal show={isAlert} onHide={() => setIsAlert(false)} centered>
-        <Modal.Body>
-          <span>{alertModal}</span>
+        <Modal.Body style={{ textAlign: 'center', padding: '30px 0' }}>
+          <span style={{ whiteSpace: 'pre-wrap', fontSize: '18px' }}>{alertModal}</span>
         </Modal.Body>
         <Modal.Footer>
           <Button
