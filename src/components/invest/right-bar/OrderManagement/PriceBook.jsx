@@ -7,12 +7,10 @@ import {
   setSelectedPrice,
 } from "../../../../store/reducers/Trading/trading";
 import { useDispatch, useSelector } from "react-redux";
-import { getMarketClosePrice } from "../../../../lib/apis/marketClose";
 
 const PriceBook = () => {
   const containerRef = useRef(null);
   const dispatch = useDispatch();
-  const [marketClosePrice, setMarketClosePrice] = useState(null);
   const { scrollPosition, disabledPriceInput, selectedPrice } = useSelector(
     (state) => state.trading
   );

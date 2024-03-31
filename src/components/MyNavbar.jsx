@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ChatBot from "../routes/chatBot/chatBot";
 import LogoIcon from "../../public/icon/logo.svg";
 import { postLogout, setUser } from "../store/reducers/User/user";
+import { setSelectedTab } from "../store/reducers/Trading/trading";
 import chatbotImg from "../../public/icon/chat_mate.jpg";
 import styled from "styled-components";
 import { getCookie } from "../lib/apis/cookie";
@@ -106,10 +107,7 @@ const MyNavbar = ({ offCanvasTitle }) => {
                     />
                     <span>ChatBot</span>
                   </ChatBotBtn>
-                  <Nav.Link
-                    as="div"
-                    className="flex-grow-1 text-center"
-                  >
+                  <Nav.Link as="div" className="flex-grow-1 text-center">
                     {User.nickname} 님
                   </Nav.Link>
                   <Nav.Link
@@ -157,6 +155,7 @@ const MyNavbar = ({ offCanvasTitle }) => {
                       dispatch(postLogout(token)).then((res) => {
                         if (res.payload.status === 200) {
                           dispatch(setUser({}));
+                          dispatch(setSelectedTab("매수"));
                           setLogoutModal(false);
                         }
                       });

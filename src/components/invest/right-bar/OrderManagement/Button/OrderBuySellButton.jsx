@@ -6,6 +6,7 @@ const OrderBuySellButton = ({
   openModal,
   openErrorModal,
   maxQuantity,
+  user,
 }) => {
   const { selectedTab } = useSelector((state) => state.trading);
 
@@ -14,16 +15,18 @@ const OrderBuySellButton = ({
     const currentHour = currentTime.getHours();
     const currentMinute = currentTime.getMinutes();
 
-    if (quantity === 0) {
-      openErrorModal("주문 수량이 없습니다.");
-    } else if (parseInt(quantity) > parseInt(maxQuantity)) {
-      openErrorModal("최대 주문 수량을 초과하였습니다.");
+    if (!user || Object.keys(user).length === 0) {
+      openErrorModal("로그인을 해주세요.");
     } else if (
       currentHour < 9 ||
       (currentHour === 15 && currentMinute > 30) ||
       currentHour > 15
     ) {
       openErrorModal("현재는 주문 가능한 시간이 아닙니다.");
+    } else if (quantity === 0) {
+      openErrorModal("주문 수량이 없습니다.");
+    } else if (parseInt(quantity) > parseInt(maxQuantity)) {
+      openErrorModal("최대 주문 수량을 초과하였습니다.");
     } else {
       openModal();
     }

@@ -32,7 +32,7 @@ const OrderInput = ({
     >
       <input
         type="text"
-        value={value}
+        value={value || ""}
         onChange={onChange}
         style={{
           padding: "0.2rem 1.8rem",

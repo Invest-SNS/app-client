@@ -1,0 +1,27 @@
+.selected-type-container {
+  position: relative; /* 상대적 위치 설정 */
+  display: inline-block; /* 선택 상자와 텍스트를 인라인 요소로 표시 */
+}
+
+.selected-type-animation {
+  position: absolute; /* 절대적 위치 설정 */
+  top: -25px; /* 텍스트가 상자 위로 올라가도록 설정 */
+  left: 0;
+  width: 50px; /* 선택 상자의 너비에 맞게 조정하세요 */
+  height: 25px; /* 선택 상자의 높이에 맞게 조정하세요 */
+  background-color: rgba(255, 227, 215, 0.5); /* 선택 상자의 투명도 추가 */
+  transition: left 0.5s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem; /* 선택 상자의 텍스트 크기 설정 */
+}
+
+.selected-type-animation.limit {
+  left: 54px; /* 지정가 선택 시 위치 */
+  border-radius: 0.3rem;
+}
+
+.selected-type-animation.market {
+  left: 100px; /* 시장가 선택 시 위치 */
+}
