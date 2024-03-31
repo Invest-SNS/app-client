@@ -32,11 +32,11 @@ const MyNavbar = ({ offCanvasTitle }) => {
     <Navbar
       expand={EXPAND_BREAKPOINT}
       sticky="top"
-      style={{ borderBottom: "1px solid black" }}
+      style={{ borderBottom: "1px solid black", zIndex: 1 }}
     >
       <Container fluid>
         <Navbar.Brand
-          href="#"
+          href="/"
           style={{
             display: "flex",
             gap: "10px",

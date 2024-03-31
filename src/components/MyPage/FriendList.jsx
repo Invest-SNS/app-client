@@ -7,7 +7,7 @@ import {
   fetchPendingFriends,
 } from "../../store/reducers/User/friend";
 import PendingFriendList from "./PendingFriendList";
-import UserPage from "./UserPage";
+import UserDetail from "./UserDetail";
 
 const FriendList = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -64,14 +64,11 @@ const FriendList = ({ onClose }) => {
                 친구 삭제
               </DeleteDiv>
             </FriendWrapper>
-            <DetailContainers $showuser={selectedFriend === item}>
-              {selectedFriend === item && (
-                <UserPage
-                  item={selectedFriend}
-                  onClose={() => setSelectedFriend(null)}
-                />
-              )}
-            </DetailContainers>
+            <UserDetail
+              item={item}
+              selectedFriend={selectedFriend}
+              func={setSelectedFriend}
+            />
           </div>
         ))}
       </FriendContainer>
@@ -129,20 +126,6 @@ const DetailContainer = styled.div`
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   transform: translateX(${(props) => (props.$showdetail ? "0" : "100%")});
-  transition: transform 0.3s ease;
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  z-index: 999;
-`;
-
-const DetailContainers = styled.div`
-  width: 400px;
-  height: 100%;
-  background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(${(props) => (props.$showuser ? "0" : "100%")});
   transition: transform 0.3s ease;
   position: absolute;
   top: 0;

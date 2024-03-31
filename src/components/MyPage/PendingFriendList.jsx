@@ -7,7 +7,7 @@ import {
   postFriendAccept,
 } from "../../store/reducers/User/friend";
 
-const UserPage = ({ onClose }) => {
+const PendingFriendList = ({ onClose }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const UserPage = ({ onClose }) => {
   );
 };
 
-export default UserPage;
+export default PendingFriendList;
 
 const RowDiv = styled.div`
   display: flex;

@@ -11,6 +11,7 @@ import {
   postLike as reqPostLike,
   postUnlike as reqPostUnlike,
   fetchMyFeedCount as reqFetchMyFeedCount,
+  postMyProfit as reqPostMyProfit,
 } from "~/lib/apis/feed";
 
 const initialState = {
@@ -115,6 +116,14 @@ const fetchMyPageFeedCount = createAsyncThunk(
   }
 );
 
+const postMyProfit = createAsyncThunk(
+  "feed/postMyProfit",
+  async (profit, thunkAPI) => {
+    const response = await reqPostMyProfit(profit);
+    return response;
+  }
+);
+
 const feedSlice = createSlice({
   name: "feed",
   initialState: initialState,
@@ -180,6 +189,10 @@ const feedSlice = createSlice({
         const deletedFeedId = action.meta.arg;
 
         state.allFeed = state.allFeed.filter(
+          (feed) => feed._id !== deletedFeedId
+        );
+
+        state.myFeed = state.myFeed.filter(
           (feed) => feed._id !== deletedFeedId
         );
       })
@@ -261,5 +274,6 @@ export {
   deleteFeed,
   fetchMyFeedCount,
   fetchMyPageFeedCount,
+  postMyProfit,
 };
 export default feedSlice.reducer;

@@ -10,7 +10,8 @@ import FeedBoard from "./FeedBoard";
 import FeedOrder from "./FeedOrder";
 import FeedReturns from "./FeedReturns";
 import FeedVote from "./FeedVote";
-import UserPage from "../../MyPage/UserPage";
+import UserDetail from "../../MyPage/UserDetail";
+import { PuffLoader } from "react-spinners";
 
 const Feed = ({ path, friendId }) => {
   const dispatch = useDispatch();
@@ -19,8 +20,8 @@ const Feed = ({ path, friendId }) => {
   const [page, setPage] = useState(1);
   const [fetching, setFetching] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
-
   const userId = useSelector((state) => state.user.user.id);
+  const loading = useSelector((state) => state.feed.loading);
 
   useEffect(() => {
     if (path === "/feed") {
@@ -94,7 +95,23 @@ const Feed = ({ path, friendId }) => {
   }, [handleScroll]);
 
   if (feedData.length == 0) {
-    return <Container> 아직 작성된 글이 없습니다.</Container>;
+    if (loading !== "fulfilled") {
+      return (
+        <Container>
+          <div
+            style={{
+              height: "36vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <PuffLoader color="#FF7D75" />
+          </div>
+        </Container>
+      );
+    }
+    return <Container>아직 작성된 글이 없습니다.</Container>;
   }
 
   return (
@@ -118,11 +135,11 @@ const Feed = ({ path, friendId }) => {
                 <FeedBoard item={item} toggleUser={toggleUser} />
               )}
             </div>
-            <DetailContainers $showuser={selectedFriend === item.user}>
-              {selectedFriend === item.user && (
-                <UserPage item={item.user} onClose={() => toggleUser(null)} />
-              )}
-            </DetailContainers>
+            <UserDetail
+              item={item.user}
+              selectedFriend={selectedFriend}
+              func={toggleUser}
+            />
           </div>
         );
       })}
@@ -143,20 +160,6 @@ const FeedScrollDiv = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
-`;
-
-const DetailContainers = styled.div`
-  width: 400px;
-  height: 100%;
-  background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(${(props) => (props.$showuser ? "0" : "100%")});
-  transition: transform 0.3s ease;
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  z-index: 999;
 `;
 
 export default Feed;

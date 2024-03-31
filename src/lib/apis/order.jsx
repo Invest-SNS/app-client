@@ -26,3 +26,14 @@ export async function getOrderHistory(code, userId) {
     console.error(err);
   }
 }
+
+export const fetchMyOrder = async () => {
+  const baseUrl = `/order/myOrder`;
+  try {
+    const response = await baseUserInstance.get(baseUrl);
+    const data = response.data;
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+}

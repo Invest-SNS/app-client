@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import * as S from "../../../style/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -7,7 +8,7 @@ import {
   postComment,
   deleteComment,
 } from "../../../store/reducers/Feed/comment";
-import UserPage from "../../MyPage/UserPage";
+import UserDetail from "../../MyPage/UserDetail";
 
 const Comment = ({ feedId }) => {
   const dispatch = useDispatch();
@@ -74,17 +75,20 @@ const Comment = ({ feedId }) => {
               </CommentDiv>
               {item.user._id === userId && (
                 <DeleteDiv>
-                  <div onClick={() => onDeleteComment(item._id)}>삭제</div>
+                  <S.DeleteDiv
+                    onClick={() => onDeleteComment(item._id)}
+                    style={{ width: "100%" }}
+                  >
+                    삭제
+                  </S.DeleteDiv>
                 </DeleteDiv>
               )}
             </Div>
-            <DetailContainers $showuser={selectedFriend == item.user}>
-              {selectedFriend === item.user && (
-                <>
-                  <UserPage item={item.user} onClose={() => toggleUser(null)} />
-                </>
-              )}
-            </DetailContainers>
+            <UserDetail
+              item={item.user}
+              selectedFriend={selectedFriend}
+              func={toggleUser}
+            />
           </div>
         ))}
       {!showAll && totalComments > currentPage * commentsPerPage ? (
@@ -105,7 +109,7 @@ const Comment = ({ feedId }) => {
           <ShowMoreButton onClick={handleFirstPage}>접기</ShowMoreButton>
         </>
       )}
-      <WriteDiv>
+      <WriteDiv $totalComments={totalComments}>
         <TextareaAutosize
           placeholder="댓글 입력하기"
           className="textarea"
@@ -121,7 +125,9 @@ const Comment = ({ feedId }) => {
 const CommentWrapper = styled.div``;
 
 const LengthDiv = styled.div`
-  padding: 16px 0px 8px 30px;
+  border-top: 1px solid #dadada;
+  margin: 0px 25px;
+  padding: 16px 0px 8px 5px;
 `;
 
 const Div = styled.div`
@@ -159,9 +165,10 @@ const WriteDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2%;
-  margin: 10px;
-  border-top: 1px solid #c9c9c9;
+  gap: 5%;
+  margin: 0px 25px 10px 25px;
+  border-top: ${(props) =>
+    props.$totalComments != 0 ? "1px solid #dadada" : null};
   padding-top: 10px;
 
   .textarea {
@@ -175,7 +182,7 @@ const WriteDiv = styled.div`
 `;
 
 const InputBtn = styled.button`
-  width: 10%;
+  width: 13%;
   height: 35px;
   background-color: #ff8b8b;
   border: none;
@@ -196,20 +203,6 @@ const ShowMoreButton = styled.button`
   background: none;
   color: #a5a4a4;
   padding-left: 0px;
-`;
-
-const DetailContainers = styled.div`
-  width: 400px;
-  height: 100%;
-  background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(${(props) => (props.$showuser ? "0" : "100%")});
-  transition: transform 0.3s ease;
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  z-index: 999;
 `;
 
 export default Comment;

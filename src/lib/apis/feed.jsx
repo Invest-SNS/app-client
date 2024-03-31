@@ -136,6 +136,15 @@ export const postOrder = async (userId, code, name, buyOrSell, quantity) => {
       quantity,
     });
     return response.data;
+    
+export const postMyProfit = async (profit) => {
+  const baseUrl = "/feed/profit";
+  try {
+    const response = await baseUserInstance.post(baseUrl, {
+      profit,
+    });
+    const data = response.data;
+    return data;
   } catch (err) {
     console.error(err);
   }

@@ -27,6 +27,7 @@ import strategyReducer from "./reducers/Strategy/getStrategy.jsx";
 import tradingReducer from "./reducers/Trading/trading.jsx";
 import kospiKosdaqReducer from "./reducers/Chart/kospiKosdaq.jsx";
 import friendReducer from "./reducers/User/friend";
+import orderReducer from "./reducers/User/order";
 
 const rootPersistConfig = {
   key: "root",
@@ -64,6 +65,7 @@ const rootReducer = persistReducer(
     strategy: strategyReducer,
     kospiKosdaq: kospiKosdaqReducer,
     friend: friendReducer,
+    order: orderReducer,
   })
 );
 const myMiddlewares = [logger];

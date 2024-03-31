@@ -80,18 +80,16 @@ const FeedWriting = ({ setIsWrite }) => {
         />
       </UserContainer>
       {isVote ? (
-        <>
-          <VoteWrapper>
-            <VoteDiv>O / X 투표</VoteDiv>
-            <VoteTextarea
-              placeholder="투표 제목"
-              onChange={(e) => {
-                setBody(e.target.value);
-                console.log("body", body);
-              }}
-            />
-          </VoteWrapper>
-        </>
+        <VoteWrapper>
+          <VoteDiv>O / X 투표</VoteDiv>
+          <VoteTextarea
+            placeholder="투표 제목"
+            onChange={(e) => {
+              setBody(e.target.value);
+              console.log("body", body);
+            }}
+          />
+        </VoteWrapper>
       ) : (
         <StyledTextarea
           placeholder="글을 작성해보세요."
@@ -99,7 +97,6 @@ const FeedWriting = ({ setIsWrite }) => {
           onChange={(e) => setBody(e.target.value)}
         />
       )}
-
       {previewImage && (
         <PreviewImageContainer>
           <img
