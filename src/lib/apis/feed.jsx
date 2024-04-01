@@ -136,7 +136,7 @@ export const postOrder = async (userId, code, name, buyOrSell, quantity) => {
       quantity,
     });
     return response.data;
-  } catch(err){
+  } catch (err) {
     console.error(err);
   }
 };
