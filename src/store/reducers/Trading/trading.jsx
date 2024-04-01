@@ -5,7 +5,7 @@ const initialState = {
   selectedPrice: null,
   selectedQuantity: 0,
   scrollPosition: 100,
-  disabledPriceInput: false, // 시장가, 지정가 가격 input
+  orderType: "지정가", // 시장가, 지정가 가격 input
   isNew: false,
 };
 
@@ -25,8 +25,8 @@ const tradingSlice = createSlice({
     setScrollPosition(state, action) {
       state.scrollPosition = action.payload;
     },
-    setDisabledPriceInput(state, action) {
-      state.disabledPriceInput = action.payload;
+    setOrderType(state, action) {
+      state.orderType = action.payload;
     },
     increaseSelectedQuantity(state) {
       state.selectedQuantity += 1;
@@ -47,7 +47,7 @@ export const {
   setSelectedPrice,
   setScrollPosition,
   setSelectedTab,
-  setDisabledPriceInput,
+  setOrderType,
   setSelectedQuantity,
   increaseSelectedQuantity,
   decreaseSelectedQuantity,

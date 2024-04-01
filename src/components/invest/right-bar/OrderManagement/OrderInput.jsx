@@ -20,7 +20,6 @@ const OrderInput = ({
       decrease();
     }
   };
-
   return (
     <div
       style={{
@@ -32,7 +31,9 @@ const OrderInput = ({
     >
       <input
         type="text"
-        value={value || ""}
+        value={
+          value === null || value === undefined ? "" : disabled ? "" : value
+        }
         onChange={onChange}
         style={{
           padding: "0.2rem 1.8rem",
