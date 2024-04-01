@@ -15,7 +15,7 @@ import { getLogoFileName, onErrorImg } from "../../util/getLogoFileName";
 
 export default function TradingPage() {
   const dispatch = useDispatch();
-  const { selectedTab, disabledPriceInput, isNew } = useSelector(
+  const { selectedTab, orderType, isNew } = useSelector(
     (state) => state.trading
   );
   const { nowPrice } = useWebSocket();
@@ -26,7 +26,7 @@ export default function TradingPage() {
     dispatch(setSelectedQuantity(0));
     dispatch(setSelectedPrice(nowPrice?.message?.close));
 
-    if (!disabledPriceInput) {
+    if (orderType === "지정가") {
       dispatch(setSelectedPrice(nowPrice?.message?.close));
     }
   };

@@ -94,7 +94,7 @@ const OrderHistoryList = () => {
           >
             {reservedHistory.map((order) => (
               <OrderPendingItem
-                key={uuidv4()}
+                key={order._id}
                 order={order}
                 name={company.name}
               />
@@ -142,7 +142,7 @@ const OrderHistoryList = () => {
           >
             {completedHistory.map((order) => (
               <OrderFilledItem
-                key={uuidv4()}
+                key={order._id}
                 order={order}
                 name={company.name}
                 userId={user.id}
