@@ -48,13 +48,6 @@ export default function InvestStrategyPage() {
                 <FileDiv href={`${strategy.marketIssue?.attachment_url}`} target="_blank">
                   <FileFont>{strategy.marketIssue?.title}.pdf</FileFont>
                 </FileDiv>
-                {/* <ContentFont>{decode(strategy.marketIssue?.content)}</ContentFont> */}
-                {strategy.marketIssue?.content.split('\n\n')[0]?.split('\n').map((item, idx) => 
-                  <SubDiv key={idx}>
-                    <span>•</span>
-                    <SubFont key={idx}>{decode(item)}</SubFont>
-                  </SubDiv>
-                )}
               </Content>
               <Content>
                 <MainDiv>
