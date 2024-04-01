@@ -288,7 +288,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
               />
               <XAxis showGridLines showTickLabel={false} />
               <YAxis showGridLines tickFormat={pricesDisplayFormat} />
-              <CandlestickSeries />
+              <CandlestickSeries fill={openCloseColor} />
 
               {/* 차트지표 */}
               {chartIndi.includes("SMA") && (
