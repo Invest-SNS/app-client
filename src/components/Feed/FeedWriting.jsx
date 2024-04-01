@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { postBoardFeed, postVoteFeed } from "../../store/reducers/Feed/feed";
 
-//TODO : S3 연결 후 사진 확인
 const FeedWriting = ({ setIsWrite }) => {
   const dispatch = useDispatch();
 
@@ -54,14 +53,10 @@ const FeedWriting = ({ setIsWrite }) => {
           formData.append("file", selectedImage);
         }
         dispatch(postBoardFeed(formData));
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
       }
-      // for (let key of formData.keys()) {
-      //   console.log(key);
-      // }
-      // for (let value of formData.values()) {
-      //   console.log(value);
-      // }
     } catch (err) {
       console.error(err);
     }
