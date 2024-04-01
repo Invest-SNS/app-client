@@ -6,7 +6,6 @@ import { getLogoFileName } from "~/util/getLogoFileName";
 import { onErrorImg } from "~/util/getLogoFileName";
 
 const FeedOrder = ({ item, toggleUser }) => {
-  console.log("order", item);
   const order = item.order.buyOrSell == "buy" ? "매수" : "매도";
   return (
     <FeedLayout item={item} toggleUser={toggleUser}>
