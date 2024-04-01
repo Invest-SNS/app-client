@@ -68,7 +68,7 @@ const rootReducer = persistReducer(
     order: orderReducer,
   })
 );
-const myMiddlewares = [logger];
+// const myMiddlewares = [logger];
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
@@ -76,7 +76,8 @@ export const store = configureStore({
       serializableCheck: {
         ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(myMiddlewares),
+    }),
+  // .concat(myMiddlewares),
 });
 
 export const persistor = persistStore(store);

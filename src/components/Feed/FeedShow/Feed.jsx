@@ -125,12 +125,7 @@ const Feed = ({ path, friendId }) => {
               ) : item.isProfit ? (
                 <FeedReturns item={item} toggleUser={toggleUser} />
               ) : item.isVote ? (
-                <FeedVote
-                  page={page}
-                  path={path}
-                  item={item}
-                  toggleUser={toggleUser}
-                />
+                <FeedVote item={item} toggleUser={toggleUser} />
               ) : (
                 <FeedBoard item={item} toggleUser={toggleUser} />
               )}
