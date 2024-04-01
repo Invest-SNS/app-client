@@ -136,6 +136,10 @@ export const postOrder = async (userId, code, name, buyOrSell, quantity) => {
       quantity,
     });
     return response.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
     
 export const postMyProfit = async (profit) => {
   const baseUrl = "/feed/profit";
