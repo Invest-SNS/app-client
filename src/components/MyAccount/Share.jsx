@@ -36,7 +36,7 @@ const Share = () => {
               <ProfitDiv>{item.whole}원</ProfitDiv>
               <RowDiv>
                 <CurrentDiv $color={item.upDownRate >= 0 ? "#015FFF" : "#F00"}>
-                  {item.price}원
+                  {item.price}원&nbsp;
                 </CurrentDiv>
                 <ReturnRateDiv
                   $color={item.upDownRate >= 0 ? "#015FFF" : "#F00"}

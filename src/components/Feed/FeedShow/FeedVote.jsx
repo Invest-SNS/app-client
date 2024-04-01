@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import * as S from "../../../style/GlobalStyle";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchAllFeed,
-  fetchMyFeed,
-  postVote,
-} from "../../../store/reducers/Feed/feed";
+import { useDispatch } from "react-redux";
+import { postVote } from "../../../store/reducers/Feed/feed";
 import FeedLayout from "./FeedLayout";
 
-const FeedVote = ({ page, path, item, toggleUser }) => {
+const FeedVote = ({ item, toggleUser }) => {
   const dispatch = useDispatch();
 
   const [isMyVote, setIsMyVote] = useState(item.myVote);
