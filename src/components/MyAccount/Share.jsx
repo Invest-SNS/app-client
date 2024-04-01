@@ -16,7 +16,7 @@ const Share = () => {
             <RowDiv>
               <img
                 src={`https://file.alphasquare.co.kr/media/images/stock_logo/${getLogoFileName(
-                  item.name || "삼성생명",
+                  item.name,
                   item.code
                 )}.png`}
                 style={{
@@ -28,7 +28,7 @@ const Share = () => {
                 onError={onErrorImg}
               />
               <ColumnDiv>
-                <NameDiv>{item.name || "삼성생명"} </NameDiv>
+                <NameDiv>{item.name} </NameDiv>
                 <QuantityDiv>{item.amount}주</QuantityDiv>
               </ColumnDiv>
             </RowDiv>
@@ -82,6 +82,7 @@ const ShareItem = styled.div`
 const ColumnDiv = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
 `;
 
 const NameDiv = styled.div`
@@ -91,8 +92,8 @@ const NameDiv = styled.div`
 
 const QuantityDiv = styled.div`
   color: #8c8c8c;
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 400;
 `;
 
 const ProfitDiv = styled.div`

@@ -25,7 +25,7 @@ const FeedOrder = ({ item, toggleUser }) => {
               onError={onErrorImg}
             />
             <S.StockDiv>{item.order.name}</S.StockDiv>
-            <QuantityDiv>{item.order.quantity}</QuantityDiv>
+            <QuantityDiv>{item.order.quantity}주</QuantityDiv>
             <OrderDiv>{order}</OrderDiv>
           </S.StockWrapper>
         </S.BodyCenter>
