@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const PriceItem = ({
   price,
@@ -10,7 +9,7 @@ const PriceItem = ({
   onPriceSelect,
   selectedPrice,
 }) => {
-  const isSelected = price === selectedPrice;
+  const isSelected = price.toString() === selectedPrice?.toString();
 
   return (
     <div

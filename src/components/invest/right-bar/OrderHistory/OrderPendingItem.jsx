@@ -44,7 +44,7 @@ const OrderPendingItem = ({ order, name }) => {
           >
             {order.buyOrSell === "buy" ? "매수" : "매도"}
           </div>
-          <div>{order.price.toLocaleString()}원</div>
+          <div>{order?.price?.toLocaleString()}원</div>
           <div style={{ margin: "0 0.2rem" }}>·</div>
           <div>{order.quantity}주</div>
         </div>

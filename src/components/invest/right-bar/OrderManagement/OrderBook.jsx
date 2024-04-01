@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useWebSocket } from "../../../../lib/hooks/useWebSocket";
 import {
   setSelectedPrice,
-  setDisabledPriceInput,
+  setOrderType,
   setSelectedQuantity,
   increaseSelectedQuantity,
   decreaseSelectedQuantity,
@@ -25,21 +25,10 @@ const OrderBook = () => {
   const [content, setContent] = useState("");
 
   const dispatch = useDispatch();
-  const { selectedPrice, selectedTab, disabledPriceInput, selectedQuantity } =
+  const { selectedPrice, selectedTab, orderType, selectedQuantity } =
     useSelector((state) => state.trading);
   const user = useSelector((state) => state.user.user);
   const company = useSelector((state) => state.company.data[1]);
-
-  // const askPrice = {
-  //   message: {
-  //     sellPrice: [90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
-  //     sellAmount: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-  //     buyPrice: [100, 101, 102, 103, 104, 105, 106, 107, 108, 109],
-  //     buyAmount: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-  //   },
-  // };
-  // const nowPrice = { message: { close: 100 } };
-  // const ready = true;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -54,11 +43,11 @@ const OrderBook = () => {
     if (type === "시장가") {
       dispatch(setSelectedQuantity(0));
       dispatch(setSelectedPrice(0));
-      dispatch(setDisabledPriceInput(true));
+      dispatch(setOrderType("시장가"));
     } else {
       dispatch(setSelectedQuantity(0));
       dispatch(setSelectedPrice(nowPrice?.message?.close));
-      dispatch(setDisabledPriceInput(false));
+      dispatch(setOrderType("지정가"));
     }
   };
 
@@ -94,7 +83,7 @@ const OrderBook = () => {
         } else {
           // 시장가
           return Math.floor(
-            balance / askPrice?.message?.sellPrice[0]
+            parseInt(balance) / askPrice?.message?.sellPrice[0]
           ).toLocaleString();
         }
       } else {
@@ -203,7 +192,7 @@ const OrderBook = () => {
             }
             increase={increasePrice}
             decrease={decreasePrice}
-            disabled={disabledPriceInput}
+            disabled={orderType === "시장가" ? true : false}
           />
         </div>
 

@@ -36,4 +36,4 @@ export const fetchMyOrder = async () => {
   } catch (err) {
     console.error(err);
   }
-}
+};

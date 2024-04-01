@@ -7,15 +7,15 @@ import {
   onErrorImg,
 } from "../../../../../util/getLogoFileName.jsx";
 import { setIsNew } from "../../../../../store/reducers/Trading/trading.jsx";
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 const OrderModal = ({ isOpen, onClose, userOrderType, price, quantity }) => {
   const company = useSelector((state) => state.company.data[1]);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
-  const handleOrderConfirmation = () => {
-    postOrderStock(
+  const handleOrderConfirmation = async () => {
+    await postOrderStock(
       company.code,
       userOrderType === "매수" ? "buy" : "sell",
       price,
