@@ -142,8 +142,11 @@ const feedSlice = createSlice({
       })
       .addCase(fetchMyFeed.fulfilled, (state, action) => {
         state.loading = "fulfilled";
-
-        state.myFeed = [...action.payload];
+        action.payload.forEach((item) => {
+          if (!state.myFeed.some((feedItem) => feedItem._id === item._id)) {
+            state.myFeed = [...state.myFeed, ...action.payload];
+          }
+        });
       })
       .addCase(fetchMyFeed.pending, (state) => {
         state.loading = "pending";
