@@ -11,6 +11,7 @@ const FeedWriting = ({ setIsWrite }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [body, setBody] = useState("");
   const [isVote, setIsVote] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const userNickname = useSelector((state) => state.user.user.nickname);
 
@@ -34,6 +35,14 @@ const FeedWriting = ({ setIsWrite }) => {
     inputRef.current.click();
   }, []);
 
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   const clickVote = () => {
     setIsVote(!isVote);
     setSelectedImage(null);
@@ -55,7 +64,7 @@ const FeedWriting = ({ setIsWrite }) => {
         dispatch(postBoardFeed(formData));
         setTimeout(() => {
           window.location.reload();
-        }, 300);
+        }, 1000);
       }
     } catch (err) {
       console.error(err);
@@ -97,9 +106,15 @@ const FeedWriting = ({ setIsWrite }) => {
           <img
             src={previewImage}
             alt="업로드된 이미지"
-            style={{ width: "300px", objectFit: "cover" }}
+            style={{ width: "300px", height: "300px", objectFit: "cover" }}
+            onClick={openModal}
           />
         </PreviewImageContainer>
+      )}
+      {modalOpen && (
+        <ModalOverlay onClick={closeModal}>
+          <ModalImg src={previewImage} alt="모달 이미지" />
+        </ModalOverlay>
       )}
       <UploadContainer>
         <input
@@ -231,6 +246,23 @@ const VoteTextarea = styled.textarea`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); // 반투명한 검은색 배경
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalImg = styled.img`
+  max-width: 90%;
+  max-height: 90%;
 `;
 
 export default FeedWriting;
