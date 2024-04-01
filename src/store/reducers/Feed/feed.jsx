@@ -143,7 +143,7 @@ const feedSlice = createSlice({
       .addCase(fetchMyFeed.fulfilled, (state, action) => {
         state.loading = "fulfilled";
 
-        state.myFeed = [...state.myFeed, ...action.payload];
+        state.myFeed = [...action.payload];
       })
       .addCase(fetchMyFeed.pending, (state) => {
         state.loading = "pending";
