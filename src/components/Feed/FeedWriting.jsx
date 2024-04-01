@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { postBoardFeed, postVoteFeed } from "../../store/reducers/Feed/feed";
@@ -12,7 +12,7 @@ const FeedWriting = ({ setIsWrite }) => {
   const [body, setBody] = useState("");
   const [isVote, setIsVote] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const loading = useSelector((state) => state.feed.loading);
   const userNickname = useSelector((state) => state.user.user.nickname);
 
   const onUploadImage = useCallback((e) => {
@@ -62,14 +62,17 @@ const FeedWriting = ({ setIsWrite }) => {
           formData.append("file", selectedImage);
         }
         dispatch(postBoardFeed(formData));
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
       }
     } catch (err) {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    if (loading == "go") {
+      window.location.reload();
+    }
+  }, [loading]);
 
   return (
     <Container>
@@ -90,7 +93,6 @@ const FeedWriting = ({ setIsWrite }) => {
             placeholder="투표 제목"
             onChange={(e) => {
               setBody(e.target.value);
-              console.log("body", body);
             }}
           />
         </VoteWrapper>
@@ -140,7 +142,11 @@ const FeedWriting = ({ setIsWrite }) => {
           <img src="/icon/vote.svg" alt="투표" style={{ width: "27px" }} />
           <div>투표</div>
         </ButtonDiv>
-        <UploadBtn onClick={onSubmit}>게시</UploadBtn>
+        {loading == "wait" ? (
+          <UploadBtn>wait</UploadBtn>
+        ) : (
+          <UploadBtn onClick={onSubmit}>게시</UploadBtn>
+        )}
       </UploadContainer>
     </Container>
   );

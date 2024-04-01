@@ -23,9 +23,6 @@ const orderSlice = createSlice({
     builder
       .addCase(fetchMyOrder.fulfilled, (state, action) => {
         state.loading = "fulfilled";
-        console.log("payloads", action.payload);
-        console.log("payloadss", action.payload.myMoney[0]);
-        console.log("payloadsss", action.payload.mystocks);
         state.myMoney = action.payload.myMoney[0];
         state.mystocks = action.payload.mystocks;
       })
