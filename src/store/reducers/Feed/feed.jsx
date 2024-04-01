@@ -178,13 +178,13 @@ const feedSlice = createSlice({
         state.loading = "rejected";
       })
       .addCase(postBoardFeed.fulfilled, (state, action) => {
-        state.loading = "fulfilled";
+        state.loading = "go";
       })
       .addCase(postBoardFeed.pending, (state) => {
-        state.loading = "pending";
+        state.loading = "wait";
       })
       .addCase(postBoardFeed.rejected, (state) => {
-        state.loading = "rejected";
+        state.loading = "wait";
       })
       .addCase(deleteFeed.fulfilled, (state, action) => {
         state.loading = "fulfilled";
