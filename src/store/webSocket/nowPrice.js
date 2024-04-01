@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-const SERVER_URL = "/api";
+const SERVER_URL = "";
 
 const socket = io(SERVER_URL);
 
