@@ -33,7 +33,6 @@ const SearchStock = ({ addToFavorites, searchInput, setSearchInput }) => {
 
   const onChangeInput = async (e) => {
     setSearchInput(e.target.value);
-    console.log("searchInput", e.target.value);
     searchFunc({ searchQuery: e.target.value });
   };
 
