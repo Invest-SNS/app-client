@@ -191,8 +191,8 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
 
   const volumeColor = (data) => {
     return data?.close > data?.open
-      ? "rgba(38, 166, 154, 0.3)"
-      : "rgba(239, 83, 80, 0.3)";
+      ? "rgba(239, 83, 80, 0.3)"
+      : "rgba(38, 166, 154, 0.3)";
   };
 
   const volumeSeries = (data) => {
@@ -200,7 +200,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
   };
 
   const openCloseColor = (data) => {
-    return data?.close > data?.open ? "#26a69a" : "#ef5350";
+    return data?.close > data?.open ? "#ef5350" : "#26a69a";
   };
 
   // hover 했을 때 보여줄 데이터
