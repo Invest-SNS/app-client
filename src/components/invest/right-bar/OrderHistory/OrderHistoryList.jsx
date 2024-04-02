@@ -3,22 +3,32 @@ import { MdRefresh } from "react-icons/md";
 import OrderPendingItem from "./OrderPendingItem";
 import OrderFilledItem from "./OrderFilledItem";
 import { v4 as uuidv4 } from "uuid";
-import { useSelector } from "react-redux";
-import { getOrderHistory } from "../../../../lib/apis/order";
+import { useDispatch, useSelector } from "react-redux";
+// import { getOrderHistory } from "../../../../lib/apis/order";
 import "./OrderHistoryList.css";
+import {
+  getOrderHistory,
+  setUniqueCompletedHistory,
+} from "../../../../store/reducers/User/order";
 
 const OrderHistoryList = () => {
-  const [completedHistory, setCompletedHistory] = useState([]);
-  const [reservedHistory, setReservedHistory] = useState([]);
+  // const [completedHistory, setCompletedHistory] = useState([]);
+  // const [reservedHistory, setReservedHistory] = useState([]);
   const [refreshTime, setRefreshTime] = useState("");
   const refreshIconContainerRef = useRef(null);
   const company = useSelector((state) => state.company.data[1]);
   const user = useSelector((state) => state.user.user);
-
+  const reservedHistory = useSelector((state) => state.order.reservedHistory);
+  const completedHistory = useSelector((state) => state.order.completedHistory);
+  const uniqueCompletedHistory = useSelector(
+    (state) => state.order.uniqueCompletedHistory
+  );
+  const dispatch = useDispatch();
   const fetchOrderHistory = async () => {
-    const history = await getOrderHistory(company.code, user.id);
-    setCompletedHistory(history.completedHistory);
-    setReservedHistory(history.reservedHistory);
+    // const history = await getOrderHistory(company.code, user.id);
+    dispatch(getOrderHistory({ code: company.code, userId: user.id }));
+    // setCompletedHistory(history.completedHistory);
+    // setReservedHistory(history.reservedHistory);
     const currentTime = new Date().toLocaleString("ko-KR", {
       hour: "numeric",
       minute: "numeric",
@@ -41,19 +51,23 @@ const OrderHistoryList = () => {
     fetchOrderHistory();
   }, [company, user]);
 
-useEffect(() => {
-  // 중복된 time 필드 제거
-  const uniqueTimes = new Set();
-  const uniqueCompletedHistory = completedHistory.filter((order) => {
-    if (!uniqueTimes.has(order.time)) {
-      uniqueTimes.add(order.time);
-      return true;
-    }
-    return false;
-  });
-  setCompletedHistory(uniqueCompletedHistory);
-}, [completedHistory]);
-
+  useEffect(() => {
+    // 중복된 time 필드 제거
+    const uniqueTimes = new Set();
+    // console.log("completedHistory", completedHistory);
+    const uniqueCompletedHistory = completedHistory.filter((order) => {
+      if (!uniqueTimes.has(order.time)) {
+        uniqueTimes.add(order.time);
+        return true;
+      }
+      return false;
+    });
+    // console.log(
+    //   "completedHistoryuniqueCompletedHistory",
+    //   uniqueCompletedHistory
+    // );
+    dispatch(setUniqueCompletedHistory(uniqueCompletedHistory));
+  }, [completedHistory]);
 
   return (
     <>
@@ -143,7 +157,7 @@ useEffect(() => {
           체결
         </div>
 
-        {completedHistory.length !== 0 ? (
+        {uniqueCompletedHistory?.length !== 0 ? (
           <div
             className="scroll-container"
             style={{
@@ -154,7 +168,7 @@ useEffect(() => {
               cursor: "pointer",
             }}
           >
-            {completedHistory.map((order) => (
+            {uniqueCompletedHistory?.map((order) => (
               <OrderFilledItem
                 key={order._id}
                 order={order}
