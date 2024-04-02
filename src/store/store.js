@@ -43,6 +43,7 @@ const rootPersistConfig = {
     "getSubIndicator",
     "company",
     "user",
+    "order",
   ],
 };
 
