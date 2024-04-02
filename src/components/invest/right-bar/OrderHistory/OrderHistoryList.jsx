@@ -41,14 +41,19 @@ const OrderHistoryList = () => {
     fetchOrderHistory();
   }, [company, user]);
 
-  useEffect(() => {
-    // 중복된 time 필드 제거
-    const uniqueTimes = new Set(completedHistory.map((order) => order.time));
-    const uniqueCompletedHistory = completedHistory.filter((order) =>
-      uniqueTimes.has(order.time)
-    );
-    setCompletedHistory(uniqueCompletedHistory);
-  }, [completedHistory]);
+useEffect(() => {
+  // 중복된 time 필드 제거
+  const uniqueTimes = new Set();
+  const uniqueCompletedHistory = completedHistory.filter((order) => {
+    if (!uniqueTimes.has(order.time)) {
+      uniqueTimes.add(order.time);
+      return true;
+    }
+    return false;
+  });
+  setCompletedHistory(uniqueCompletedHistory);
+}, [completedHistory]);
+
 
   return (
     <>
