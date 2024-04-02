@@ -25,10 +25,7 @@ const OrderHistoryList = () => {
   );
   const dispatch = useDispatch();
   const fetchOrderHistory = async () => {
-    // const history = await getOrderHistory(company.code, user.id);
     dispatch(getOrderHistory({ code: company.code, userId: user.id }));
-    // setCompletedHistory(history.completedHistory);
-    // setReservedHistory(history.reservedHistory);
     const currentTime = new Date().toLocaleString("ko-KR", {
       hour: "numeric",
       minute: "numeric",
@@ -54,7 +51,6 @@ const OrderHistoryList = () => {
   useEffect(() => {
     // 중복된 time 필드 제거
     const uniqueTimes = new Set();
-    // console.log("completedHistory", completedHistory);
     const uniqueCompletedHistory = completedHistory.filter((order) => {
       if (!uniqueTimes.has(order.time)) {
         uniqueTimes.add(order.time);
@@ -62,10 +58,6 @@ const OrderHistoryList = () => {
       }
       return false;
     });
-    // console.log(
-    //   "completedHistoryuniqueCompletedHistory",
-    //   uniqueCompletedHistory
-    // );
     dispatch(setUniqueCompletedHistory(uniqueCompletedHistory));
   }, [completedHistory]);
 
