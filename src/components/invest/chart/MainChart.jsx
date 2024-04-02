@@ -200,7 +200,7 @@ export default function MainChart({ toggleCharts, toggleIndicators, showCharts, 
   };
 
   const openCloseColor = (data) => {
-    return data?.close > data?.open ? "#ef5350" : "#26a69a";
+    return data?.close > data?.open ? "#ef5350" :"#26a69a";
   };
 
   // hover 했을 때 보여줄 데이터
