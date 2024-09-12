@@ -1,0 +1,433 @@
+[
+  {
+    "id": 0,
+    "name": "MACD",
+    "showName": "MACD",
+    "vars": [
+      {
+        "id": 0,
+        "key": "longPeriod",
+        "name": "장기",
+        "default": 26,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 1,
+        "key": "shortPeriod",
+        "name": "단기",
+        "default": 12,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 2,
+        "key": "signalPeriod",
+        "name": "시그널",
+        "default": 9,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "name": "STOCHF",
+    "showName": "Stochastic Fast",
+    "vars": [
+      {
+        "id": 0,
+        "key": "K",
+        "name": "기간(%K)",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      },
+      {
+        "id": 1,
+        "key": "D",
+        "name": "기간(%D)",
+        "default": 3,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "STOCH",
+    "showName": "Stochastic slow",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      },
+      {
+        "id": 1,
+        "key": "K",
+        "name": "기간(%K)",
+        "default": 3,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      },
+      {
+        "id": 2,
+        "key": "D",
+        "name": "기간(%D)",
+        "default": 3,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "RSI",
+    "showName": "RSI",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 10,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "CCI",
+    "showName": "CCI",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 20,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "MOM",
+    "showName": "모멘텀",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 10,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "ROC",
+    "showName": "ROC",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 10,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "AD",
+    "showName": "AD Line",
+    "vars": []
+  },
+  {
+    "id": 8,
+    "name": "ATR",
+    "showName": "ATR",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 20,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "MFI",
+    "showName": "MFI",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "OBV",
+    "showName": "OBV",
+    "vars": []
+  },
+  {
+    "id": 11,
+    "name": "ADOSC",
+    "showName": "Chaikin Oscillator",
+    "vars": [
+      {
+        "id": 0,
+        "key": "longPeriod",
+        "name": "장기",
+        "default": 10,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 1,
+        "key": "shortPeriod",
+        "name": "단기",
+        "default": 3,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "TRIX",
+    "showName": "TRIX",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 12,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "WILLR",
+    "showName": "Williams %R",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "DX",
+    "showName": "DMI",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "ADX",
+    "showName": "ADX",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "name": "ADXR",
+    "showName": "ADXR",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "name": "AROON",
+    "showName": "Aroon",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 25,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "name": "AROONOSC",
+    "showName": "Aroon Oscillator",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "기간",
+        "default": 25,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "name": "STOCHRSI",
+    "showName": "Stochastic RSI",
+    "vars": [
+      {
+        "id": 0,
+        "key": "Date",
+        "name": "RSI 기간",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 1,
+        "key": "K",
+        "name": "기간(%K)",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      },
+      {
+        "id": 2,
+        "key": "D",
+        "name": "기간(%D)",
+        "default": 3,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "ULTOSC",
+    "showName": "Ultimate Oscillator",
+    "vars": [
+      {
+        "id": 0,
+        "key": "longPeriod",
+        "name": "장기",
+        "default": 28,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      },
+      {
+        "id": 1,
+        "key": "middlePeriod",
+        "name": "중기",
+        "default": 14,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      },
+      {
+        "id": 2,
+        "key": "shortPeriod",
+        "name": "단기",
+        "default": 7,
+        "val": 1,
+        "max": 480,
+        "min": 1
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "name": "PPO",
+    "showName": "PPO",
+    "vars": [
+      {
+        "id": 0,
+        "key": "longPeriod",
+        "name": "장기",
+        "default": 26,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      },
+      {
+        "id": 1,
+        "key": "shortPeriod",
+        "name": "단기",
+        "default": 12,
+        "val": 1,
+        "max": 480,
+        "min": 2
+      }
+    ]
+  }
+]
